@@ -1,0 +1,11 @@
+# Ignore Visual Studio temporary files
+.vs/
+*.obj
+*.exe
+*.pdb
+*.user
+*.suo
+*.log
+Debug/
+Release/
+ipch/
