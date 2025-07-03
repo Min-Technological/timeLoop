@@ -34,4 +34,10 @@ void Time::sleep_delta() {
 	else {
 		accumulator = deltaTime;
 	}
+
+	frameCount += 1;
+}
+
+Uint64 Time::current_frame() {
+	return frameCount;
 }

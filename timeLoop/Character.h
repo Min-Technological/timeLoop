@@ -33,6 +33,7 @@ private:
 	void moveLeft(int px);
 	void moveDown(int px);
 	void moveRight(int px);
+	void moveJump();
 
 	float newX; // predicted x
 	float newY; // predicted y
@@ -51,6 +52,8 @@ private:
 
 	float xVelocity = 0;
 	float yVelocity = 0;
+	float jumpVelocity = 20;
+	float gravity = 1;
 
 	void set_texture(float xOffset);
 

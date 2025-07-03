@@ -15,8 +15,8 @@ void Character::move() {
 	newX = hitbox.xa;
 	newY = hitbox.ya;
 
-	yVelocity = 0;
-	xVelocity = 0;
+	bool yMoved = false;
+	bool xMoved = false;
 
 	const bool* keys = SDL_GetKeyboardState(NULL);
 
@@ -29,23 +29,30 @@ void Character::move() {
 
 	if (keys[SDL_SCANCODE_W]) {
 		moveUp(10);
-	}
-
-	if (keys[SDL_SCANCODE_A]) {
-		moveLeft(10);
+		yMoved = true;
 	}
 
 	if (keys[SDL_SCANCODE_S]) {
 		moveDown(10);
+		yMoved = true;
+	}
+
+	if (keys[SDL_SCANCODE_A]) {
+		moveLeft(10);
+		xMoved = true;
 	}
 
 	if (keys[SDL_SCANCODE_D]) {
 		moveRight(10);
+		xMoved = true;
 	}
 
 	if (keys[SDL_SCANCODE_SPACE]) {
-		// moveJump();
+		moveJump();
 	}
+
+
+
 
 	if (keys[SDL_SCANCODE_R]) {
 		newX = 960;
@@ -61,6 +68,7 @@ void Character::collide(std::vector<Tile> map) {
 
 	newY -= yVelocity;
 	hitbox.update_hitbox(newX, newY, w, h);
+	grounded = false;
 	for (Tile& tile : map) {
 
 		// Check collision
@@ -87,6 +95,12 @@ void Character::collide(std::vector<Tile> map) {
 				break;
 			}
 		}
+	}
+	if (grounded) {
+		yVelocity = 0;
+	}
+	else {
+		yVelocity += (-gravity);
 	}
 
 	newX += xVelocity;
@@ -119,6 +133,7 @@ void Character::collide(std::vector<Tile> map) {
 		}
 
 	}
+	xVelocity = 0;
 	
 	hitbox.update_hitbox(newX, newY, w, h);
 
@@ -151,6 +166,13 @@ void Character::moveRight(int px) {
 	xVelocity += sprinting ? px * 2 : px;
 }
 
+void Character::moveJump() {
+	if (grounded) {
+		yVelocity = jumpVelocity;
+		grounded = false;
+	}
+}
+
 void Character::set_texture(float xOffset) {
 
 	renderX = (newX - xOffset) * scale;
@@ -167,9 +189,11 @@ void Character::set_texture(float xOffset) {
 void Character::solid_Y_collision(Tile& tile) {
 	if (yVelocity < 0) {
 		newY = tile.hitbox.ya - h;
+		grounded = true;
 	}
 	else if (yVelocity > 0) {
 		newY = tile.hitbox.yb;
+		yVelocity = 0;
 	}
 }
 

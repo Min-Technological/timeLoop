@@ -14,9 +14,12 @@ public:
 	Uint64 frame_delta();
 
 	void sleep_delta();
+
+	Uint64 current_frame();
 	
 private:
 	Uint64 accumulator = 0;
+	Uint64 frameCount = 0;
 	const Uint64 frameGap;
 };
 
