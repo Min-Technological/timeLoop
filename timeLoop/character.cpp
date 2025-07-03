@@ -166,22 +166,18 @@ void Character::set_texture(float xOffset) {
 
 void Character::solid_Y_collision(Tile& tile) {
 	if (yVelocity < 0) {
-		std::cout << "DOWN\n";
 		newY = tile.hitbox.ya - h;
 	}
 	else if (yVelocity > 0) {
-		std::cout << "UP\n";
 		newY = tile.hitbox.yb;
 	}
 }
 
 void Character::solid_X_collision(Tile& tile) {
 	if (xVelocity < 0) {
-		std::cout << "LEFT\n";
 		newX = tile.hitbox.xb;
 	}
 	else if (xVelocity > 0) {
-		std::cout << "RIGHT\n";
 		newX = tile.hitbox.xa - w;
 	}
 
