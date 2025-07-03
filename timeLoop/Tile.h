@@ -3,9 +3,9 @@
 #define TILE
 
 #include <SDL3/SDL.h>
+#include <vector>
 #include "Window.h"
 #include "Hitbox.h"
-#include "Camera.h"
 
 
 
@@ -19,27 +19,32 @@ public:
         GRASS_DARK
     };
 
-    Tile(TileType tileType, float xPos, float yPos, AppWindow window, Camera &windowCamera);
+    Tile(TileType tileType, float xPos, float yPos, AppWindow window);
 
 
 
     void handle_event(bool fullscreen);
 
-    void update(float viewScale);
+    void update(float viewScale, float offset);
 
-    void render();
+    void render(std::vector<float> screenDimensions);
+
+
+
+    int get_type();
+
+    Hitbox hitbox;
 
 private:
     float x, y;
+
     float w = 40; // width
 
     float fullscreenScale;
 
     float renderX, renderY, renderW;
     float scale;
-    Camera &camera;
     
-    Hitbox hitbox;
     TileType type;
 
     SDL_Renderer* r = nullptr;

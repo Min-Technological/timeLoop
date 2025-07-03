@@ -9,7 +9,12 @@ public:
 	Hitbox();
 	Hitbox(float x, float y, float width, float height);
 
-	void check_collision(Hitbox other) const;
+	void update_hitbox(float x, float y, float width, float height);
+
+	void enable_collisions(bool status);
+	bool allows_collisions();
+
+	bool check_collision(Hitbox other) const;
 
 	float xa; // Left Side
 	float xb; // Right Side
@@ -17,6 +22,8 @@ public:
 	float yb; // Bottom Side
 
 private:
+
+	bool allowsCollisions = true;
 };
 
 

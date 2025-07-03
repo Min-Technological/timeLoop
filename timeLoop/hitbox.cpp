@@ -9,13 +9,36 @@ Hitbox::Hitbox(float x, float y, float width, float height) :
 	yb = y + height; // Bottom Edge
 }
 
+void Hitbox::update_hitbox(float x, float y, float width, float height) {
+	xa = x;
+	xb = x + width;
+	ya = y;
+	yb = y + height;
+}
+
+void Hitbox::enable_collisions(bool status) {
+	allowsCollisions = status;
+}
+
+bool Hitbox::allows_collisions() {
+	return allowsCollisions;
+}
 
 
-void Hitbox::check_collision(Hitbox other) const {
-	if (xb > other.xa &&	// inside left
-		xa < other.xb &&	// inside right
-		yb > other.ya &&	// inside top
-		ya < other.yb) {	// inside bottom
-		std::cout << "COLLIDING\n";
+
+bool Hitbox::check_collision(Hitbox other) const {
+	if (other.allows_collisions()) {
+		if (xb > other.xa &&	// inside left
+			xa < other.xb &&	// inside right
+			yb > other.ya &&	// inside top
+			ya < other.yb) {	// inside bottom
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	else {
+		return false;
 	}
 }

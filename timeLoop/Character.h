@@ -3,8 +3,10 @@
 #define CHARACTER
 
 #include <SDL3/SDL.h>
+#include <vector>
 #include "Window.h"
 #include "Hitbox.h"
+#include "Tile.h"
 
 class Character {
 public:
@@ -13,6 +15,8 @@ public:
 	void handle_event(bool fullscreen);
 
 	void move();
+
+	void collide(std::vector<Tile> map);
 
 	void update(float viewScale, float xOffset);
 
@@ -45,7 +49,13 @@ private:
 	bool grounded = true; 
 	bool sprinting = false;
 
+	float xVelocity = 0;
+	float yVelocity = 0;
+
 	void set_texture(float xOffset);
+
+	void solid_Y_collision(Tile& tile);
+	void solid_X_collision(Tile& tile);
 };
 
 #endif

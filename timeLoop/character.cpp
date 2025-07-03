@@ -15,6 +15,9 @@ void Character::move() {
 	newX = hitbox.xa;
 	newY = hitbox.ya;
 
+	yVelocity = 0;
+	xVelocity = 0;
+
 	const bool* keys = SDL_GetKeyboardState(NULL);
 
 	if (keys[SDL_SCANCODE_LSHIFT]) {
@@ -46,10 +49,78 @@ void Character::move() {
 
 	if (keys[SDL_SCANCODE_R]) {
 		newX = 960;
+		xVelocity = 0;
+
 		newY = 680;
+		yVelocity = 0;
 	}
 
-	hitbox = std::move(Hitbox(newX, newY, w, h));
+}
+
+void Character::collide(std::vector<Tile> map) {
+
+	newY -= yVelocity;
+	hitbox.update_hitbox(newX, newY, w, h);
+	for (Tile& tile : map) {
+
+		// Check collision
+		int responseType;
+		if (hitbox.check_collision(tile.hitbox)) {
+			responseType = tile.get_type();
+		}
+		else {
+			responseType = 0;
+		}
+
+
+		// Collision logic
+		if (responseType) {
+			switch (responseType) {
+
+			case 1: // Dirt Light
+			case 2: // Dirt Dark
+			case 3: // Grass Light
+			case 4: // Grass Dark
+				solid_Y_collision(tile);
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
+	newX += xVelocity;
+	hitbox.update_hitbox(newX, newY, w, h);
+	for (Tile& tile : map) {
+
+		// Check collision
+		int responseType;
+		if (hitbox.check_collision(tile.hitbox)) {
+			responseType = tile.get_type();
+		}
+		else {
+			responseType = 0;
+		}
+
+
+		// Collision logic
+		if (responseType) {
+			switch (responseType) {
+
+			case 1: // Dirt Light
+			case 2: // Dirt Dark
+			case 3: // Grass Light
+			case 4: // Grass Dark
+				solid_X_collision(tile);
+				break;
+			default:
+				break;
+			}
+		}
+
+	}
+	
+	hitbox.update_hitbox(newX, newY, w, h);
 
 }
 
@@ -65,19 +136,19 @@ void Character::render() {
 }
 
 void Character::moveUp(int px) {
-	newY -= sprinting ? px * 2 : px;
+	yVelocity += sprinting ? px * 2 : px;
 }
 
 void Character::moveLeft(int px) {
-	newX -= sprinting ? px * 2 : px;
+	xVelocity -= sprinting ? px * 2 : px;
 }
 
 void Character::moveDown(int px) {
-	newY += sprinting ? px * 2 : px;
+	yVelocity -= sprinting ? px * 2 : px;
 }
 
 void Character::moveRight(int px) {
-	newX += sprinting ? px * 2 : px;
+	xVelocity += sprinting ? px * 2 : px;
 }
 
 void Character::set_texture(float xOffset) {
@@ -91,4 +162,27 @@ void Character::set_texture(float xOffset) {
 		renderY,
 		renderW,
 		renderH };
+}
+
+void Character::solid_Y_collision(Tile& tile) {
+	if (yVelocity < 0) {
+		std::cout << "DOWN\n";
+		newY = tile.hitbox.ya - h;
+	}
+	else if (yVelocity > 0) {
+		std::cout << "UP\n";
+		newY = tile.hitbox.yb;
+	}
+}
+
+void Character::solid_X_collision(Tile& tile) {
+	if (xVelocity < 0) {
+		std::cout << "LEFT\n";
+		newX = tile.hitbox.xb;
+	}
+	else if (xVelocity > 0) {
+		std::cout << "RIGHT\n";
+		newX = tile.hitbox.xa - w;
+	}
+
 }

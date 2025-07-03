@@ -60,6 +60,9 @@ void Gamestate::handle_event() {
 
 void Gamestate::move() {
 	user.move();
+
+	user.collide(currentMap);
+
 	camera.affect();
 }
 
@@ -74,7 +77,7 @@ void Gamestate::update() {
 	user.update(scale, camera.xOffset);
 
 	for (Tile &tile : currentMap) {
-		tile.update(scale);
+		tile.update(scale, camera.xOffset);
 	}
 }
 
@@ -89,8 +92,10 @@ void Gamestate::render() {
 
 	background.render();
 
+	std::vector<float> screenDimensions = { float(camera.w), float(camera.h) };
+
 	for (Tile &tile : currentMap) {
-		tile.render();
+		tile.render(screenDimensions);
 	}
 
 	user.render();
@@ -109,6 +114,25 @@ void Gamestate::close() {
 	window.destroy();
 
 	SDL_Quit();
+
+}
+
+Gamestate::State Gamestate::get_current_state() {
+	return currentState;
+}
+
+void Gamestate::change_state() {
+
+	const bool* keys = SDL_GetKeyboardState(NULL);
+
+	if (keys[SDL_SCANCODE_ESCAPE]) {
+		if (get_current_state() == State::MENU) {
+			// currentState = State::GAME;
+		}
+		else {
+			currentState = State::MENU;
+		}
+	}
 
 }
 

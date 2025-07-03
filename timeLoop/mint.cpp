@@ -13,16 +13,28 @@ int main(int argc, char* argsp[]) {
 	mint.initialise_map();
 
 	while (!mint.quit) {
-		
-		mint.handle_event(); // handle simple inputs.
 
-		mint.move(); // handle movement inputs.
+		switch (mint.get_current_state()) {
+		case (mint.MENU):
+				std::cout << "IN DEVELOPMENT!\n";
+				break;
+		case (mint.GAME):
+			mint.handle_event(); // handle simple game inputs.
 
-		mint.update(); // update object collisions.
+			mint.move(); // handle game movement inputs.
 
-		mint.render(); // render to screen.
+			mint.update(); // update game object collisions.
+
+			mint.render(); // render game to screen.
+			break;
+
+		}
+
+		mint.change_state();
 
 	}
+
+	mint.close();
 
 	return 0;
 

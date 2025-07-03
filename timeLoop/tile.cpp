@@ -1,10 +1,17 @@
 #include "Tile.h"
 
-Tile::Tile(TileType tileType, float xPos, float yPos, AppWindow window, Camera &windowCamera) :
- x(xPos), y(yPos), type(tileType), r(window.get_renderer()), hitbox(xPos, yPos, w, w), camera(windowCamera) {
+Tile::Tile(TileType tileType, float xPos, float yPos, AppWindow window) :
+ x(xPos), y(yPos), type(tileType), r(window.get_renderer()) {
+
+	hitbox = Hitbox(xPos, yPos, w, w);
 
 	fullscreenScale = SDL_GetWindowDisplayScale(window.get_window());
 	set_texture();
+	//switch (type) {
+	//case TileType::DIRT_DARK:
+	//	hitbox.enable_collisions(false);
+	//	break;
+	//}
 
 }
 
@@ -12,9 +19,9 @@ void Tile::handle_event(bool fullscreen) {
 
 }
 
-void Tile::update(float viewScale) {
+void Tile::update(float viewScale, float offset) {
 
-	renderX = x - camera.xOffset;
+	renderX = x - offset;
 
 	scale = viewScale;
 	if (scale != viewScale) {
@@ -25,9 +32,9 @@ void Tile::update(float viewScale) {
 
 }
 
-void Tile::render() {
-	if (x > -renderW && renderX < camera.w &&
-		y > -renderW && renderY < camera.h){
+void Tile::render(std::vector<float> screenDimensions) {
+	if (x > -renderW && renderX < screenDimensions[0] &&
+		y > -renderW && renderY < screenDimensions[1]){
 		switch (type) {
 		case TileType::DIRT_DARK:
 			SDL_SetRenderDrawColor(r, 0xDD, 0x55, 0x00, 0xFF);
@@ -55,6 +62,10 @@ void Tile::render() {
 			break;
 		}
 	}
+}
+
+int Tile::get_type() {
+	return int(type);
 }
 
 void Tile::set_texture() {

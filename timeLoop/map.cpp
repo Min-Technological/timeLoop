@@ -72,7 +72,7 @@ void Map::create_tile(Uint32 color, float x, float y) {
 		type = Tile::TileType::NILL;
 	}
 
-	map.emplace_back(type, x * tileSize, y * tileSize, appWindow, camera);
+	map.emplace_back(type, x * tileSize, y * tileSize, appWindow);
 
 }
 

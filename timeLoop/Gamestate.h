@@ -22,6 +22,9 @@ public:
 
 	void initialise_map();
 
+
+
+	// Game Loop Functions
 	void set_render_canvas();
 
 	void handle_event();
@@ -32,7 +35,22 @@ public:
 
 	void render();
 
+
+
+	// Exit Game Functions
 	void close();
+
+
+
+	// Game States:
+	enum State {
+		MENU,
+		GAME
+	};
+
+	State currentState = State::GAME;
+	State get_current_state();
+	void change_state();
 
 private:
 
