@@ -155,6 +155,7 @@ void Character::collide(std::vector<Chunk>& map) {
 
 void Character::update(float viewScale, float xOffset) {
 	scale = viewScale;
+	xOff = xOffset;
 
 	set_texture(xOffset);
 }
@@ -162,6 +163,11 @@ void Character::update(float viewScale, float xOffset) {
 void Character::render() {
 	SDL_SetRenderDrawColor(r, 0x00, 0x00, 0x0, 0xFF);
 	SDL_RenderFillRect(r, &t);
+
+	if (bounding) {
+		std::cout << "BOUNDING\n";
+		hitbox.render_hitbox(r, xOff, scale, 0);
+	}
 }
 
 void Character::moveUp(int px) {

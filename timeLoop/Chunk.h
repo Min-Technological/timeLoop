@@ -22,7 +22,7 @@ public:
 	Hitbox hitbox;
 
 private:
-	bool showBounding = true;
+	bool showBounding = false;
 	float xOff = 0;
 	int debug = 0;
 

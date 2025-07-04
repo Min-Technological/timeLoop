@@ -59,6 +59,9 @@ private:
 
 	void solid_Y_collision(Tile& tile);
 	void solid_X_collision(Tile& tile);
+
+	float xOff;
+	bool bounding = true;
 };
 
 #endif

@@ -25,6 +25,9 @@ public:
 	float yb; // Bottom Side
 
 private:
+	float w, h;
+
+	SDL_FRect bounding;
 
 	bool allowsCollisions = true;
 };
