@@ -14,22 +14,29 @@ SDL_Surface* Map::load_surface() {
 	return surface;
 }
 
-std::vector<Tile> Map::generate_map()
+std::vector<Chunk> Map::generate_map()
 {
 	if (SDL_MUSTLOCK(s)) {
 		SDL_LockSurface(s);
 	}
 
 
-
+	int index = -1;
 	Uint32* pixels = (Uint32*)s->pixels;
-	for (int y = 0; y < s->h; y++) {
-		for (int x = 0; x < s->w; x++) {
+	for (int x = 0; x < s->w; x++) {
+
+		if (x % 16 == 0) {
+			index += 1;
+			map.emplace_back(40.0f * x, appWindow);
+		}
+
+		for (int y = 0; y < s->h; y++) {
+
 			// Get pixel color at specific x,y
 			Uint32 pixelColor = pixels[y * s->w + x];
 
 			// Generate tile from colour, append to map
-			create_tile(pixelColor, float(x), float(y));
+			create_tile(pixelColor, float(x), float(y), index);
 		}
 	}
 
@@ -45,7 +52,7 @@ std::vector<Tile> Map::generate_map()
 	return map;
 }
 
-void Map::create_tile(Uint32 color, float x, float y) {
+void Map::create_tile(Uint32 color, float x, float y, int mapIndex) {
 
 	const SDL_PixelFormatDetails* fd = SDL_GetPixelFormatDetails(s->format);
 
@@ -72,7 +79,7 @@ void Map::create_tile(Uint32 color, float x, float y) {
 		type = Tile::TileType::NILL;
 	}
 
-	map.emplace_back(type, x * tileSize, y * tileSize, appWindow);
+	map[mapIndex].append(type, x * tileSize, y * tileSize, appWindow);
 
 }
 

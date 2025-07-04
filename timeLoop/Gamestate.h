@@ -9,6 +9,7 @@
 #include "Window.h"
 #include "Titlebar.h"
 #include "Time.h"
+#include "Chunk.h"
 #include "Background.h"
 #include "Character.h"
 #include "Camera.h"
@@ -65,8 +66,9 @@ private:
 	Map gameMap0;
 	SDL_Event event{};
 
-	std::vector<Tile> currentMap;
+	std::vector<Chunk> currentMap;
 	int screenW = 1920;
+	int windowH = 1080;
 	int screenH = 1080;
 	float scale = 1.0f;
 };

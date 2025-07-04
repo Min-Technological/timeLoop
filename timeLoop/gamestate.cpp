@@ -76,8 +76,8 @@ void Gamestate::update() {
 
 	user.update(scale, camera.xOffset);
 
-	for (Tile &tile : currentMap) {
-		tile.update(scale, camera.xOffset);
+	for (Chunk &chunk : currentMap) {
+		chunk.update(scale, camera.xOffset);
 	}
 }
 
@@ -94,8 +94,8 @@ void Gamestate::render() {
 
 	std::vector<float> screenDimensions = { float(camera.w), float(camera.h) };
 
-	for (Tile &tile : currentMap) {
-		tile.render(screenDimensions);
+	for (Chunk &chunk : currentMap) {
+		chunk.render(screenDimensions);
 	}
 
 	user.render();
@@ -137,7 +137,7 @@ void Gamestate::change_state() {
 }
 
 void Gamestate::calculate_scale() {
-	SDL_GetCurrentRenderOutputSize(window.get_renderer(), &screenW, &screenH);
-	float windowHeight = window.is_fullscreen() ? float(screenH) : float(screenH) - titlebar.titleHeight;
-	scale = float(windowHeight) / 1080;
+	SDL_GetCurrentRenderOutputSize(window.get_renderer(), &screenW, &windowH);
+	screenH = window.is_fullscreen() ? int(windowH) : int(windowH) - titlebar.titleHeight;
+	scale = float(screenH) / 1080;
 }

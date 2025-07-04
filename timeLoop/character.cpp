@@ -28,13 +28,13 @@ void Character::move() {
 	}
 
 	if (keys[SDL_SCANCODE_W]) {
-		moveUp(10);
-		yMoved = true;
+		// moveUp(10);
+		// yMoved = true;
 	}
 
 	if (keys[SDL_SCANCODE_S]) {
-		moveDown(10);
-		yMoved = true;
+		// moveDown(10);
+		// yMoved = true;
 	}
 
 	if (keys[SDL_SCANCODE_A]) {
@@ -64,38 +64,47 @@ void Character::move() {
 
 }
 
-void Character::collide(std::vector<Tile> map) {
+void Character::collide(std::vector<Chunk>& map) {
 
 	newY -= yVelocity;
 	hitbox.update_hitbox(newX, newY, w, h);
 	grounded = false;
-	for (Tile& tile : map) {
+	for (Chunk& chunk : map) {
+		if (hitbox.check_collision(chunk.hitbox)) {
+			chunk.set_debug('G');
+			for (Tile& tile : chunk.chunk) {
 
-		// Check collision
-		int responseType;
-		if (hitbox.check_collision(tile.hitbox)) {
-			responseType = tile.get_type();
-		}
-		else {
-			responseType = 0;
-		}
+				// Check collision
+				int responseType;
+				if (hitbox.check_collision(tile.hitbox)) {
+					responseType = tile.get_type();
+				}
+				else {
+					responseType = 0;
+				}
 
 
-		// Collision logic
-		if (responseType) {
-			switch (responseType) {
+				// Collision logic
+				if (responseType) {
+					switch (responseType) {
 
-			case 1: // Dirt Light
-			case 2: // Dirt Dark
-			case 3: // Grass Light
-			case 4: // Grass Dark
-				solid_Y_collision(tile);
-				break;
-			default:
-				break;
+					case 1: // Dirt Light
+					case 2: // Dirt Dark
+					case 3: // Grass Light
+					case 4: // Grass Dark
+						solid_Y_collision(tile);
+						break;
+					default:
+						break;
+					}
+				}
 			}
 		}
+		else {
+			chunk.set_debug('R');
+		}
 	}
+	
 	if (grounded) {
 		yVelocity = 0;
 	}
@@ -105,33 +114,38 @@ void Character::collide(std::vector<Tile> map) {
 
 	newX += xVelocity;
 	hitbox.update_hitbox(newX, newY, w, h);
-	for (Tile& tile : map) {
 
-		// Check collision
-		int responseType;
-		if (hitbox.check_collision(tile.hitbox)) {
-			responseType = tile.get_type();
-		}
-		else {
-			responseType = 0;
-		}
+	for (Chunk& chunk : map) {
+		if (hitbox.check_collision(chunk.hitbox)) {
+			for (Tile& tile : chunk.chunk) {
+
+				// Check collision
+				int responseType;
+				if (hitbox.check_collision(tile.hitbox)) {
+					responseType = tile.get_type();
+				}
+				else {
+					responseType = 0;
+				}
 
 
-		// Collision logic
-		if (responseType) {
-			switch (responseType) {
+				// Collision logic
+				if (responseType) {
+					switch (responseType) {
 
-			case 1: // Dirt Light
-			case 2: // Dirt Dark
-			case 3: // Grass Light
-			case 4: // Grass Dark
-				solid_X_collision(tile);
-				break;
-			default:
-				break;
+					case 1: // Dirt Light
+					case 2: // Dirt Dark
+					case 3: // Grass Light
+					case 4: // Grass Dark
+						solid_X_collision(tile);
+						break;
+					default:
+						break;
+					}
+				}
+
 			}
 		}
-
 	}
 	xVelocity = 0;
 	

@@ -33,7 +33,7 @@ private:
 	float& scale;
 
 	float leftEdge = 0;
-	float rightEdge = 4000;
+	float rightEdge = 128.0f * 40.0f;
 
 	bool shaking = false;
 	Uint64 shakeStart = 0;

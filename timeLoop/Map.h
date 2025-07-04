@@ -8,6 +8,7 @@
 #include <SDL3_image/SDL_image.h>
 
 #include "Window.h"
+#include "Chunk.h"
 #include "Tile.h"
 #include "Camera.h"
 
@@ -17,7 +18,7 @@ class Map{
 public:
 	Map(const std::string& path, int tileWidth, AppWindow window, Camera &windowCamera);
 
-	std::vector<Tile> generate_map();
+	std::vector<Chunk> generate_map();
 
 private:
 	std::string mapPath;
@@ -27,10 +28,10 @@ private:
 	SDL_Renderer* r = nullptr;
 	AppWindow appWindow;
 
-	std::vector<Tile> map;
+	std::vector<Chunk> map;
 
 	SDL_Surface* load_surface();
-	void create_tile(Uint32 color, float x, float y);
+	void create_tile(Uint32 color, float x, float y, int mapIndex);
 
 	Camera &camera;
 

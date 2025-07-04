@@ -6,7 +6,7 @@
 #include <vector>
 #include "Window.h"
 #include "Hitbox.h"
-#include "Tile.h"
+#include "Chunk.h"
 
 class Character {
 public:
@@ -16,7 +16,7 @@ public:
 
 	void move();
 
-	void collide(std::vector<Tile> map);
+	void collide(std::vector<Chunk>& map);
 
 	void update(float viewScale, float xOffset);
 

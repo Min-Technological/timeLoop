@@ -42,3 +42,9 @@ bool Hitbox::check_collision(Hitbox other) const {
 		return false;
 	}
 }
+
+void Hitbox::render_hitbox(SDL_Renderer* r, float xOffset, float scale, int green) {
+	SDL_FRect rect = { (xa - xOffset) * scale, ya, 640.0f * scale, 1080.0f };
+	SDL_SetRenderDrawColor(r, 255, green, 0, 255);
+	SDL_RenderRect(r, &rect);
+}
