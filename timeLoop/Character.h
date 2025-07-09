@@ -10,58 +10,58 @@
 
 class Character {
 public:
-	Character(float x, float y, float width, float height, AppWindow window);
+    // === Constructor ===
+    Character(float x, float y, float width, float height, AppWindow window);
 
-	void handle_event(bool fullscreen);
+    // === Public Methods ===
+    void handle_event(bool fullscreen);
+    void move();
+    void collide(std::vector<Chunk>& map);
+    void update(float viewScale, float xOffset);
+    void render();
 
-	void move();
+    // === Public Fields ===
+    Hitbox hitbox;
+    float renderX, renderY;
+    float w; // Width
+    float h; // Height
 
-	void collide(std::vector<Chunk>& map);
-
-	void update(float viewScale, float xOffset);
-
-	void render();
-
-	Hitbox hitbox;
-
-	float renderX, renderY;
-
-	float w; // Width
-	float h; // Height
 private:
-	void moveUp(int px);
-	void moveLeft(int px);
-	void moveDown(int px);
-	void moveRight(int px);
-	void moveJump();
+    // === Movement Helpers ===
+    void moveUp(int px);
+    void moveLeft(int px);
+    void moveDown(int px);
+    void moveRight(int px);
+    void moveJump();
 
-	float newX; // predicted x
-	float newY; // predicted y
+    // === Collision Helpers ===
+    std::vector<Tile*> get_collided_tiles(std::vector<Chunk>& map);
+    void solid_Y_collision(Tile& tile);
+    void solid_X_collision(Tile& tile);
 
-	float renderW, renderH;
-	float fullscreenScale;
-	float scale;
+    // === Texture Helpers ===
+    void set_texture(float xOffset);
 
-	SDL_FRect t; // texture
-	SDL_Renderer* r; // renderer
-	AppWindow appWindow;
+    // === State Fields ===
+    float newX; // Predicted x
+    float newY; // Predicted y
+    float renderW, renderH;
+    float fullscreenScale;
+    float scale;
 
-	// On the ground, vs falling / jumping
-	bool grounded = true; 
-	bool sprinting = false;
+    SDL_FRect t;          // Texture rect
+    SDL_Renderer* r;      // Renderer
+    AppWindow appWindow;
 
-	float xVelocity = 0;
-	float yVelocity = 0;
-	float jumpVelocity = 20;
-	float gravity = 1;
+    bool grounded = true;
+    bool sprinting = false;
+    bool bounding = false;
 
-	void set_texture(float xOffset);
-
-	void solid_Y_collision(Tile& tile);
-	void solid_X_collision(Tile& tile);
-
-	float xOff;
-	bool bounding = true;
+    float xVelocity = 0;
+    float yVelocity = 0;
+    float jumpVelocity = 20;
+    float gravity = 1;
+    float xOff;
 };
 
 #endif

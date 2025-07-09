@@ -7,40 +7,41 @@
 
 class Camera {
 public:
-	Camera(Character &character, Time &mainTime, int &screenW, int&screenH, float &screenScale);
+    // === Constructor ===
+    Camera(Character& character, Time& mainTime, int& screenW, int& screenH, float& screenScale);
 
-	void affect();
+    // === Public Methods ===
+    void affect();
+    void update();
 
-	void update();
-
-	int &w; // Viewport Width
-	int &h; // Viewport Height
-
-	float xOffset = 0;
-	float yOffset = 0;
+    // === Public Fields ===
+    int& w;  // Viewport Width
+    int& h;  // Viewport Height
+    float xOffset = 0;
+    float yOffset = 0;
 
 private:
-	Character &user;
-	Time &time;
+    // === References ===
+    Character& user;
+    Time& time;
+    float& scale;
 
-	float x = 0;
-	float y = 0;
+    // === Internal State ===
+    float x = 0;
+    float y = 0;
 
-	float leftBounds;
-	float rightBounds;
-	float boundsCount = 4;
+    float leftBounds;
+    float rightBounds;
+    float boundsCount = 4;
 
-	float& scale;
+    float leftEdge = 0;
+    float rightEdge = 128.0f * 40.0f;
 
-	float leftEdge = 0;
-	float rightEdge = 128.0f * 40.0f;
+    bool shaking = false;
+    Uint64 shakeStart = 0;
 
-	bool shaking = false;
-	Uint64 shakeStart = 0;
-	void shake_effect();
-
-
+    // === Private Helpers ===
+    void shake_effect();
 };
-
 
 #endif

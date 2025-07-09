@@ -1,10 +1,16 @@
 #include "Titlebar.h"
 
+// === Constructor: load texture and initialize button sprite frames ===
 Titlebar::Titlebar(int width, int height, std::string buttonTextures, SDL_Renderer* renderer, AppWindow* appWindow)
 	: titleWidth(width),
 	titleHeight(height),
 	titleBarRenderer(renderer),
-	titleBarWindow(appWindow)
+	titleBarWindow(appWindow),
+	titleBarTexture(nullptr),
+	isClicking(false),
+	minimiseState(0),
+	fullscreenState(0),
+	closeState(0)
 {
 	load_texture(buttonTextures);
 
@@ -13,61 +19,43 @@ Titlebar::Titlebar(int width, int height, std::string buttonTextures, SDL_Render
 	load_sprites(closeSprites, 2);
 }
 
-
+// === Load the title bar texture from file ===
 void Titlebar::load_texture(std::string texturePath) {
-	// The Final Texture
-	SDL_Texture* newTexture = NULL;
-
 	SDL_Surface* loadedSurface = IMG_Load(texturePath.c_str());
-	if (loadedSurface == NULL) {
+	if (!loadedSurface) {
 		std::cout << "UNABLE TO LOAD IMAGE! " << SDL_GetError() << std::endl;
-	}
-	else {
-		// Create Texture From Surface Pixels
-		newTexture = SDL_CreateTextureFromSurface(titleBarRenderer, loadedSurface);
-		if (newTexture == NULL) {
-			std::cout << "UNABLE TO CREATE TEXTURE FROM: " << SDL_GetError() << std::endl;
-		}
-		// Get Rid of Old Loaded Surface
-		SDL_DestroySurface(loadedSurface);
+		return;
 	}
 
-	titleBarTexture = newTexture;
+	titleBarTexture = SDL_CreateTextureFromSurface(titleBarRenderer, loadedSurface);
+	if (!titleBarTexture) {
+		std::cout << "UNABLE TO CREATE TEXTURE FROM: " << SDL_GetError() << std::endl;
+	}
+
+	SDL_DestroySurface(loadedSurface);
 }
 
+// === Initialize button sprite rectangles for a column in the sprite sheet ===
 void Titlebar::load_sprites(SDL_FRect button[], int column) {
-	if (titleBarTexture == NULL) {
+	if (!titleBarTexture) {
 		std::cout << "FAILED TO LOAD SPRITE SHEET TEXTURE!\n";
-	}
-	else {
-		float set = column * buttonWidth;
-
-		button[0].x = set;
-		button[0].y = 0;
-		button[0].w = buttonWidth;
-		button[0].h = buttonHeight;
-
-		button[1].x = set;
-		button[1].y = buttonHeight;
-		button[1].w = buttonWidth;
-		button[1].h = buttonHeight;
-
-		button[2].x = set;
-		button[2].y = buttonHeight * 2;
-		button[2].w = buttonWidth;
-		button[2].h = buttonHeight;
+		return;
 	}
 
+	float xStart = column * buttonWidth;
+
+	button[0] = { xStart, 0, buttonWidth, buttonHeight };
+	button[1] = { xStart, buttonHeight, buttonWidth, buttonHeight };
+	button[2] = { xStart, buttonHeight * 2, buttonWidth, buttonHeight };
 }
 
+// === Handle mouse and keyboard events ===
 void Titlebar::handle_event(SDL_Event* e) {
-	if (e->type == SDL_EVENT_MOUSE_MOTION
-		|| e->type == SDL_EVENT_MOUSE_BUTTON_DOWN
-		|| e->type == SDL_EVENT_MOUSE_BUTTON_UP) {
-		//Get mouse position
+	if (e->type == SDL_EVENT_MOUSE_MOTION || e->type == SDL_EVENT_MOUSE_BUTTON_DOWN || e->type == SDL_EVENT_MOUSE_BUTTON_UP) {
 		float x, y;
 		SDL_GetMouseState(&x, &y);
-		bool withinX = titleWidth - (3 * buttonWidth) < x && x < titleWidth;
+
+		bool withinX = (titleWidth - 3 * buttonWidth) < x && x < titleWidth;
 		bool withinY = 0 < y && y < buttonHeight;
 
 		if (e->type == SDL_EVENT_MOUSE_BUTTON_UP) {
@@ -75,14 +63,13 @@ void Titlebar::handle_event(SDL_Event* e) {
 		}
 
 		if (withinX && withinY) {
-
-			if (x < titleWidth - (2 * buttonWidth)) {
+			if (x < titleWidth - 2 * buttonWidth) {
 				handle_minimise(e);
 			}
 			else if (x < titleWidth - buttonWidth) {
 				handle_fullscreen(e);
 			}
-			else if (x < titleWidth) {
+			else {
 				handle_close(e);
 			}
 		}
@@ -108,6 +95,7 @@ void Titlebar::handle_event(SDL_Event* e) {
 	}
 }
 
+// === Button specific handlers ===
 void Titlebar::handle_minimise(SDL_Event* e) {
 	if (e->type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
 		isClicking = true;
@@ -150,45 +138,33 @@ void Titlebar::handle_close(SDL_Event* e) {
 	}
 }
 
+// === Set button sprite states ===
 void Titlebar::set_state(int state1, int state2, int state3) {
 	minimiseState = state1;
 	fullscreenState = state2;
 	closeState = state3;
 }
 
+// === Render the titlebar buttons ===
 void Titlebar::render() {
-
-	if (titleBarWindow->is_fullscreen() == false) {
+	if (!titleBarWindow->is_fullscreen()) {
 		renderWindow = { 0, 0, 960, 540 + titleHeight };
 		SDL_SetRenderViewport(titleBarRenderer, &renderWindow);
 
-		SDL_FRect renderMinimise{};
-		renderMinimise.x = titleWidth - buttonWidth * 3;
-		renderMinimise.y = 0;
-		renderMinimise.w = buttonWidth;
-		renderMinimise.h = buttonHeight;
-
-		SDL_FRect renderFullscreen{};
-		renderFullscreen.x = titleWidth - buttonWidth * 2;
-		renderFullscreen.y = 0;
-		renderFullscreen.w = buttonWidth;
-		renderFullscreen.h = buttonHeight;
-
-		SDL_FRect renderClose{};
-		renderClose.x = titleWidth - buttonWidth;
-		renderClose.y = 0;
-		renderClose.w = buttonWidth;
-		renderClose.h = buttonHeight;
+		SDL_FRect renderMinimise = { float(titleWidth - buttonWidth * 3), 0.f, buttonWidth, buttonHeight };
+		SDL_FRect renderFullscreen = { float(titleWidth - buttonWidth * 2), 0.f, buttonWidth, buttonHeight };
+		SDL_FRect renderClose = { float(titleWidth - buttonWidth), 0.f, buttonWidth, buttonHeight };
 
 		SDL_RenderTexture(titleBarRenderer, titleBarTexture, &minimiseSprites[minimiseState], &renderMinimise);
-
 		SDL_RenderTexture(titleBarRenderer, titleBarTexture, &fullscreenSprites[fullscreenState], &renderFullscreen);
-
 		SDL_RenderTexture(titleBarRenderer, titleBarTexture, &closeSprites[closeState], &renderClose);
 	}
 }
 
+// === Cleanup ===
 void Titlebar::destroy() {
-	SDL_DestroyTexture(titleBarTexture);
-	titleBarTexture = NULL;
+	if (titleBarTexture) {
+		SDL_DestroyTexture(titleBarTexture);
+		titleBarTexture = nullptr;
+	}
 }

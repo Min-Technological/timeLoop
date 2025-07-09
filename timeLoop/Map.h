@@ -12,31 +12,31 @@
 #include "Tile.h"
 #include "Camera.h"
 
-
-
-class Map{
+class Map {
 public:
-	Map(const std::string& path, int tileWidth, AppWindow window, Camera &windowCamera);
+    // === Constructor ===
+    Map(const std::string& path, int tileWidth, AppWindow window, Camera& windowCamera);
 
-	std::vector<Chunk> generate_map();
+    // === Public Methods ===
+    std::vector<Chunk> generate_map();
 
 private:
-	std::string mapPath;
-	SDL_Surface* s = nullptr;
+    // === File & Surface State ===
+    std::string mapPath;
+    SDL_Surface* s = nullptr;
 
-	int tileSize;
-	SDL_Renderer* r = nullptr;
-	AppWindow appWindow;
+    // === Map Properties ===
+    int tileSize;
+    AppWindow appWindow;
+    SDL_Renderer* r = nullptr;
+    std::vector<Chunk> map;
 
-	std::vector<Chunk> map;
+    // === Camera Reference ===
+    Camera& camera;
 
-	SDL_Surface* load_surface();
-	void create_tile(Uint32 color, float x, float y, int mapIndex);
-
-	Camera &camera;
-
+    // === Private Helpers ===
+    SDL_Surface* load_surface();
+    void create_tile(Uint32 color, float x, float y, int mapIndex);
 };
-
-
 
 #endif

@@ -7,20 +7,20 @@
 
 class Time {
 public:
-	Time(Uint64 expectedGap);
+    // === Constructor ===
+    Time(Uint64 expectedGap);
 
-	Uint64 current_time();
-	
-	Uint64 frame_delta();
+    // === Public Methods ===
+    Uint64 current_time();
+    Uint64 frame_delta();
+    void sleep_delta();
+    Uint64 current_frame();
 
-	void sleep_delta();
-
-	Uint64 current_frame();
-	
 private:
-	Uint64 accumulator = 0;
-	Uint64 frameCount = 0;
-	const Uint64 frameGap;
+    // === Timing State ===
+    Uint64 accumulator = 0;
+    Uint64 frameCount = 0;
+    const Uint64 frameGap;
 };
 
 #endif

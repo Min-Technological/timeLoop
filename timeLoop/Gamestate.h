@@ -17,60 +17,55 @@
 
 class Gamestate {
 public:
-	bool quit;
+    // === Constructor ===
+    Gamestate();
 
-	Gamestate();
+    // === Public Fields ===
+    bool quit;
 
-	void initialise_map();
+    // === Game Loop Functions ===
+    void initialise_map();
+    void set_render_canvas();
+    void handle_event();
+    void move();
+    void update();
+    void render();
 
+    // === Exit Game Functions ===
+    void close();
 
+    // === Game State Management ===
+    enum State {
+        MENU,
+        GAME
+    };
 
-	// Game Loop Functions
-	void set_render_canvas();
-
-	void handle_event();
-
-	void move();
-
-	void update();
-
-	void render();
-
-
-
-	// Exit Game Functions
-	void close();
-
-
-
-	// Game States:
-	enum State {
-		MENU,
-		GAME
-	};
-
-	State currentState = State::GAME;
-	State get_current_state();
-	void change_state();
+    State currentState = State::GAME;
+    State get_current_state();
+    void change_state();
 
 private:
+    // === Private Helpers ===
+    void calculate_scale();
 
-	void calculate_scale();
+    // === Subsystems ===
+    AppWindow window;
+    Titlebar titlebar;
+    Time time;
+    Background background;
+    Character user;
+    Camera camera;
+    Map gameMap0;
 
-	AppWindow window;
-	Titlebar titlebar;
-	Time time;
-	Background background;
-	Character user;
-	Camera camera;
-	Map gameMap0;
-	SDL_Event event{};
+    // === Input & Map ===
+    SDL_Event event{};
+    std::vector<Chunk> currentMap;
 
-	std::vector<Chunk> currentMap;
-	int screenW = 1920;
-	int windowH = 1080;
-	int screenH = 1080;
-	float scale = 1.0f;
+    // === Display State ===
+    int screenW = 1920;
+    int windowH = 1080;
+    int screenH = 1080;
+    float scale = 1.0f;
 };
 
 #endif

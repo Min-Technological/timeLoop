@@ -6,17 +6,18 @@
 
 class Background {
 public:
-	Background(SDL_Renderer* renderer);
+    // === Constructor ===
+    Background(SDL_Renderer* renderer);
 
-	void handle_event(bool fullscreenState);
+    // === Public Methods ===
+    void handle_event(bool fullscreenState);
+    void update(int screenW, int screenH);
+    void render();
 
-	void update(int screenW, int screenH);
-
-	void render();
 private:
-	SDL_FRect t = { 0, 0, 960, 540 }; // Texture
-	SDL_Renderer* r; // Renderer
+    // === Fields ===
+    SDL_FRect t = { 0, 0, 960, 540 }; // Texture rect
+    SDL_Renderer* r;                  // Renderer
 };
-
 
 #endif

@@ -1,71 +1,61 @@
 #include "Camera.h"
 
-Camera::Camera(Character &character, Time &mainTime, int &screenW, int &screenH, float &screenScale) :
-	user(character), w(screenW), h(screenH), scale(screenScale), time(mainTime) {
+// === Constructor ===
+Camera::Camera(Character& character, Time& mainTime, int& screenW, int& screenH, float& screenScale) :
+    user(character), w(screenW), h(screenH), scale(screenScale), time(mainTime) {
 }
 
+// === Apply Camera Effects ===
 void Camera::affect() {
+    const bool* keys = SDL_GetKeyboardState(NULL);
 
-	const bool* keys = SDL_GetKeyboardState(NULL);
-
-	if (keys[SDL_SCANCODE_R]) {
-		shake_effect();
-	}
-
-
+    if (keys[SDL_SCANCODE_R]) {
+        shake_effect();
+    }
 }
 
+// === Update Camera Position & Effects ===
 void Camera::update() {
+    leftBounds = float(w) / boundsCount;
+    rightBounds = leftBounds * (boundsCount - 1);
 
-	leftBounds = float(w) / boundsCount;
-	rightBounds = leftBounds * (boundsCount - 1);
+    float userCentre = user.hitbox.xa + (user.w / 2.0f);
+    float screenPlayerPos = (userCentre - xOffset) * scale;
 
-	float userCentre = user.hitbox.xa + (user.w / 2.0f);
-	float screenPlayerPos = (userCentre - xOffset) * scale;
+    if (screenPlayerPos < leftBounds) {
+        xOffset = (userCentre - leftBounds / scale);
+    }
+    else if (screenPlayerPos > rightBounds) {
+        xOffset = (userCentre - rightBounds / scale);
+    }
 
-	if (screenPlayerPos < leftBounds) {
+    // Clamp camera within edges
+    float rightClamp = rightEdge - (float(w) / scale);
 
-		xOffset = (userCentre - leftBounds / scale);
+    if (xOffset < leftEdge) {
+        xOffset = leftEdge;
+    }
+    else if (xOffset > rightClamp) {
+        xOffset = rightClamp;
+    }
 
-	}
-	else if (screenPlayerPos > rightBounds) {
+    // Apply shake effect if active
+    if (!shaking) return;
 
-		xOffset = (userCentre - rightBounds / scale);
-
-	}
-
-	// CLAMPING
-	float rightClamp = rightEdge - (float(w) / scale);
-
-	if (xOffset < leftEdge) {
-		xOffset = leftEdge;
-	}
-	else if (xOffset > (rightClamp)) {
-		xOffset = rightClamp;
-	}
-
-	// EFFECTS
-
-	if (shaking) {
-		int deltaTime = time.current_time() - shakeStart;
-		if (!(deltaTime >= 1000)) {
-			bool shakeDirection = deltaTime % 2;
-			if (shakeDirection) {
-				xOffset -= 5;
-			}
-			else {
-				xOffset += 5;
-			}
-		}
-		else {
-			shaking = false;
-		}
-	}
+    Uint64 deltaTime = time.current_time() - shakeStart;
+    if (!(deltaTime >= 1000)) {
+        bool shakeDirection = deltaTime % 2;
+        xOffset += shakeDirection ? 5 : -5;
+    }
+    else {
+        shaking = false;
+    }
 }
 
+// === Start Shake Effect ===
 void Camera::shake_effect() {
-	if (!shaking) {
-		shaking = true;
-		shakeStart = time.current_time();
-	}
+    if (!shaking) {
+        shaking = true;
+        shakeStart = time.current_time();
+    }
 }
