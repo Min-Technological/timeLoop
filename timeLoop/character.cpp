@@ -4,7 +4,7 @@
 Character::Character(float x, float y, float width, float height, AppWindow window)
     : w(width), h(height), newX(x), newY(y), appWindow(window), r(window.get_renderer()) {
     hitbox = std::move(Hitbox(x, y, width, height));
-    fullscreenScale = SDL_GetWindowDisplayScale(window.get_window());
+    load_all_sprites();
     set_texture(0);
 }
 
@@ -25,27 +25,27 @@ void Character::move() {
     sprinting = keys[SDL_SCANCODE_LSHIFT];
 
     if (keys[SDL_SCANCODE_W]) {
-        // moveUp(10);
+        // move_up(10);
         // yMoved = true;
     }
 
     if (keys[SDL_SCANCODE_S]) {
-        // moveDown(10);
+        // move_down(10);
         // yMoved = true;
     }
 
     if (keys[SDL_SCANCODE_A]) {
-        moveLeft(10);
+        move_left(10);
         xMoved = true;
     }
 
     if (keys[SDL_SCANCODE_D]) {
-        moveRight(10);
+        move_right(10);
         xMoved = true;
     }
 
     if (keys[SDL_SCANCODE_SPACE]) {
-        moveJump();
+        move_jump();
     }
 
     if (keys[SDL_SCANCODE_R]) {
@@ -85,8 +85,14 @@ void Character::collide(std::vector<Chunk>& map) {
     }
     else {
         yVelocity += (-gravity);
+        if (yVelocity < -40) {
+            yVelocity = -40;
+        }
     }
 
+    if (xVelocity == 0) {
+        walkingNum = 0;
+    }
     newX += xVelocity;
     hitbox.update_hitbox(newX, newY, w, h);
 
@@ -107,8 +113,8 @@ void Character::collide(std::vector<Chunk>& map) {
             break;
         }
     }
-
     xVelocity = 0;
+
     hitbox.update_hitbox(newX, newY, w, h);
 }
 
@@ -120,47 +126,131 @@ void Character::update(float viewScale, float xOffset) {
 }
 
 void Character::render() {
-    SDL_SetRenderDrawColor(r, 0x00, 0x00, 0x00, 0xFF);
-    SDL_RenderFillRect(r, &t);
+
+    SDL_RenderTexture(r, t, currentSprite, &v);
+    // SDL_RenderFillRect(r, &v);
 
     if (bounding) {
-        std::cout << "BOUNDING\n";
         hitbox.render_hitbox(r, xOff, scale, 0);
     }
 }
 
+void Character::destroy() {
+    if (t) {
+        SDL_DestroyTexture(t);
+        t = nullptr;
+    }
+}
+
 // === Movement Helpers ===
-void Character::moveUp(int px) {
+void Character::move_up(int px) {
     yVelocity += sprinting ? px * 2 : px;
 }
 
-void Character::moveLeft(int px) {
+void Character::move_left(int px) {
     xVelocity -= sprinting ? px * 2 : px;
+    currentState = sprinting ? State:: RUNNING_LEFT : State::WALKING_LEFT;
+    increment_walk();
 }
 
-void Character::moveDown(int px) {
+void Character::move_down(int px) {
     yVelocity -= sprinting ? px * 2 : px;
 }
 
-void Character::moveRight(int px) {
+void Character::move_right(int px) {
     xVelocity += sprinting ? px * 2 : px;
+
+    currentState = sprinting ? State::RUNNING_RIGHT : State::WALKING_RIGHT;
+    increment_walk();
 }
 
-void Character::moveJump() {
+void Character::move_jump() {
     if (grounded) {
         yVelocity = jumpVelocity;
         grounded = false;
     }
 }
 
+void Character::increment_walk() {
+    walkFrameCounter++;
+    if (!(walkFrameCounter < 4)) {
+        walkFrameCounter = 0;
+
+        walkingNum++;
+        if (!(walkingNum < 12)) {
+            walkingNum = 0;
+        }
+    }
+}
+
 // === Texture / Render Helpers ===
+void Character::load_texture(const std::string& path) {
+    SDL_Surface* loadedSurface = IMG_Load(path.c_str());
+    if (!loadedSurface) {
+        std::cout << "UNABLE TO LOAD IMAGE! " << SDL_GetError() << std::endl;
+        return;
+    }
+
+    t = SDL_CreateTextureFromSurface(r, loadedSurface);
+    if (!t) {
+        std::cout << "UNABLE TO CREATE TEXTURE FROM: " << SDL_GetError() << std::endl;
+    }
+    else {
+        SDL_SetTextureScaleMode(t, SDL_SCALEMODE_NEAREST);
+    }
+
+
+
+    SDL_DestroySurface(loadedSurface);
+}
+
+void Character::load_all_sprites() {
+    const std::string path = "protagonist.png";
+    load_texture(path);
+
+    for (int i = 0; i < int(TOTAL); i++) {
+        animations.emplace_back(t);
+        switch (i) {
+        case (int(WALKING_RIGHT)):
+            animations[i].load_sprites((0 * 80), 60, 80, 12);
+            break;
+        case (int(WALKING_LEFT)):
+            animations[i].load_sprites((1 * 80), 60, 80, 12);
+            break;
+        case (int(RUNNING_RIGHT)):
+            animations[i].load_sprites((2 * 80), 60, 80, 12);
+            break;
+        case (int(RUNNING_LEFT)):
+            animations[i].load_sprites((3 * 80), 60, 80, 12);
+            break;
+        default:
+            break;
+        }
+    }
+}
+
 void Character::set_texture(float xOffset) {
     renderX = (newX - xOffset) * scale;
     renderY = newY * scale;
     renderW = w * scale;
     renderH = h * scale;
 
-    t = { renderX, renderY, renderW, renderH };
+    v = { renderX, renderY, renderW, renderH };
+
+    switch (currentState) {
+    case State::WALKING_LEFT:
+    case State::WALKING_RIGHT:
+    case State::RUNNING_LEFT:
+    case State::RUNNING_RIGHT:
+        v.x -= 40 * scale;
+        v.w = 120 * scale;
+        break;
+    default:
+        break;
+    }
+
+    currentSprite = &animations[int(currentState)].get_sprite(walkingNum);
+
 }
 
 // === Collision Helpers ===

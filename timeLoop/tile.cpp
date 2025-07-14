@@ -39,22 +39,22 @@ void Tile::render(std::vector<float> screenDimensions) {
 
         switch (type) {
         case TileType::DIRT_DARK:
-            SDL_SetRenderDrawColor(r, 0xDD, 0x55, 0x00, 0xFF);
+            SDL_SetRenderDrawColor(r, 125, 41, 78, 0xFF);
             SDL_RenderFillRect(r, &t);
             break;
 
         case TileType::DIRT_LIGHT:
-            SDL_SetRenderDrawColor(r, 0xFF, 0x66, 0x00, 0xFF);
+            SDL_SetRenderDrawColor(r, 152, 52, 96, 0xFF);
             SDL_RenderFillRect(r, &t);
             break;
 
         case TileType::GRASS_DARK:
-            SDL_SetRenderDrawColor(r, 0x00, 0xDD, 0x00, 0xFF);
+            SDL_SetRenderDrawColor(r, 195, 68, 125, 0xFF);
             SDL_RenderFillRect(r, &t);
             break;
 
         case TileType::GRASS_LIGHT:
-            SDL_SetRenderDrawColor(r, 0x00, 0xFF, 0x00, 0xFF);
+            SDL_SetRenderDrawColor(r, 224, 80, 144, 0xFF);
             SDL_RenderFillRect(r, &t);
             break;
 

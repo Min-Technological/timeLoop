@@ -18,6 +18,7 @@ int main(int argc, char* argsp[]) {
 		case (mint.MENU):
 				std::cout << "IN DEVELOPMENT!\n";
 				break;
+
 		case (mint.GAME):
 			mint.handle_event(); // handle simple game inputs.
 
@@ -28,6 +29,14 @@ int main(int argc, char* argsp[]) {
 			mint.render(); // render game to screen.
 			break;
 
+		case (mint.PAUSE):
+			mint.handle_event();
+
+			mint.update();
+
+			mint.pause_render();
+
+			break;
 		}
 
 		mint.change_state();

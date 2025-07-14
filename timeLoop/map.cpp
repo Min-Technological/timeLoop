@@ -59,16 +59,16 @@ void Map::create_tile(Uint32 color, float x, float y, int mapIndex) {
         // White = no tile
         return;
     }
-    else if (R == 0xff && G == 0x00 && B == 0x00) {
+    else if (R == 0xCF && G == 0x00 && B == 0x00) {
         type = Tile::TileType::DIRT_DARK;
     }
-    else if (R == 0xff && G == 0xff && B == 0x00) {
+    else if (R == 0xDF && G == 0x00 && B == 0x00) {
         type = Tile::TileType::DIRT_LIGHT;
     }
-    else if (R == 0x00 && G == 0xff && B == 0x00) {
+    else if (R == 0xEF && G == 0x00 && B == 0x00) {
         type = Tile::TileType::GRASS_DARK;
     }
-    else if (R == 0x00 && G == 0xff && B == 0xff) {
+    else if (R == 0xFF && G == 0x00 && B == 0x00) {
         type = Tile::TileType::GRASS_LIGHT;
     }
     else {

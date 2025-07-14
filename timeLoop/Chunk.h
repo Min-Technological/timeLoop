@@ -19,10 +19,10 @@ public:
     // === Public Fields ===
     std::vector<Tile> chunk;
     Hitbox hitbox;
+    bool showBounding = false;
 
 private:
     // === Internal State ===
-    bool showBounding = true;
     float xOff = 0;
     int debug = 0;
 

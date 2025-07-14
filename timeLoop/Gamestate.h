@@ -31,13 +31,19 @@ public:
     void update();
     void render();
 
+    // === Pause Loop Functions ===
+    void pause_render();
+
     // === Exit Game Functions ===
     void close();
 
     // === Game State Management ===
     enum State {
         MENU,
-        GAME
+        GAME,
+        PAUSE,
+        REWIND,
+        TAROT,
     };
 
     State currentState = State::GAME;
@@ -66,6 +72,11 @@ private:
     int windowH = 1080;
     int screenH = 1080;
     float scale = 1.0f;
+    bool bounding = false;
+
+    // === Key Press Memory ===
+    bool f3KeyLifted = true;
+    bool escKeyLifted = true;
 };
 
 #endif
