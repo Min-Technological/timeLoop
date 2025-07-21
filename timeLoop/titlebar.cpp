@@ -151,9 +151,9 @@ void Titlebar::render() {
 		renderWindow = { 0, 0, 960, 540 + titleHeight };
 		SDL_SetRenderViewport(titleBarRenderer, &renderWindow);
 
-		SDL_FRect renderMinimise = { float(titleWidth - buttonWidth * 3), 0.f, buttonWidth, buttonHeight };
-		SDL_FRect renderFullscreen = { float(titleWidth - buttonWidth * 2), 0.f, buttonWidth, buttonHeight };
-		SDL_FRect renderClose = { float(titleWidth - buttonWidth), 0.f, buttonWidth, buttonHeight };
+		SDL_FRect renderMinimise = { static_cast<float>(titleWidth - buttonWidth * 3), 0.f, buttonWidth, buttonHeight };
+		SDL_FRect renderFullscreen = { static_cast<float>(titleWidth - buttonWidth * 2), 0.f, buttonWidth, buttonHeight };
+		SDL_FRect renderClose = { static_cast<float>(titleWidth - buttonWidth), 0.f, buttonWidth, buttonHeight };
 
 		SDL_RenderTexture(titleBarRenderer, titleBarTexture, &minimiseSprites[minimiseState], &renderMinimise);
 		SDL_RenderTexture(titleBarRenderer, titleBarTexture, &fullscreenSprites[fullscreenState], &renderFullscreen);

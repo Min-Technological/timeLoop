@@ -3,6 +3,7 @@
 // === Constructors ===
 Hitbox::Hitbox() :
     xa(0), xb(20), ya(0), yb(40), w(1920), h(1080) {
+    bounding = { 0, 0, 40, 40 };
 }
 
 Hitbox::Hitbox(float x, float y, float width, float height) :
@@ -26,7 +27,7 @@ void Hitbox::enable_collisions(bool status) {
     allowsCollisions = status;
 }
 
-bool Hitbox::allows_collisions() {
+bool Hitbox::allows_collisions() const {
     return allowsCollisions;
 }
 

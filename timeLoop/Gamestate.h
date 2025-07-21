@@ -14,6 +14,7 @@
 #include "Character.h"
 #include "Camera.h"
 #include "Map.h"
+#include "LoopData.h"
 
 class Gamestate {
 public:
@@ -22,6 +23,7 @@ public:
 
     // === Public Fields ===
     bool quit;
+    Uint64 frameCount = 0;
 
     // === Game Loop Functions ===
     void initialise_map();
@@ -34,7 +36,12 @@ public:
     // === Pause Loop Functions ===
     void pause_render();
 
-    // === Exit Game Functions ===
+    // === Suicide Loop Functions ===
+    void suicide_update();
+    void suicide_render();
+
+    // === Cleanup ===
+    void increment_frame();
     void close();
 
     // === Game State Management ===
@@ -42,13 +49,15 @@ public:
         MENU,
         GAME,
         PAUSE,
+        SUICIDE,
         REWIND,
         TAROT,
+        TOTAL
     };
-
     State currentState = State::GAME;
-    State get_current_state();
+    State get_current_state() const;
     void change_state();
+    void print_state() const;
 
 private:
     // === Private Helpers ===
@@ -62,6 +71,7 @@ private:
     Character user;
     Camera camera;
     Map gameMap0;
+    LoopData loopData;
 
     // === Input & Map ===
     SDL_Event event{};
@@ -77,6 +87,10 @@ private:
     // === Key Press Memory ===
     bool f3KeyLifted = true;
     bool escKeyLifted = true;
+
+    // === Uh... Memory ===
+    bool waiting = false;
+    Uint64 waitingFrame = 0;
 };
 
 #endif

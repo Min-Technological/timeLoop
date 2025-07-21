@@ -9,11 +9,22 @@ Character::Character(float x, float y, float width, float height, AppWindow wind
 }
 
 // === Input & Movement ===
-void Character::handle_event(bool fullscreen) {
-    // Intentionally left empty or to be implemented
+void Character::handle_event(SDL_Event* e) {
+    stateChanged = false;
+    gameState = 1;
+
+    if (e->type == SDL_EVENT_KEY_DOWN) {
+        if (e->key.key == SDLK_R) {
+            suicide();
+        }
+    }
 }
 
 void Character::move() {
+    if (stateChanged) {
+        return;
+    }
+
     newX = hitbox.xa;
     newY = hitbox.ya;
 
@@ -47,17 +58,14 @@ void Character::move() {
     if (keys[SDL_SCANCODE_SPACE]) {
         move_jump();
     }
-
-    if (keys[SDL_SCANCODE_R]) {
-        newX = 960;
-        xVelocity = 0;
-        newY = 680;
-        yVelocity = 0;
-    }
 }
 
 // === Collision Handling ===
 void Character::collide(std::vector<Chunk>& map) {
+    if (stateChanged) {
+        return;
+    }
+
     newY -= yVelocity;
     hitbox.update_hitbox(newX, newY, w, h);
     grounded = false;
@@ -120,12 +128,19 @@ void Character::collide(std::vector<Chunk>& map) {
 
 // === Update & Render ===
 void Character::update(float viewScale, float xOffset) {
+    if (stateChanged) {
+        return;
+    }
+
     scale = viewScale;
     xOff = xOffset;
     set_texture(xOffset);
 }
 
 void Character::render() {
+    if (stateChanged) {
+        return;
+    }
 
     SDL_RenderTexture(r, t, currentSprite, &v);
     // SDL_RenderFillRect(r, &v);
@@ -140,6 +155,20 @@ void Character::destroy() {
         SDL_DestroyTexture(t);
         t = nullptr;
     }
+}
+
+int Character::return_state() const {
+    return gameState;
+}
+
+void Character::load_data(PassiveData passive) {
+    hitbox.update_hitbox(passive.x, passive.y, w, h);
+    xVelocity = passive.xVelocity;
+    yVelocity = passive.yVelocity;
+}
+
+std::array<float, 2> Character::get_velocity() const {
+    return { xVelocity, yVelocity };
 }
 
 // === Movement Helpers ===
@@ -208,19 +237,19 @@ void Character::load_all_sprites() {
     const std::string path = "protagonist.png";
     load_texture(path);
 
-    for (int i = 0; i < int(TOTAL); i++) {
+    for (int i = 0; i < static_cast<int>(TOTAL); i++) {
         animations.emplace_back(t);
         switch (i) {
-        case (int(WALKING_RIGHT)):
+        case (static_cast<int>(WALKING_RIGHT)):
             animations[i].load_sprites((0 * 80), 60, 80, 12);
             break;
-        case (int(WALKING_LEFT)):
+        case (static_cast<int>(WALKING_LEFT)):
             animations[i].load_sprites((1 * 80), 60, 80, 12);
             break;
-        case (int(RUNNING_RIGHT)):
+        case (static_cast<int>(RUNNING_RIGHT)):
             animations[i].load_sprites((2 * 80), 60, 80, 12);
             break;
-        case (int(RUNNING_LEFT)):
+        case (static_cast<int>(RUNNING_LEFT)):
             animations[i].load_sprites((3 * 80), 60, 80, 12);
             break;
         default:
@@ -249,12 +278,18 @@ void Character::set_texture(float xOffset) {
         break;
     }
 
-    currentSprite = &animations[int(currentState)].get_sprite(walkingNum);
+    currentSprite = &animations[static_cast<int>(currentState)].get_sprite(walkingNum);
 
 }
 
+// === Event Helpers ===
+void Character::suicide() {
+    stateChanged = true;
+    gameState = 3;
+}
+
 // === Collision Helpers ===
-std::vector<Tile*> Character::get_collided_tiles(std::vector<Chunk>& map) {
+std::vector<Tile*> Character::get_collided_tiles(std::vector<Chunk>& map) const {
     std::vector<Tile*> collidedTiles;
 
     for (Chunk& chunk : map) {

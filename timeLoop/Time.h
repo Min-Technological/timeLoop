@@ -14,7 +14,7 @@ public:
     Uint64 current_time();
     Uint64 frame_delta();
     void sleep_delta();
-    Uint64 current_frame();
+    Uint64 current_frame() const;
 
 private:
     // === Timing State ===

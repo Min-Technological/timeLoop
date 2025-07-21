@@ -25,7 +25,7 @@ public:
     void handle_event(bool fullscreen);
     void update(float viewScale, float offset);
     void render(std::vector<float> screenDimensions);
-    int get_type();
+    int get_type() const;
 
     // === Public Fields ===
     Hitbox hitbox;

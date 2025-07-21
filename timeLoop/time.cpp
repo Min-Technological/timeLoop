@@ -44,6 +44,6 @@ void Time::sleep_delta() {
 }
 
 // === Get current frame number ===
-Uint64 Time::current_frame() {
+Uint64 Time::current_frame() const {
     return frameCount;
 }

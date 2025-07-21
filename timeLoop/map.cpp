@@ -33,7 +33,7 @@ std::vector<Chunk> Map::generate_map() {
 
         for (int y = 0; y < s->h; y++) {
             Uint32 pixelColor = pixels[y * s->w + x];
-            create_tile(pixelColor, float(x), float(y), index);
+            create_tile(pixelColor, static_cast<float>(x), static_cast<float>(y), index);
         }
     }
 

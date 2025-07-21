@@ -14,7 +14,7 @@ public:
     // === Public Methods ===
     void update_hitbox(float x, float y, float width, float height);
     void enable_collisions(bool status);
-    bool allows_collisions();
+    bool allows_collisions() const;
     bool check_collision(Hitbox other) const;
     void render_hitbox(SDL_Renderer* r, float xOffset, float scale, int green);
 

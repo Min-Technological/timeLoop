@@ -67,8 +67,8 @@ void Tile::render(std::vector<float> screenDimensions) {
 }
 
 // === Get numeric type value ===
-int Tile::get_type() {
-    return int(type);
+int Tile::get_type() const {
+    return static_cast<int>(type);
 }
 
 // === Calculate scaled texture rect ===

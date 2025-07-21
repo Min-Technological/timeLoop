@@ -18,9 +18,10 @@ SDL_FRect& Animations::get_sprite(int frame) {
 	}
 	else {
 		std::cout << "An error occured returning the sprite!\n";
+		return spriteRegions[0];
 	}
 }
 
-int Animations::get_total_frames() {
+int Animations::get_total_frames() const {
 	return frameCount;
 }

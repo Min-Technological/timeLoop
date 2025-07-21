@@ -10,13 +10,13 @@ void Camera::affect() {
     const bool* keys = SDL_GetKeyboardState(NULL);
 
     if (keys[SDL_SCANCODE_R]) {
-        shake_effect();
+        // shake_effect();
     }
 }
 
 // === Update Camera Position & Effects ===
 void Camera::update() {
-    leftBounds = float(w) / boundsCount;
+    leftBounds = static_cast<float>(w) / boundsCount;
     rightBounds = leftBounds * (boundsCount - 1);
 
     float userCentre = user.hitbox.xa + (user.w / 2.0f);
@@ -30,7 +30,7 @@ void Camera::update() {
     }
 
     // Clamp camera within edges
-    float rightClamp = rightEdge - (float(w) / scale);
+    float rightClamp = rightEdge - (static_cast<float>(w) / scale);
 
     if (xOffset < leftEdge) {
         xOffset = leftEdge;

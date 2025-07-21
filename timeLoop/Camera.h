@@ -30,8 +30,8 @@ private:
     float x = 0;
     float y = 0;
 
-    float leftBounds;
-    float rightBounds;
+    float leftBounds = 480;
+    float rightBounds = 1440;
     float boundsCount = 4;
 
     float leftEdge = 0;

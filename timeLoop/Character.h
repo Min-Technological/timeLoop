@@ -4,10 +4,12 @@
 
 #include <SDL3/SDL.h>
 #include <vector>
+#include <array>
 #include "Window.h"
 #include "Animations.h"
 #include "Hitbox.h"
 #include "Chunk.h"
+#include "PassiveData.h"
 
 class Character {
 public:
@@ -15,12 +17,17 @@ public:
     Character(float x, float y, float width, float height, AppWindow window);
 
     // === Public Methods ===
-    void handle_event(bool fullscreen);
+    void handle_event(SDL_Event* e);
     void move();
     void collide(std::vector<Chunk>& map);
     void update(float viewScale, float xOffset);
     void render();
     void destroy();
+
+    int return_state() const;
+    void load_data(PassiveData passive);
+
+    std::array<float, 2> get_velocity() const;
 
     // === Public Fields ===
     Hitbox hitbox;
@@ -40,7 +47,7 @@ private:
     void increment_walk();
 
     // === Collision Helpers ===
-    std::vector<Tile*> get_collided_tiles(std::vector<Chunk>& map);
+    std::vector<Tile*> get_collided_tiles(std::vector<Chunk>& map) const;
     void solid_Y_collision(Tile& tile);
     void solid_X_collision(Tile& tile);
 
@@ -48,6 +55,9 @@ private:
     void load_texture(const std::string& path);
     void load_all_sprites();
     void set_texture(float xOffset);
+
+    // === Event Helpers ===
+    void suicide();
 
     // === State Fields ===
     enum State {    // List of Animation States
@@ -83,6 +93,10 @@ private:
     float jumpVelocity = 20; // Initial Upward Velocity when Jumping
     float gravity = 1;  // Scalar - p/(f^2)
     float xOff;     // Camera Offset (x-axis)
+
+    // === Outside Communications ===
+    bool stateChanged = false;
+    int gameState = 1;
 };
 
 #endif

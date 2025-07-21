@@ -37,9 +37,21 @@ int main(int argc, char* argsp[]) {
 			mint.pause_render();
 
 			break;
+
+		case (mint.SUICIDE):
+			mint.handle_event();
+
+			mint.suicide_update();
+
+			mint.suicide_render();
+
+			break;
 		}
 
 		mint.change_state();
+		// mint.print_state();
+		mint.increment_frame();
+		mint.frameCount++;
 
 	}
 

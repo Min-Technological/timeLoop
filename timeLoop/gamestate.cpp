@@ -9,6 +9,7 @@ Gamestate::Gamestate() :
     user(920, 600, 40, 160, window),
     camera(user, time, screenW, screenH, scale),
     gameMap0("map_test.png", 40, window, camera),
+    loopData(),
     quit(false)
 {
     event.type = SDL_EVENT_FIRST;
@@ -43,20 +44,20 @@ void Gamestate::handle_event() {
 
         titlebar.handle_event(&event);
 
+        user.handle_event(&event);
+
     }
     calculate_scale();
 }
 
-// === Game Logic: Movement and Collision ===
+// === Game Helpers ===
 void Gamestate::move() {
     user.move();
     user.collide(currentMap);
     camera.affect();
 }
-
-// === Game Update ===
 void Gamestate::update() {
-    background.update(screenW, screenH);
+    background.update(screenW, screenH, static_cast<int>(currentState));
     camera.update();
     user.update(scale, camera.xOffset);
 
@@ -64,8 +65,6 @@ void Gamestate::update() {
         chunk.update(scale, camera.xOffset);
     }
 }
-
-// === Game Rendering ===
 void Gamestate::render() {
     SDL_SetRenderDrawColor(window.get_renderer(), 0x14, 0x28, 0x20, 0xFF);
     SDL_RenderClear(window.get_renderer());
@@ -75,7 +74,7 @@ void Gamestate::render() {
 
     background.render();
 
-    std::vector<float> screenDimensions = { float(camera.w), float(camera.h) };
+    std::vector<float> screenDimensions = { static_cast<float>(camera.w), static_cast<float>(camera.h) };
     for (Chunk& chunk : currentMap) {
         chunk.render(screenDimensions);
     }
@@ -83,12 +82,9 @@ void Gamestate::render() {
     user.render();
 
     SDL_RenderPresent(window.get_renderer());
-    time.sleep_delta();
 }
 
-// === Pause Update ===
-
-// === Pause Rendering ===
+// === Pause Helpers ===
 void Gamestate::pause_render() {
     SDL_SetRenderDrawBlendMode(window.get_renderer(), SDL_BLENDMODE_BLEND);
     SDL_SetRenderDrawColor(window.get_renderer(), 0x14, 0x28, 0x20, 0xFF);
@@ -99,7 +95,7 @@ void Gamestate::pause_render() {
 
     background.render();
 
-    std::vector<float> screenDimensions = { float(camera.w), float(camera.h) };
+    std::vector<float> screenDimensions = { static_cast<float>(camera.w), static_cast<float>(camera.h) };
     for (Chunk& chunk : currentMap) {
         chunk.render(screenDimensions);
     }
@@ -107,15 +103,49 @@ void Gamestate::pause_render() {
     user.render();
 
     // Render Pause Overlay
-    SDL_FRect v = { 0, 0, 2000, 2000 };
+    SDL_FRect v = { 0, 0, static_cast<float>(screenW), static_cast<float>(screenH) };
     SDL_SetRenderDrawColor(window.get_renderer(), 0x14, 0x28, 0x20, 0x5F);
     SDL_RenderFillRect(window.get_renderer(), &v);
 
     SDL_RenderPresent(window.get_renderer());
-    time.sleep_delta();
+}
+
+// === Suicide Helpers ===
+void Gamestate::suicide_update() {
+
+    background.update(screenW, screenH, static_cast<int>(currentState));
+
+    user.load_data(loopData.dump_passive_data());
+
+    if (!waiting) {
+        waitingFrame = frameCount;
+        waiting = true;
+    }
+    if (waiting) {
+        if (frameCount - waitingFrame >= 60) {
+            currentState = State::GAME;
+            waiting = false;
+        }
+    }
+
+}
+void Gamestate::suicide_render() {
+    SDL_SetRenderDrawColor(window.get_renderer(), 0x14, 0x28, 0x20, 0xFF);
+    SDL_RenderClear(window.get_renderer());
+
+    titlebar.render();
+    set_render_canvas();
+
+    background.render();
+
+
+    SDL_RenderPresent(window.get_renderer());
 }
 
 // === Cleanup ===
+void Gamestate::increment_frame() {
+    time.sleep_delta();
+}
 void Gamestate::close() {
     user.destroy();
     titlebar.destroy();
@@ -124,11 +154,19 @@ void Gamestate::close() {
 }
 
 // === State Management ===
-Gamestate::State Gamestate::get_current_state() {
+Gamestate::State Gamestate::get_current_state() const {
     return currentState;
 }
 
 void Gamestate::change_state() {
+
+    int userState = user.return_state();
+    if (currentState == State::GAME && userState != State::GAME) {
+        if (userState >= 0 && userState < State::TOTAL) {
+            currentState = static_cast<State>(userState);
+        }
+    }
+
     const bool* keys = SDL_GetKeyboardState(NULL);
 
     if (keys[SDL_SCANCODE_F3]) {
@@ -149,19 +187,52 @@ void Gamestate::change_state() {
     }
 
     if (keys[SDL_SCANCODE_ESCAPE]) {
-        if (escKeyLifted) {
-            if (get_current_state() == State::PAUSE) {
+        if (get_current_state() == State::PAUSE) {
+            if (escKeyLifted) {
                 currentState = State::GAME;
             }
-            else {
+        }
+        else if (get_current_state() == State::GAME) {
+            if (escKeyLifted) {
                 currentState = State::PAUSE;
             }
-
-            escKeyLifted = false;
         }
+
+        escKeyLifted = false;
     }
     else if (!keys[SDL_SCANCODE_ESCAPE]) {
         escKeyLifted = true;
+    }
+}
+
+void Gamestate::print_state() const {
+    std::cout << "GAMESTATE ";
+
+    switch (currentState) {
+    case State::GAME:
+        std::cout << "GAME\n";
+        break;
+    case State::MENU:
+        std::cout << "MENU\n";
+        break;
+    case State::PAUSE:
+        std::cout << "PAUSE\n";
+        break;
+    case State::REWIND:
+        std::cout << "REWIND\n";
+        break;
+    case State::SUICIDE:
+        std::cout << "SUICIDE\n";
+        break;
+    case State::TAROT:
+        std::cout << "TAROT\n";
+        break;
+    case State::TOTAL:
+        std::cout << "TOTAL\n";
+        break;
+    default:
+        std::cout << "BLANK\n";
+        break;
     }
 }
 
@@ -169,5 +240,5 @@ void Gamestate::change_state() {
 void Gamestate::calculate_scale() {
     SDL_GetCurrentRenderOutputSize(window.get_renderer(), &screenW, &windowH);
     screenH = window.is_fullscreen() ? int(windowH) : int(windowH) - titlebar.titleHeight;
-    scale = float(screenH) / 1080;
+    scale = static_cast<float>(screenH) / 1080;
 }

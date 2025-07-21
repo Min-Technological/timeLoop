@@ -54,6 +54,12 @@
     <ClCompile Include="animations.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PassiveData.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LoopData.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h">
@@ -92,6 +98,12 @@
     <ClInclude Include="Animations.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="LoopData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PassiveData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="map_test.png">
@@ -101,6 +113,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="protagonist.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="suicide.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
