@@ -3,9 +3,11 @@
 #define CHARACTER
 
 #include <SDL3/SDL.h>
+#include <cmath>
 #include <vector>
 #include <array>
 #include "Window.h"
+#include "Time.h"
 #include "Animations.h"
 #include "Hitbox.h"
 #include "Chunk.h"
@@ -14,7 +16,7 @@
 class Character {
 public:
     // === Constructor ===
-    Character(float x, float y, float width, float height, AppWindow window);
+    Character(float x, float y, float width, float height, AppWindow window, Time& timer);
 
     // === Public Methods ===
     void handle_event(SDL_Event* e);
@@ -84,6 +86,7 @@ private:
     SDL_FRect* currentSprite = NULL;   // The current Sprite
     SDL_Renderer* r;        // Renderer
     AppWindow appWindow;    // Window
+    Time& time;  // Timer
 
     bool grounded = true;   // On a platform
     bool sprinting = false; // Running

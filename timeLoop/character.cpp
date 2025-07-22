@@ -1,8 +1,8 @@
 #include "Character.h"
 
 // === Constructor ===
-Character::Character(float x, float y, float width, float height, AppWindow window)
-    : w(width), h(height), newX(x), newY(y), appWindow(window), r(window.get_renderer()) {
+Character::Character(float x, float y, float width, float height, AppWindow window, Time& timer)
+    : w(width), h(height), newX(x), newY(y), appWindow(window), r(window.get_renderer()), time(timer) {
     hitbox = std::move(Hitbox(x, y, width, height));
     load_all_sprites();
     set_texture(0);
@@ -201,9 +201,15 @@ void Character::move_jump() {
 }
 
 void Character::increment_walk() {
-    walkFrameCounter++;
-    if (!(walkFrameCounter < 4)) {
-        walkFrameCounter = 0;
+    // Current time since SDL Initialized
+    Uint64 currentTime = time.current_time();
+
+    // How many ms has passed since last frame
+    int difference = currentTime - walkFrameCounter;
+
+    // 30 fps cap
+    if (difference > 33) {
+        walkFrameCounter = currentTime;
 
         walkingNum++;
         if (!(walkingNum < 12)) {

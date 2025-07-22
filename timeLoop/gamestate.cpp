@@ -6,7 +6,7 @@ Gamestate::Gamestate() :
     titlebar(960, 25, "titleBarIcons.png", window.get_renderer(), &window),
     time(60),
     background(window.get_renderer()),
-    user(920, 600, 40, 160, window),
+    user(920, 600, 40, 160, window, time),
     camera(user, time, screenW, screenH, scale),
     gameMap0("map_test.png", 40, window, camera),
     loopData(),
@@ -118,11 +118,11 @@ void Gamestate::suicide_update() {
     user.load_data(loopData.dump_passive_data());
 
     if (!waiting) {
-        waitingFrame = frameCount;
+        waitTime = time.current_time();
         waiting = true;
     }
     if (waiting) {
-        if (frameCount - waitingFrame >= 60) {
+        if (time.current_time() - waitTime >= 1000) {
             currentState = State::GAME;
             waiting = false;
         }
@@ -202,6 +202,11 @@ void Gamestate::change_state() {
     }
     else if (!keys[SDL_SCANCODE_ESCAPE]) {
         escKeyLifted = true;
+    }
+
+    if (keys[SDL_SCANCODE_F]) {
+        std::cout << "SAVED DATA!\n";
+        loopData.update_passive(user);
     }
 }
 

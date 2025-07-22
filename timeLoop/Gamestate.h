@@ -90,7 +90,7 @@ private:
 
     // === Uh... Memory ===
     bool waiting = false;
-    Uint64 waitingFrame = 0;
+    Uint64 waitTime = 0;
 };
 
 #endif

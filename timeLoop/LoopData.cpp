@@ -14,5 +14,5 @@ void LoopData::update_passive(const Character& character) {
 }
 
 PassiveData LoopData::dump_passive_data() {
-	return passive[0];
+	return passive[(passive.size() - 1)];
 }
