@@ -11,8 +11,16 @@ void LoopData::update_passive(const Character& character) {
 	newPassive.yVelocity = velocity[1];
 
 	passive.push_back(newPassive);
+	std::cout << passive.size() << "\n";
 }
 
 PassiveData LoopData::dump_passive_data() {
-	return passive[(passive.size() - 1)];
+	if (passive.size() > 5)
+	{
+		return passive[(passive.size() - 5)];
+	}
+	else {
+		PassiveData tempData;
+		return tempData;
+	}
 }

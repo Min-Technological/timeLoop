@@ -64,6 +64,8 @@ void Gamestate::update() {
     for (Chunk& chunk : currentMap) {
         chunk.update(scale, camera.xOffset);
     }
+
+    increment_loop_data();
 }
 void Gamestate::render() {
     SDL_SetRenderDrawColor(window.get_renderer(), 0x14, 0x28, 0x20, 0xFF);
@@ -157,7 +159,6 @@ void Gamestate::close() {
 Gamestate::State Gamestate::get_current_state() const {
     return currentState;
 }
-
 void Gamestate::change_state() {
 
     int userState = user.return_state();
@@ -204,12 +205,10 @@ void Gamestate::change_state() {
         escKeyLifted = true;
     }
 
-    if (keys[SDL_SCANCODE_F]) {
-        std::cout << "SAVED DATA!\n";
+    /*if (keys[SDL_SCANCODE_F]) {
         loopData.update_passive(user);
-    }
+    }*/
 }
-
 void Gamestate::print_state() const {
     std::cout << "GAMESTATE ";
 
@@ -246,4 +245,11 @@ void Gamestate::calculate_scale() {
     SDL_GetCurrentRenderOutputSize(window.get_renderer(), &screenW, &windowH);
     screenH = window.is_fullscreen() ? int(windowH) : int(windowH) - titlebar.titleHeight;
     scale = static_cast<float>(screenH) / 1080;
+}
+void Gamestate::increment_loop_data() {
+    Uint64 currentTime = time.current_time();
+    if (currentTime - loopTime > 500) {
+        loopData.update_passive(user);
+        loopTime = currentTime;
+    }
 }

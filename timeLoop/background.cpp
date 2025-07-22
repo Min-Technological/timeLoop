@@ -51,7 +51,6 @@ void Background::render() {
     if (t == nullptr) {
         SDL_SetRenderDrawColor(r, 0x50, 0xE0, 0xA0, 0xFF);
         SDL_RenderFillRect(r, &v);
-        std::cout << "OHNO!\n";
         return;
     }
 

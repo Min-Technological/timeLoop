@@ -62,6 +62,7 @@ public:
 private:
     // === Private Helpers ===
     void calculate_scale();
+    void increment_loop_data();
 
     // === Subsystems ===
     AppWindow window;
@@ -91,6 +92,7 @@ private:
     // === Uh... Memory ===
     bool waiting = false;
     Uint64 waitTime = 0;
+    Uint64 loopTime = 0;
 };
 
 #endif
