@@ -46,12 +46,12 @@ void Character::move() {
     }
 
     if (keys[SDL_SCANCODE_A]) {
-        move_left(10);
+        move_left(5);
         xMoved = true;
     }
 
     if (keys[SDL_SCANCODE_D]) {
-        move_right(10);
+        move_right(5);
         xMoved = true;
     }
 
@@ -121,7 +121,18 @@ void Character::collide(std::vector<Chunk>& map) {
             break;
         }
     }
-    xVelocity = 0;
+    if (xVelocity > 0) {
+        xVelocity -= 1;
+        if (xVelocity < 0) {
+            xVelocity = 0;
+        }
+    }
+    else if (xVelocity < 0) {
+        xVelocity += 1;
+        if (xVelocity > 0) {
+            xVelocity = 0;
+        }
+    }
 
     hitbox.update_hitbox(newX, newY, w, h);
 }
@@ -177,7 +188,15 @@ void Character::move_up(int px) {
 }
 
 void Character::move_left(int px) {
+    float maxV = px * 2;
     xVelocity -= sprinting ? px * 2 : px;
+    if (xVelocity < -maxV && !sprinting) {
+        xVelocity = -maxV;
+    }
+    else if (xVelocity < -(maxV * 2) && sprinting) {
+        xVelocity = -(maxV * 2);
+    }
+
     currentState = sprinting ? State:: RUNNING_LEFT : State::WALKING_LEFT;
     increment_walk();
 }
@@ -187,7 +206,14 @@ void Character::move_down(int px) {
 }
 
 void Character::move_right(int px) {
+    float maxV = px * 2;
     xVelocity += sprinting ? px * 2 : px;
+    if (xVelocity > maxV && !sprinting) {
+        xVelocity = maxV;
+    }
+    else if (xVelocity > (maxV * 2) && sprinting) {
+        xVelocity = maxV * 2;
+    }
 
     currentState = sprinting ? State::RUNNING_RIGHT : State::WALKING_RIGHT;
     increment_walk();
@@ -333,4 +359,5 @@ void Character::solid_X_collision(Tile& tile) {
     else if (xVelocity > 0) {
         newX = tile.hitbox.xa - w;
     }
+    walkingNum = 0;
 }
