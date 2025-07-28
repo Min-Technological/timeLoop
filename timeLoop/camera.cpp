@@ -6,12 +6,7 @@ Camera::Camera(Character& character, Time& mainTime, int& screenW, int& screenH,
 }
 
 // === Apply Camera Effects ===
-void Camera::affect() {
-    const bool* keys = SDL_GetKeyboardState(NULL);
-
-    if (keys[SDL_SCANCODE_R]) {
-        // shake_effect();
-    }
+void Camera::affect(Input input) {
 }
 
 // === Update Camera Position & Effects ===

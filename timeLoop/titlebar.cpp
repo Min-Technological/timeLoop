@@ -50,54 +50,56 @@ void Titlebar::load_sprites(SDL_FRect button[], int column) {
 }
 
 // === Handle mouse and keyboard events ===
-void Titlebar::handle_event(SDL_Event* e) {
-	if (e->type == SDL_EVENT_MOUSE_MOTION || e->type == SDL_EVENT_MOUSE_BUTTON_DOWN || e->type == SDL_EVENT_MOUSE_BUTTON_UP) {
-		float x, y;
-		SDL_GetMouseState(&x, &y);
-
-		bool withinX = (titleWidth - 3 * buttonWidth) < x && x < titleWidth;
-		bool withinY = 0 < y && y < buttonHeight;
-
-		if (e->type == SDL_EVENT_MOUSE_BUTTON_UP) {
-			isClicking = false;
-		}
-
-		if (withinX && withinY) {
-			if (x < titleWidth - 2 * buttonWidth) {
-				handle_minimise(e);
-			}
-			else if (x < titleWidth - buttonWidth) {
-				handle_fullscreen(e);
-			}
-			else {
-				handle_close(e);
-			}
+void Titlebar::handle_event(Input input) {
+	if (input.is_key_just_pressed(SDLK_F11)) {
+		if (titleBarWindow->is_fullscreen()) {
+			titleBarWindow->windowed();
 		}
 		else {
-			if (!isClicking) {
-				set_state(0, 0, 0);
-			}
+			titleBarWindow->fullscreen();
 		}
 	}
-	else if (e->type == SDL_EVENT_KEY_DOWN) {
-		switch (e->key.key) {
-		case SDLK_F11:
-			if (titleBarWindow->is_fullscreen()) {
-				titleBarWindow->windowed();
+	else {
+		for (const SDL_Event& e : input.get_events()) {
+			if (e.type == SDL_EVENT_MOUSE_MOTION ||
+				e.type == SDL_EVENT_MOUSE_BUTTON_DOWN ||
+				e.type == SDL_EVENT_MOUSE_BUTTON_UP) {
+
+				float x, y;
+				SDL_GetMouseState(&x, &y);
+
+				bool withinX = (titleWidth - 3 * buttonWidth) < x && x < titleWidth;
+				bool withinY = 0 < y && y < buttonHeight;
+
+				if (e.type == SDL_EVENT_MOUSE_BUTTON_UP) {
+					isClicking = false;
+				}
+
+				if (withinX && withinY) {
+					if (x < titleWidth - 2 * buttonWidth) {
+						handle_minimise(e);
+					}
+					else if (x < titleWidth - buttonWidth) {
+						handle_fullscreen(e);
+					}
+					else {
+						handle_close(e);
+					}
+				}
+				else {
+					if (!isClicking) {
+						set_state(0, 0, 0);
+					}
+				}
+
 			}
-			else {
-				titleBarWindow->fullscreen();
-			}
-			break;
-		default:
-			break;
 		}
 	}
 }
 
 // === Button specific handlers ===
-void Titlebar::handle_minimise(SDL_Event* e) {
-	if (e->type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
+void Titlebar::handle_minimise(const SDL_Event &e) {
+	if (e.type == (SDL_EVENT_MOUSE_BUTTON_DOWN)) {
 		isClicking = true;
 		set_state(2, 0, 0);
 		SDL_MinimizeWindow(titleBarWindow->get_window());
@@ -110,8 +112,8 @@ void Titlebar::handle_minimise(SDL_Event* e) {
 	}
 }
 
-void Titlebar::handle_fullscreen(SDL_Event* e) {
-	if (e->type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
+void Titlebar::handle_fullscreen(const SDL_Event& e) {
+	if (e.type == (SDL_EVENT_MOUSE_BUTTON_DOWN)) {
 		isClicking = true;
 		set_state(0, 2, 0);
 		titleBarWindow->fullscreen();
@@ -124,10 +126,11 @@ void Titlebar::handle_fullscreen(SDL_Event* e) {
 	}
 }
 
-void Titlebar::handle_close(SDL_Event* e) {
-	if (e->type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
+void Titlebar::handle_close(const SDL_Event& e) {
+	if (e.type == (SDL_EVENT_MOUSE_BUTTON_DOWN)) {
 		isClicking = true;
 		set_state(0, 0, 2);
+		std::cout << "CLOSE\n";
 		titleBarWindow->close();
 	}
 	else if (isClicking) {

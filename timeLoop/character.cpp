@@ -9,18 +9,16 @@ Character::Character(float x, float y, float width, float height, AppWindow wind
 }
 
 // === Input & Movement ===
-void Character::handle_event(SDL_Event* e) {
+void Character::handle_event(Input input) {
     stateChanged = false;
     gameState = 1;
 
-    if (e->type == SDL_EVENT_KEY_DOWN) {
-        if (e->key.key == SDLK_R) {
-            suicide();
-        }
+    if (input.is_key_just_pressed(SDLK_R)) {
+        suicide();
     }
 }
 
-void Character::move() {
+void Character::move(Input input) {
     if (stateChanged) {
         return;
     }
@@ -31,31 +29,19 @@ void Character::move() {
     bool yMoved = false;
     bool xMoved = false;
 
-    const bool* keys = SDL_GetKeyboardState(NULL);
+    sprinting = input.is_key_pressed(SDL_SCANCODE_LSHIFT);
 
-    sprinting = keys[SDL_SCANCODE_LSHIFT];
-
-    if (keys[SDL_SCANCODE_W]) {
-        // move_up(10);
-        // yMoved = true;
-    }
-
-    if (keys[SDL_SCANCODE_S]) {
-        // move_down(10);
-        // yMoved = true;
-    }
-
-    if (keys[SDL_SCANCODE_A]) {
+    if (input.is_key_pressed(SDL_SCANCODE_A)) {
         move_left(5);
         xMoved = true;
     }
 
-    if (keys[SDL_SCANCODE_D]) {
+    if (input.is_key_pressed(SDL_SCANCODE_D)) {
         move_right(5);
         xMoved = true;
     }
 
-    if (keys[SDL_SCANCODE_SPACE]) {
+    if (input.is_key_pressed(SDL_SCANCODE_SPACE)) {
         move_jump();
     }
 }

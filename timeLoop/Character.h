@@ -7,6 +7,7 @@
 #include <vector>
 #include <array>
 #include "Window.h"
+#include "Input.h"
 #include "Time.h"
 #include "Animations.h"
 #include "Hitbox.h"
@@ -19,8 +20,8 @@ public:
     Character(float x, float y, float width, float height, AppWindow window, Time& timer);
 
     // === Public Methods ===
-    void handle_event(SDL_Event* e);
-    void move();
+    void handle_event(Input input);
+    void move(Input input);
     void collide(std::vector<Chunk>& map);
     void update(float viewScale, float xOffset);
     void render();
@@ -71,10 +72,23 @@ private:
         JUMPING,
         TOTAL // Total number of Animation States
     };
+    enum 
     State currentState = WALKING_RIGHT;
     std::vector<Animations> animations;
     int walkingNum = 0;
     int walkFrameCounter = 0;
+
+    // === Persona Fields ===
+    enum Persona {
+        PROTAG,     // No Name
+        CUP,        // TBD
+        WAND,       // TBD
+        SWORD,      // TBD
+        PENTACLE    // TBD
+    };
+    Persona currentPersona = PROTAG;
+    int personasUnlocked = 0;
+
         
     float newX; // Predicted x
     float newY; // Predicted y

@@ -9,6 +9,7 @@
 #include <functional>
 
 #include "Window.h"
+#include "Input.h"
 
 class Titlebar {
 public:
@@ -18,10 +19,10 @@ public:
     // === Public Methods ===
     void load_texture(std::string texturePath);
     void load_sprites(SDL_FRect button[], int column);
-    void handle_event(SDL_Event* e);
-    void handle_minimise(SDL_Event* e);
-    void handle_fullscreen(SDL_Event* e);
-    void handle_close(SDL_Event* e);
+    void handle_event(Input input);
+    void handle_minimise(const SDL_Event &e);
+    void handle_fullscreen(const SDL_Event &e);
+    void handle_close(const SDL_Event &e);
     void set_state(int state1, int state2, int state3);
     void render();
     void destroy();

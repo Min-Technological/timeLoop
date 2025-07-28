@@ -145,6 +145,7 @@
     </ClCompile>
     <ClCompile Include="gamestate.cpp" />
     <ClCompile Include="hitbox.cpp" />
+    <ClCompile Include="input.cpp" />
     <ClCompile Include="LoopData.cpp" />
     <ClCompile Include="map.cpp" />
     <ClCompile Include="mint.cpp" />
@@ -162,6 +163,7 @@
     <ClInclude Include="Chunk.h" />
     <ClInclude Include="Gamestate.h" />
     <ClInclude Include="Hitbox.h" />
+    <ClInclude Include="Input.h" />
     <ClInclude Include="LoopData.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="PassiveData.h" />

@@ -9,6 +9,7 @@ class PassiveData {
 public:
 	PassiveData();
 
+	void provide_frame(Uint64 frame);
 	Uint64 return_frame() const;
 
 	float x, y;

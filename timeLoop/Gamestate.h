@@ -8,6 +8,7 @@
 
 #include "Window.h"
 #include "Titlebar.h"
+#include "Input.h"
 #include "Time.h"
 #include "Chunk.h"
 #include "Background.h"
@@ -59,6 +60,9 @@ public:
     void change_state();
     void print_state() const;
 
+    // === Loop Management ===
+    void update_loop_data();
+
 private:
     // === Private Helpers ===
     void calculate_scale();
@@ -67,6 +71,7 @@ private:
     // === Subsystems ===
     AppWindow window;
     Titlebar titlebar;
+    Input input;
     Time time;
     Background background;
     Character user;

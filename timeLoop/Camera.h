@@ -3,6 +3,7 @@
 #define CAMERA
 
 #include "Character.h"
+#include "Input.h"
 #include "Time.h"
 
 class Camera {
@@ -11,7 +12,7 @@ public:
     Camera(Character& character, Time& mainTime, int& screenW, int& screenH, float& screenScale);
 
     // === Public Methods ===
-    void affect();
+    void affect(Input input);
     void update();
 
     // === Public Fields ===

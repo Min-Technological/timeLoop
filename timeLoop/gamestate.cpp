@@ -4,6 +4,7 @@
 Gamestate::Gamestate() :
     window("Test Window", 960, 540, 25),
     titlebar(960, 25, "titleBarIcons.png", window.get_renderer(), &window),
+    input(),
     time(60),
     background(window.get_renderer()),
     user(920, 600, 40, 160, window, time),
@@ -36,25 +37,23 @@ void Gamestate::set_render_canvas() {
 
 // === Event Handling ===
 void Gamestate::handle_event() {
-    while (SDL_PollEvent(&event) != 0) {
-        if (!window.is_running()) {
-            quit = true;
-            break;
-        }
 
-        titlebar.handle_event(&event);
+    input.handle_event();
 
-        user.handle_event(&event);
+    quit = (input.is_event_occurring(SDL_EVENT_QUIT) ||
+        window.is_running() == false) ? true : false;
 
-    }
+    titlebar.handle_event(input);
+
+    user.handle_event(input);
     calculate_scale();
 }
 
 // === Game Helpers ===
 void Gamestate::move() {
-    user.move();
+    user.move(input);
     user.collide(currentMap);
-    camera.affect();
+    camera.affect(input);
 }
 void Gamestate::update() {
     background.update(screenW, screenH, static_cast<int>(currentState));
@@ -65,7 +64,7 @@ void Gamestate::update() {
         chunk.update(scale, camera.xOffset);
     }
 
-    increment_loop_data();
+    update_loop_data();
 }
 void Gamestate::render() {
     SDL_SetRenderDrawColor(window.get_renderer(), 0x14, 0x28, 0x20, 0xFF);
@@ -240,16 +239,27 @@ void Gamestate::print_state() const {
     }
 }
 
+// === Loop Management ===
+void Gamestate::update_loop_data() {
+    int currentPassiveSize = loopData.return_passive_size();
+    increment_loop_data();
+    if (currentPassiveSize < loopData.return_passive_size()) {
+        loopData.kull_passive_data();
+    }
+}
+
+void Gamestate::increment_loop_data() {
+    Uint64 currentTime = time.current_time();
+    if (currentTime - loopTime > 500) {
+        loopData.update_passive(user, currentTime);
+        loopTime = currentTime;
+    }
+}
+
 // === Utility ===
 void Gamestate::calculate_scale() {
     SDL_GetCurrentRenderOutputSize(window.get_renderer(), &screenW, &windowH);
     screenH = window.is_fullscreen() ? int(windowH) : int(windowH) - titlebar.titleHeight;
     scale = static_cast<float>(screenH) / 1080;
 }
-void Gamestate::increment_loop_data() {
-    Uint64 currentTime = time.current_time();
-    if (currentTime - loopTime > 500) {
-        loopData.update_passive(user);
-        loopTime = currentTime;
-    }
-}
+

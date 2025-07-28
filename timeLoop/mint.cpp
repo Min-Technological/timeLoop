@@ -16,8 +16,10 @@ int main(int argc, char* argsp[]) {
 
 		switch (mint.get_current_state()) {
 		case (mint.MENU):
-				std::cout << "IN DEVELOPMENT!\n";
-				break;
+			mint.handle_event(); // handle simple game inputs.
+
+			std::cout << "IN DEVELOPMENT!\n";
+			break;
 
 		case (mint.GAME):
 			mint.handle_event(); // handle simple game inputs.
