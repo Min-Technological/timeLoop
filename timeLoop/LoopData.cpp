@@ -12,7 +12,6 @@ void LoopData::update_passive(const Character& character, Uint64 frame) {
 	newPassive.provide_frame(frame);
 
 	passive.push_back(newPassive);
-	std::cout << passive.size() << "\n";
 }
 
 PassiveData LoopData::dump_passive_data() {

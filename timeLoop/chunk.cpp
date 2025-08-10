@@ -7,8 +7,13 @@ Chunk::Chunk(float leftEdge, AppWindow window) :
 }
 
 // === Manage Tiles ===
-void Chunk::append(Tile::TileType type, float x, float y, AppWindow appWindow) {
-    chunk.emplace_back(type, x, y, appWindow);
+void Chunk::append(Tile::TileType type, float x, float y, SDL_Renderer* renderer) {
+    chunk.emplace_back(type, x, y, renderer);
+}
+
+// === Manage Tarot Cards ===
+void Chunk::add_cards(int type, float x, float y, AppWindow appWindow) {
+    cards.emplace_back(type, x, y, appWindow);
 }
 
 // === Update Tiles ===
@@ -19,6 +24,9 @@ void Chunk::update(float viewScale, float xOffset) {
     for (Tile& tile : chunk) {
         tile.update(viewScale, xOffset);
     }
+    for (TarotCard& card : cards) {
+        card.update(viewScale, xOffset);
+    }
 }
 
 // === Render Tiles & Bounding Box ===
@@ -27,6 +35,9 @@ void Chunk::render(std::vector<float> screenDimensions) {
         (hitbox.xa - xOff) * scale < screenDimensions[0]) {
         for (Tile& tile : chunk) {
             tile.render(screenDimensions);
+        }
+        for (TarotCard& card : cards) {
+            card.render(screenDimensions);
         }
     }
 

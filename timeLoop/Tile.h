@@ -4,7 +4,7 @@
 
 #include <SDL3/SDL.h>
 #include <vector>
-#include "Window.h"
+#include "Renderer.h"
 #include "Hitbox.h"
 
 class Tile {
@@ -19,12 +19,13 @@ public:
     };
 
     // === Constructor ===
-    Tile(TileType tileType, float xPos, float yPos, AppWindow window);
+    Tile(TileType tileType, float xPos, float yPos, SDL_Renderer* r);
 
     // === Public Methods ===
     void handle_event(bool fullscreen);
     void update(float viewScale, float offset);
     void render(std::vector<float> screenDimensions);
+
     int get_type() const;
 
     // === Public Fields ===
@@ -36,17 +37,12 @@ private:
     float w = 40; // Width
 
     // === Render State ===
-    float fullscreenScale;
-    float renderX, renderY, renderW;
+    Renderer renderer;
     float scale;
 
+    // === Miscellaneous Tile Info ===
     TileType type;
 
-    SDL_Renderer* r = nullptr;
-    SDL_FRect t;
-
-    // === Private Helpers ===
-    void set_texture();
 };
 
 #endif

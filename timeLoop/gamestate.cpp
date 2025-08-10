@@ -167,41 +167,22 @@ void Gamestate::change_state() {
         }
     }
 
-    const bool* keys = SDL_GetKeyboardState(NULL);
+    if (input.is_key_just_pressed(SDLK_F3)) {
+        bounding = bounding ? false : true;
 
-    if (keys[SDL_SCANCODE_F3]) {
-        if (f3KeyLifted) {
-            bounding = bounding ? false : true;
-
-            user.bounding = bounding;
-            for (Chunk& chunk : currentMap) {
-                chunk.showBounding = bounding;
-            }
-
-            f3KeyLifted = false;
-        }
-    
-    }
-    else if (!keys[SDL_SCANCODE_F3]) {
-        f3KeyLifted = true;
+        user.bounding = bounding;
+        for (Chunk& chunk : currentMap) {
+            chunk.showBounding = bounding;
+        }    
     }
 
-    if (keys[SDL_SCANCODE_ESCAPE]) {
+    if (input.is_key_just_pressed(SDLK_ESCAPE)) {
         if (get_current_state() == State::PAUSE) {
-            if (escKeyLifted) {
-                currentState = State::GAME;
-            }
+            currentState = State::GAME;
         }
         else if (get_current_state() == State::GAME) {
-            if (escKeyLifted) {
-                currentState = State::PAUSE;
-            }
+            currentState = State::PAUSE;
         }
-
-        escKeyLifted = false;
-    }
-    else if (!keys[SDL_SCANCODE_ESCAPE]) {
-        escKeyLifted = true;
     }
 
     /*if (keys[SDL_SCANCODE_F]) {

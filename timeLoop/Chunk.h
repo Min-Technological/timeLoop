@@ -4,6 +4,7 @@
 
 #include "Window.h"
 #include "Tile.h"
+#include "TarotCard.h"
 
 class Chunk {
 public:
@@ -11,13 +12,15 @@ public:
     Chunk(float leftEdge, AppWindow window);
 
     // === Public Methods ===
-    void append(Tile::TileType type, float x, float y, AppWindow appWindow);
+    void append(Tile::TileType type, float x, float y, SDL_Renderer* renderer);
+    void add_cards(int type, float x, float y, AppWindow appWindow);
     void update(float viewScale, float xOffset);
     void render(std::vector<float> screenDimensions);
     void set_debug(char a);
 
     // === Public Fields ===
     std::vector<Tile> chunk;
+    std::vector<TarotCard> cards;
     Hitbox hitbox;
     bool showBounding = false;
 

@@ -54,14 +54,23 @@
     <ClCompile Include="animations.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PassiveData.cpp">
+    <ClCompile Include="passiveData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="LoopData.cpp">
+    <ClCompile Include="loopData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="input.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tarotDeck.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tarotCard.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer.cpp">
+      <Filter>Resource Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -119,6 +128,15 @@
     <ClInclude Include="Input.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="TarotCard.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TarotDeck.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="map_test.png">
@@ -134,6 +152,12 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="Min-T.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="tempTaro.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="tarotCards.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

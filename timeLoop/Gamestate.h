@@ -90,10 +90,6 @@ private:
     float scale = 1.0f;
     bool bounding = false;
 
-    // === Key Press Memory ===
-    bool f3KeyLifted = true;
-    bool escKeyLifted = true;
-
     // === Uh... Memory ===
     bool waiting = false;
     Uint64 waitTime = 0;

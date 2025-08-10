@@ -12,7 +12,6 @@ public:
     Animations(SDL_Texture* texture);
 
     void load_sprites(float y, float w, float h, int count);
-
     SDL_FRect& get_sprite(int frame);
     int get_total_frames() const;
 
