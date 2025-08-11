@@ -16,7 +16,6 @@ public:
     void enable_collisions(bool status);
     bool allows_collisions() const;
     bool check_collision(Hitbox other) const;
-    void render_hitbox(SDL_Renderer* r, float xOffset, float scale, int green);
 
     // === Public Fields ===
     float xa; // Left Side

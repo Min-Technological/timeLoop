@@ -38,7 +38,7 @@ private:
 
     // === Render State ===
     Renderer renderer;
-    float scale;
+    float scale = 1;
 
     // === Miscellaneous Tile Info ===
     TileType type;

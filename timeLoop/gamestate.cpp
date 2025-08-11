@@ -222,7 +222,7 @@ void Gamestate::print_state() const {
 
 // === Loop Management ===
 void Gamestate::update_loop_data() {
-    int currentPassiveSize = loopData.return_passive_size();
+    Uint64 currentPassiveSize = loopData.return_passive_size();
     increment_loop_data();
     if (currentPassiveSize < loopData.return_passive_size()) {
         loopData.kull_passive_data();

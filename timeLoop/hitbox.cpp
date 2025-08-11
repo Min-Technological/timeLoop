@@ -48,14 +48,3 @@ bool Hitbox::check_collision(Hitbox other) const {
         return false;
     }
 }
-
-// === Debug Rendering ===
-void Hitbox::render_hitbox(SDL_Renderer* r, float xOffset, float scale, int green) {
-    bounding.x = (xa - xOffset) * scale;
-    bounding.y = ya * scale;
-    bounding.w = w * scale;
-    bounding.h = h * scale;
-
-    SDL_SetRenderDrawColor(r, 255, green, 0, 255);
-    SDL_RenderRect(r, &bounding);
-}

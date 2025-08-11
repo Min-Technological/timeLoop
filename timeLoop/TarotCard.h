@@ -39,7 +39,7 @@ public:
 	void update(float viewScale, float offset);
 	void render(std::vector<float> screenDimensions);
 
-	CardNumber get_card_number();
+	CardNumber get_card_number() const;
 	Hitbox hitbox;
 
 private:
@@ -52,7 +52,7 @@ private:
 	float x, y;
 	float w = 40;
 	float h = 80;
-	float scale;
+	float scale = 1;
 	Renderer renderer;
 
 	// === States ===

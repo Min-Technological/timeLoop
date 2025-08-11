@@ -106,7 +106,7 @@ void Character::collide(std::vector<Chunk>& map) {
             break;
         }
     }
-    xVelocity = xVelocity * 0.8;
+    xVelocity = xVelocity * 0.8f;
 
     hitbox.update_hitbox(newX, newY, w, h);
 }
@@ -122,32 +122,32 @@ void Character::update(float viewScale, float offset) {
         renderer.new_scale(scale);
     }
 
-    renderer.new_position(newX - offset, newY, w, h);
+    renderer.new_position(newX, newY, w, h, offset);
 
     switch (currentState) {
     case State::WALKING_RIGHT:
         spriteColumn = 0;
-        renderer.new_position(newX - offset - 40, newY, 120, h);
+        renderer.new_position(newX - 40, newY, 120, h, offset);
         break;
 
     case State::WALKING_LEFT:
         spriteColumn = 1;
-        renderer.new_position(newX - offset - 40, newY, 120, h);
+        renderer.new_position(newX - 40, newY, 120, h, offset);
         break;
 
     case State::RUNNING_RIGHT:
         spriteColumn = 2;
-        renderer.new_position(newX - offset - 40, newY, 120, h);
+        renderer.new_position(newX - 40, newY, 120, h, offset);
         break;
 
     case State::RUNNING_LEFT:
         spriteColumn = 3;
-        renderer.new_position(newX - offset - 40, newY, 120, h);
+        renderer.new_position(newX - 40, newY, 120, h, offset);
         break;
 
     default:
         spriteColumn = 0;
-        renderer.new_position(newX - offset, newY, w, h);
+        renderer.new_position(newX, newY, w, h, offset);
         break;
     }
 }
@@ -157,11 +157,11 @@ void Character::render() {
         return;
     }
 
-    renderer.render_sprite(60 * walkingNum, 80 * spriteColumn, 60, 80);
+    renderer.render_sprite(60.0f * walkingNum, 80.0f * spriteColumn, 60, 80);
     // SDL_RenderFillRect(r, &v);
 
     if (bounding) {
-        // hitbox.render_hitbox(r, xOff, scale, 0);
+        renderer.render_hitbox(hitbox, 0);
     }
 }
 
@@ -218,7 +218,7 @@ void Character::increment_walk() {
     Uint64 currentTime = time.current_time();
 
     // How many ms has passed since last frame
-    int difference = currentTime - walkFrameCounter;
+    Uint64 difference = currentTime - walkFrameCounter;
 
     // 30 fps cap
     if (difference > 33) {

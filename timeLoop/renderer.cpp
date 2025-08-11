@@ -26,8 +26,9 @@ void Renderer::load_texture(const std::string& path) {
 	SDL_DestroySurface(loadedSurface);
 }
 
-void Renderer::new_position(float newX, float newY, float newW, float newH) {
-	viewport.x = newX * scale;
+void Renderer::new_position(float newX, float newY, float newW, float newH, float xOff) {
+	xOffset = xOff;
+	viewport.x = (newX -  xOffset) * scale;
 	viewport.y = newY * scale;
 	viewport.w = newW * scale;
 	viewport.h = newH * scale;
@@ -49,8 +50,22 @@ void Renderer::render_sprite(float x, float y, float w, float h) {
 
 	SDL_RenderTexture(renderer, texture, &sprite, &viewport);
 }
+void Renderer::render_hitbox(Hitbox hitbox, Uint8 green) {
 
-bool Renderer::test_frame(std::vector<float> camera) {
+	float width = hitbox.xb - hitbox.xa;
+	float height = hitbox.yb - hitbox.ya;
+	SDL_FRect bounding = {
+		(hitbox.xa - xOffset) * scale,
+		hitbox.ya * scale,
+		width * scale,
+		height * scale
+	};
+
+	SDL_SetRenderDrawColor(renderer, 255, green, 0, 255);
+	SDL_RenderRect(renderer, &bounding);
+}
+
+bool Renderer::test_frame(std::vector<float> camera) const {
 	if (viewport.x > -viewport.w && viewport.x < camera[0]) {
 		if (viewport.y > -viewport.h && viewport.y < camera[1]) {
 			return true;

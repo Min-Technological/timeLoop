@@ -11,7 +11,7 @@ void TarotCard::update(float viewScale, float offset) {
         renderer.new_scale(scale);
     }
 
-    renderer.new_position(x - offset, y, w, h);
+    renderer.new_position(x, y, w, h, offset);
 
 }
 
@@ -22,6 +22,6 @@ void TarotCard::render(std::vector<float> screenDimensions) {
 	}
 }
 
-TarotCard::CardNumber TarotCard::get_card_number() {
+TarotCard::CardNumber TarotCard::get_card_number() const {
 	return cardNumber;
 }

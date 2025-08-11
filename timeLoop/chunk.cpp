@@ -2,8 +2,8 @@
 
 // === Constructor ===
 Chunk::Chunk(float leftEdge, AppWindow window) :
-    hitbox(leftEdge, 0, 640, 1080),
-    r(window.get_renderer()) {
+    hitbox(leftEdge, 0, 640, 1080), x(leftEdge),
+    renderer(window.get_renderer(), leftEdge, 0, 640, 1080) {
 }
 
 // === Manage Tiles ===
@@ -17,22 +17,25 @@ void Chunk::add_cards(int type, float x, float y, AppWindow appWindow) {
 }
 
 // === Update Tiles ===
-void Chunk::update(float viewScale, float xOffset) {
-    scale = viewScale;
-    xOff = xOffset;
+void Chunk::update(float viewScale, float offset) {
+    if (scale != viewScale) {
+        scale = viewScale;
+        renderer.new_scale(scale);
+    }
+
+    renderer.new_position(x, y, w, h, offset);
 
     for (Tile& tile : chunk) {
-        tile.update(viewScale, xOffset);
+        tile.update(viewScale, offset);
     }
     for (TarotCard& card : cards) {
-        card.update(viewScale, xOffset);
+        card.update(viewScale, offset);
     }
 }
 
 // === Render Tiles & Bounding Box ===
 void Chunk::render(std::vector<float> screenDimensions) {
-    if ((hitbox.xb - xOff) * scale >= 0 &&
-        (hitbox.xa - xOff) * scale < screenDimensions[0]) {
+    if (renderer.test_frame(screenDimensions)) {
         for (Tile& tile : chunk) {
             tile.render(screenDimensions);
         }
@@ -42,7 +45,7 @@ void Chunk::render(std::vector<float> screenDimensions) {
     }
 
     if (showBounding) {
-        hitbox.render_hitbox(r, xOff, scale, debug);
+        renderer.render_hitbox(hitbox, debug);
     }
 }
 

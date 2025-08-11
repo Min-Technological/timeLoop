@@ -3,7 +3,6 @@
 // === Constructor ===
 Tile::Tile(TileType tileType, float xPos, float yPos, SDL_Renderer* r) :
     x(xPos), y(yPos), type(tileType), renderer(r, xPos, yPos, w, w) {
-
     hitbox = Hitbox(xPos, yPos, w, w);
 }
 
@@ -18,7 +17,7 @@ void Tile::update(float viewScale, float offset) {
         renderer.new_scale(scale);
     }
 
-    renderer.new_position(x - offset, y, w, w);
+    renderer.new_position(x, y, w, w, offset);
 
 }
 

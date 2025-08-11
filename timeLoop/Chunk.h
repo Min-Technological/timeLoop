@@ -3,6 +3,7 @@
 #define CHUNK
 
 #include "Window.h"
+#include "Renderer.h"
 #include "Tile.h"
 #include "TarotCard.h"
 
@@ -26,12 +27,15 @@ public:
 
 private:
     // === Internal State ===
-    float xOff = 0;
+    float x;
+    float y = 0;
+    float w = 640;
+    float h = 2080;
+
+    Renderer renderer;
+    float scale = 1;
     int debug = 0;
 
-    float scale = 1;
-
-    SDL_Renderer* r;
 };
 
 #endif
