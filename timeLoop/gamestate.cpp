@@ -7,7 +7,7 @@ Gamestate::Gamestate() :
     input(),
     time(60),
     background(window.get_renderer()),
-    user(920, 600, 40, 160, window, time),
+    user(920, 600, window, time),
     camera(user, time, screenW, screenH, scale),
     gameMap0("map_test.png", 40, window, camera),
     loopData(),

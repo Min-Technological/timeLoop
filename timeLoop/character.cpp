@@ -1,11 +1,10 @@
 #include "Character.h"
 
 // === Constructor ===
-Character::Character(float x, float y, float width, float height, AppWindow window, Time& timer)
-    : w(width), h(height), newX(x), newY(y), appWindow(window), r(window.get_renderer()), time(timer) {
-    hitbox = std::move(Hitbox(x, y, width, height));
-    load_all_sprites();
-    set_texture(0);
+Character::Character(float x, float y, AppWindow window, Time& timer)
+    : newX(x), newY(y), appWindow(window), renderer(window.get_renderer(), x, y, w, h), time(timer) {
+    hitbox = std::move(Hitbox(x, y, w, h));
+    renderer.load_texture("protagonist.png");
 }
 
 // === Input & Movement ===
@@ -113,14 +112,44 @@ void Character::collide(std::vector<Chunk>& map) {
 }
 
 // === Update & Render ===
-void Character::update(float viewScale, float xOffset) {
+void Character::update(float viewScale, float offset) {
     if (stateChanged) {
         return;
     }
 
-    scale = viewScale;
-    xOff = xOffset;
-    set_texture(xOffset);
+    if (scale != viewScale) {
+        scale = viewScale;
+        renderer.new_scale(scale);
+    }
+
+    renderer.new_position(newX - offset, newY, w, h);
+
+    switch (currentState) {
+    case State::WALKING_RIGHT:
+        spriteColumn = 0;
+        renderer.new_position(newX - offset - 40, newY, 120, h);
+        break;
+
+    case State::WALKING_LEFT:
+        spriteColumn = 1;
+        renderer.new_position(newX - offset - 40, newY, 120, h);
+        break;
+
+    case State::RUNNING_RIGHT:
+        spriteColumn = 2;
+        renderer.new_position(newX - offset - 40, newY, 120, h);
+        break;
+
+    case State::RUNNING_LEFT:
+        spriteColumn = 3;
+        renderer.new_position(newX - offset - 40, newY, 120, h);
+        break;
+
+    default:
+        spriteColumn = 0;
+        renderer.new_position(newX - offset, newY, w, h);
+        break;
+    }
 }
 
 void Character::render() {
@@ -128,19 +157,16 @@ void Character::render() {
         return;
     }
 
-    SDL_RenderTexture(r, t, currentSprite, &v);
+    renderer.render_sprite(60 * walkingNum, 80 * spriteColumn, 60, 80);
     // SDL_RenderFillRect(r, &v);
 
     if (bounding) {
-        hitbox.render_hitbox(r, xOff, scale, 0);
+        // hitbox.render_hitbox(r, xOff, scale, 0);
     }
 }
 
 void Character::destroy() {
-    if (t) {
-        SDL_DestroyTexture(t);
-        t = nullptr;
-    }
+    renderer.destroy_texture();
 }
 
 int Character::return_state() const {
@@ -203,76 +229,6 @@ void Character::increment_walk() {
             walkingNum = 0;
         }
     }
-}
-
-// === Texture / Render Helpers ===
-void Character::load_texture(const std::string& path) {
-    SDL_Surface* loadedSurface = IMG_Load(path.c_str());
-    if (!loadedSurface) {
-        std::cout << "UNABLE TO LOAD IMAGE! " << SDL_GetError() << std::endl;
-        return;
-    }
-
-    t = SDL_CreateTextureFromSurface(r, loadedSurface);
-    if (!t) {
-        std::cout << "UNABLE TO CREATE TEXTURE FROM: " << SDL_GetError() << std::endl;
-    }
-    else {
-        SDL_SetTextureScaleMode(t, SDL_SCALEMODE_NEAREST);
-    }
-
-
-
-    SDL_DestroySurface(loadedSurface);
-}
-
-void Character::load_all_sprites() {
-    const std::string path = "protagonist.png";
-    load_texture(path);
-
-    for (int i = 0; i < static_cast<int>(TOTAL); i++) {
-        animations.emplace_back(t);
-        switch (i) {
-        case (static_cast<int>(WALKING_RIGHT)):
-            animations[i].load_sprites((0 * 80), 60, 80, 12);
-            break;
-        case (static_cast<int>(WALKING_LEFT)):
-            animations[i].load_sprites((1 * 80), 60, 80, 12);
-            break;
-        case (static_cast<int>(RUNNING_RIGHT)):
-            animations[i].load_sprites((2 * 80), 60, 80, 12);
-            break;
-        case (static_cast<int>(RUNNING_LEFT)):
-            animations[i].load_sprites((3 * 80), 60, 80, 12);
-            break;
-        default:
-            break;
-        }
-    }
-}
-
-void Character::set_texture(float xOffset) {
-    renderX = (newX - xOffset) * scale;
-    renderY = newY * scale;
-    renderW = w * scale;
-    renderH = h * scale;
-
-    v = { renderX, renderY, renderW, renderH };
-
-    switch (currentState) {
-    case State::WALKING_LEFT:
-    case State::WALKING_RIGHT:
-    case State::RUNNING_LEFT:
-    case State::RUNNING_RIGHT:
-        v.x -= 40 * scale;
-        v.w = 120 * scale;
-        break;
-    default:
-        break;
-    }
-
-    currentSprite = &animations[static_cast<int>(currentState)].get_sprite(walkingNum);
-
 }
 
 // === Event Helpers ===

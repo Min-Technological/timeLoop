@@ -51,9 +51,6 @@
     <ClCompile Include="chunk.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="animations.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="passiveData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -105,9 +102,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Chunk.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Animations.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="LoopData.h">

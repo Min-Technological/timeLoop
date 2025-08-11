@@ -9,7 +9,7 @@
 #include "Window.h"
 #include "Input.h"
 #include "Time.h"
-#include "Animations.h"
+#include "Renderer.h"
 #include "Hitbox.h"
 #include "Chunk.h"
 #include "PassiveData.h"
@@ -17,7 +17,7 @@
 class Character {
 public:
     // === Constructor ===
-    Character(float x, float y, float width, float height, AppWindow window, Time& timer);
+    Character(float x, float y, AppWindow window, Time& timer);
 
     // === Public Methods ===
     void handle_event(Input input);
@@ -34,9 +34,8 @@ public:
 
     // === Public Fields ===
     Hitbox hitbox;
-    float renderX, renderY;
-    float w; // Width
-    float h; // Height
+    float w = 40; // Width
+    float h = 160; // Height
     bool bounding = false;  // Display Hitbox
 
 private:
@@ -54,11 +53,6 @@ private:
     void solid_Y_collision(Tile& tile);
     void solid_X_collision(Tile& tile);
 
-    // === Texture Helpers ===
-    void load_texture(const std::string& path);
-    void load_all_sprites();
-    void set_texture(float xOffset);
-
     // === Event Helpers ===
     void suicide();
 
@@ -74,9 +68,9 @@ private:
     };
     enum 
     State currentState = WALKING_RIGHT;
-    std::vector<Animations> animations;
     int walkingNum = 0;
     int walkFrameCounter = 0;
+    int spriteColumn = 0;
 
     // === Persona Fields ===
     enum Persona {
@@ -92,21 +86,17 @@ private:
         
     float newX; // Predicted x
     float newY; // Predicted y
-    float renderW, renderH; // Render Coordinates
     float scale;    // Vertical Scale Multiplier (1 : 1080)
 
-    SDL_Texture* t = NULL;  // Protag Texture
-    SDL_FRect v;            // Texture Viewport
-    SDL_FRect* currentSprite = NULL;   // The current Sprite
-    SDL_Renderer* r;        // Renderer
+    Renderer renderer;
     AppWindow appWindow;    // Window
     Time& time;  // Timer
 
     bool grounded = true;   // On a platform
     bool sprinting = false; // Running
 
-    float xVelocity = 0;
-    float yVelocity = 0;
+    float xVelocity;
+    float yVelocity;
     float jumpVelocity = 20; // Initial Upward Velocity when Jumping
     float gravity = 1;  // Scalar - p/(f^2)
     float xOff;     // Camera Offset (x-axis)
