@@ -17,6 +17,8 @@ public:
     bool allows_collisions() const;
     bool check_collision(Hitbox other) const;
 
+    void destroy();
+
     // === Public Fields ===
     float xa; // Left Side
     float xb; // Right Side

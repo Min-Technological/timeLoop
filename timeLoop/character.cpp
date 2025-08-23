@@ -31,12 +31,12 @@ void Character::move(Input input) {
     sprinting = input.is_key_pressed(SDL_SCANCODE_LSHIFT);
 
     if (input.is_key_pressed(SDL_SCANCODE_A)) {
-        move_left(2);
+        move_left(2); // === Previously used 2 ===
         xMoved = true;
     }
 
     if (input.is_key_pressed(SDL_SCANCODE_D)) {
-        move_right(2);
+        move_right(2); // === Previously used 2 ===
         xMoved = true;
     }
 
@@ -106,9 +106,19 @@ void Character::collide(std::vector<Chunk>& map) {
             break;
         }
     }
+    if (xVelocity < 1 && xVelocity > -1) {
+        xVelocity = 0;
+    }
     xVelocity = xVelocity * 0.8f;
 
     hitbox.update_hitbox(newX, newY, w, h);
+
+
+
+    // === This Can be After Movement ===
+    std::vector<TarotCard*> collidedTarot = get_collided_tarot(map);
+
+
 }
 
 // === Update & Render ===
@@ -256,6 +266,30 @@ std::vector<Tile*> Character::get_collided_tiles(std::vector<Chunk>& map) const 
     }
 
     return collidedTiles;
+}
+
+// === Collision Helpers ===
+std::vector<TarotCard*> Character::get_collided_tarot(std::vector<Chunk>& map) {
+    std::vector<TarotCard*> collidedTarot;
+
+    for (Chunk& chunk : map) {
+        if (!hitbox.check_collision(chunk.hitbox)) {
+            chunk.set_debug('R');
+            continue;
+        }
+
+        chunk.set_debug('G');
+        for (TarotCard& tarot : chunk.cards) {
+            if (hitbox.check_collision(tarot.hitbox)) {
+                collidedTarot.push_back(&tarot);
+                TarotCard* tarotPointer = &tarot;
+                tarotDeck.evaporate_card(tarotPointer);
+                chunk.remove_card(tarotPointer);
+            }
+        }
+    }
+
+    return collidedTarot;
 }
 
 void Character::solid_Y_collision(Tile& tile) {

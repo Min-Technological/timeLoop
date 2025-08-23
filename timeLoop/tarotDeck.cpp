@@ -32,3 +32,8 @@ std::vector<TarotCard::CardNumber> TarotDeck::get_cards(bool type) {
 
 	return hasList;
 }
+
+void TarotDeck::evaporate_card(TarotCard* realCard) {
+	add_card(realCard->get_card_number());
+	realCard->destroy();
+}

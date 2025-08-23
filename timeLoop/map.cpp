@@ -92,91 +92,91 @@ void Map::create_tile(Uint32 color, float x, float y, int mapIndex) {
         objectType = OBJECT_TAROT;
         if (R == 0xFF && G == 0x00 && B == 0xFF) {
             tarotType = 0; // FOOL
-            std::cout << "FOOL!\n";
+            // std::cout << "FOOL!\n";
         }
         else if (R == 0xF4 && G == 0x00 && B == 0xF4) {
             tarotType = 1; // MAGICIAN
-            std::cout << "MAGICIAN!\n";
+            // std::cout << "MAGICIAN!\n";
         }
         else if (R == 0xE9 && G == 0x00 && B == 0xE9) {
             tarotType = 2; // HIGH PRIESTESS
-            std::cout << "HIGH PRIESTESS!\n";
+            // std::cout << "HIGH PRIESTESS!\n";
         }
         else if (R == 0xDE && G == 0x00 && B == 0xDE) {
             tarotType = 3; // EMPRESS
-            std::cout << "EMPRESS!\n";
+            // std::cout << "EMPRESS!\n";
         }
         else if (R == 0xD3 && G == 0x00 && B == 0xD3) {
             tarotType = 4; // EMPEROR
-            std::cout << "EMPEROR!\n";
+            // std::cout << "EMPEROR!\n";
         }
         else if (R == 0xC8 && G == 0x00 && B == 0xC8) {
             tarotType = 5; // HIGH PRIEST
-            std::cout << "HIGH PRIEST!\n";
+            // std::cout << "HIGH PRIEST!\n";
         }
         else if (R == 0xBD && G == 0x00 && B == 0xBD) {
             tarotType = 6; // LOVERS
-            std::cout << "LOVERS!\n";
+            // std::cout << "LOVERS!\n";
         }
         else if (R == 0xB2 && G == 0x00 && B == 0xB2) {
             tarotType = 7; // CHARIOT
-            std::cout << "CHARIOT!\n";
+            // std::cout << "CHARIOT!\n";
         }
         else if (R == 0xA7 && G == 0x00 && B == 0xA7) {
             tarotType = 8; // STRENGTH
-            std::cout << "STRENGTH!\n";
+            // std::cout << "STRENGTH!\n";
         }
         else if (R == 0x9C && G == 0x00 && B == 0x9C) {
             tarotType = 9; // HERMIT
-            std::cout << "HERMIT!\n";
+            // std::cout << "HERMIT!\n";
         }
         else if (R == 0x91 && G == 0x00 && B == 0x91) {
             tarotType = 10; // WHEEL OF FORTUNE
-            std::cout << "WHEEL OF FORTUNE!\n";
+            // std::cout << "WHEEL OF FORTUNE!\n";
         }
         else if (R == 0x86 && G == 0x00 && B == 0x86) {
             tarotType = 11; // JUSTICE
-            std::cout << "JUSTICE!\n";
+            // std::cout << "JUSTICE!\n";
         }
         else if (R == 0x7B && G == 0x00 && B == 0x7B) {
             tarotType = 12; // HANGED MAN
-            std::cout << "HANGED MAN!\n";
+            // std::cout << "HANGED MAN!\n";
         }
         else if (R == 0x70 && G == 0x00 && B == 0x70) {
             tarotType = 13; // DEATH
-            std::cout << "DEATH!\n";
+            // std::cout << "DEATH!\n";
         }
         else if (R == 0x65 && G == 0x00 && B == 0x65) {
             tarotType = 14; // TEMPERANCE
-            std::cout << "TEMPERANCE!\n";
+            // std::cout << "TEMPERANCE!\n";
         }
         else if (R == 0x5A && G == 0x00 && B == 0x5A) {
             tarotType = 15; // DEVIL
-            std::cout << "DEVIL!\n";
+            // std::cout << "DEVIL!\n";
         }
         else if (R == 0x4F && G == 0x00 && B == 0x4F) {
             tarotType = 16; // TOWER
-            std::cout << "TOWER!\n";
+            // std::cout << "TOWER!\n";
         }
         else if (R == 0x44 && G == 0x00 && B == 0x44) {
             tarotType = 17; // STAR
-            std::cout << "STAR!\n";
+            // std::cout << "STAR!\n";
         }
         else if (R == 0x39 && G == 0x00 && B == 0x39) {
             tarotType = 18; // MOON
-            std::cout << "MOON!\n";
+            // std::cout << "MOON!\n";
         }
         else if (R == 0x2E && G == 0x00 && B == 0x2E) {
             tarotType = 19; // SUN
-            std::cout << "SUN!\n";
+            // std::cout << "SUN!\n";
         }
         else if (R == 0x23 && G == 0x00 && B == 0x23) {
             tarotType = 20; // JUDGEMENT
-            std::cout << "JUDGEMENT!\n";
+            // std::cout << "JUDGEMENT!\n";
         }
         else if (R == 0x18 && G == 0x00 && B == 0x18) {
             tarotType = 21; // WORLD
-            std::cout << "WORLD!\n";
+            // std::cout << "WORLD!\n";
         }
 
     }

@@ -15,6 +15,7 @@ public:
     // === Public Methods ===
     void append(Tile::TileType type, float x, float y, SDL_Renderer* renderer);
     void add_cards(int type, float x, float y, AppWindow appWindow);
+    void remove_card(TarotCard* tarotCard);
     void update(float viewScale, float xOffset);
     void render(std::vector<float> screenDimensions);
     void set_debug(char a);

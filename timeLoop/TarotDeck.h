@@ -14,6 +14,8 @@ public:
 	std::vector<TarotCard::CardNumber> found_cards();
 	std::vector<TarotCard::CardNumber> lost_cards();
 
+	void evaporate_card(TarotCard* realCard);
+
 private:
 	std::vector<TarotCard::CardNumber> get_cards(bool type);
 

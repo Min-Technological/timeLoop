@@ -39,7 +39,10 @@ public:
 	void update(float viewScale, float offset);
 	void render(std::vector<float> screenDimensions);
 
+	void destroy();
+
 	CardNumber get_card_number() const;
+	std::string get_card_name() const;
 	Hitbox hitbox;
 
 private:

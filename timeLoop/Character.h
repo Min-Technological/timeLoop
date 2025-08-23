@@ -13,6 +13,7 @@
 #include "Hitbox.h"
 #include "Chunk.h"
 #include "PassiveData.h"
+#include "TarotDeck.h"
 
 class Character {
 public:
@@ -50,6 +51,7 @@ private:
 
     // === Collision Helpers ===
     std::vector<Tile*> get_collided_tiles(std::vector<Chunk>& map) const;
+    std::vector<TarotCard*> get_collided_tarot(std::vector<Chunk>& map);
     void solid_Y_collision(Tile& tile);
     void solid_X_collision(Tile& tile);
 
@@ -102,6 +104,9 @@ private:
     // === Outside Communications ===
     bool stateChanged = false;
     int gameState = 1;
+
+    // === UHHHH Tarot? ===
+    TarotDeck tarotDeck;
 };
 
 #endif

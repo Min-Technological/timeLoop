@@ -85,3 +85,8 @@ void Renderer::destroy_texture() {
 		texture = nullptr;
 	}
 }
+
+bool Renderer::has_texture() {
+	// return texture == nullptr ? false : true;
+	return true;
+}

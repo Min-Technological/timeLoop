@@ -24,10 +24,12 @@ public:
 	void render_hitbox(Hitbox hitbox, Uint8 green);
 
 	void destroy_texture();
+
+	bool has_texture();
 private:
 
-	SDL_Texture* texture = NULL;
-	SDL_Renderer* renderer = NULL;
+	SDL_Texture* texture = nullptr;
+	SDL_Renderer* renderer = nullptr;
 	SDL_FRect viewport;
 
 	float scale = 1.0f;
