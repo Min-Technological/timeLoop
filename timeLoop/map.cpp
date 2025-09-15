@@ -87,6 +87,17 @@ void Map::create_tile(Uint32 color, float x, float y, int mapIndex) {
         }
     }
 
+    // === Character Swapper ===
+    else if (G == R / 2) {
+        objectType = OBJECT_TILE;
+        if (R == 255) {
+            type = Tile::TileType::CHARACTERSWAP_PROTAG;
+        }
+        else if (R == 245) {
+            type = Tile::TileType::CHARACTERSWAP_WAND;
+        }
+    }
+
     // === Tarot Cards ===
     else if (R == B) {
         objectType = OBJECT_TAROT;

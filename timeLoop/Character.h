@@ -77,12 +77,14 @@ private:
     enum Persona {
         PROTAG,     // No Name
         CUP,        // TBD
-        WAND,       // TBD
+        WAND,       // Velara
         SWORD,      // TBD
         PENTACLE    // TBD
     };
-    Persona currentPersona = PROTAG;
+    Persona currentPersona = WAND;
     int personasUnlocked = 0;
+
+    void change_persona(Persona persona);
 
         
     float newX; // Predicted x

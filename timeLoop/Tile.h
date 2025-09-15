@@ -15,7 +15,12 @@ public:
         DIRT_LIGHT,
         DIRT_DARK,
         GRASS_LIGHT,
-        GRASS_DARK
+        GRASS_DARK,
+        CHARACTERSWAP_PROTAG,
+        CHARACTERSWAP_CUP,
+        CHARACTERSWAP_SWORD,
+        CHARACTERSWAP_WAND,
+        CHARACTERSWAP_PENTACLE
     };
 
     // === Constructor ===

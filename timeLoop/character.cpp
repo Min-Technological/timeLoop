@@ -4,7 +4,7 @@
 Character::Character(float x, float y, AppWindow window, Time& timer)
     : newX(x), newY(y), appWindow(window), renderer(window.get_renderer(), x, y, w, h), time(timer) {
     hitbox = std::move(Hitbox(x, y, w, h));
-    renderer.load_texture("protagonist.png");
+    change_persona(currentPersona);
 }
 
 // === Input & Movement ===
@@ -62,11 +62,29 @@ void Character::collide(std::vector<Chunk>& map) {
         if (responseType == 0) continue;
 
         switch (responseType) {
+            // === TERRAIN ===
         case 1: // Dirt Light
         case 2: // Dirt Dark
         case 3: // Grass Light
         case 4: // Grass Dark
             solid_Y_collision(*tile);
+            break;
+            // === CHARACTER SWAPPER ===
+        case 5: // PROTAG
+            if (currentPersona != PROTAG) {
+                change_persona(PROTAG);
+            }
+            break;
+        case 6: // CUP
+            break;
+        case 7: // SWORD
+            break;
+        case 8: // WAND
+            if (currentPersona != WAND) {
+                change_persona(WAND);
+            }
+            break;
+        case 9: // PENTACLE
             break;
         default:
             break;
@@ -311,4 +329,31 @@ void Character::solid_X_collision(Tile& tile) {
         newX = tile.hitbox.xa - w;
     }
     walkingNum = 0;
+}
+
+
+
+void Character::change_persona(Persona persona) {
+    renderer.destroy_texture();
+    currentPersona = persona;
+    switch (persona) {
+    case PROTAG:
+        renderer.load_texture("cProtagonist.png");
+        break;
+    case WAND:
+        renderer.load_texture("cVelara.png");
+        break;
+    case CUP:
+        renderer.load_texture("NAH");
+        break;
+    case SWORD:
+        renderer.load_texture("NAH");
+        break;
+    case PENTACLE:
+        renderer.load_texture("NAH");
+        break;
+    default:
+        std::cout << "NO CHARACTER SELECTED!\n";
+        break;
+    }
 }
