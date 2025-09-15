@@ -17,12 +17,11 @@ void Chunk::add_cards(int type, float x, float y, AppWindow appWindow) {
 }
 
 void Chunk::remove_card(TarotCard* tarotCard) {
-    // for (TarotCard& tarot : cards) {
     for ( int i = 0; i < cards.size(); i++ ) {
         TarotCard* currentTarot = &cards[i];
-        if (currentTarot == tarotCard) {
-            cards.erase(cards.begin() + i);
+        if (currentTarot->get_card_number() == tarotCard->get_card_number()) {
             std::cout << currentTarot->get_card_name() << "\n";
+            cards.erase(cards.begin() + i);
         }
     }
 }

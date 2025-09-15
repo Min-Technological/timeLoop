@@ -16,7 +16,7 @@ void Background::update(int screenW, int screenH, int gameState) {
         case 2: // PAUSE
             break;
         case 3: // SUICIDE
-            renderer.load_texture("suicide.png");
+            renderer.load_texture("suicideNone.png");
             break;
         case 4: // REWIND
             break;
