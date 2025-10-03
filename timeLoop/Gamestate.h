@@ -36,6 +36,7 @@ public:
     void render();
 
     // === Pause Loop Functions ===
+    void pause_update();
     void pause_render();
 
     // === Suicide Loop Functions ===

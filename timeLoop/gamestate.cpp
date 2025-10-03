@@ -66,6 +66,10 @@ void Gamestate::update() {
     }
 
     update_loop_data();
+
+    if (input.is_key_just_pressed(SDLK_ESCAPE)) {
+        currentState = State::PAUSE;
+    }
 }
 void Gamestate::render() {
     SDL_SetRenderDrawColor(window.get_renderer(), 0x14, 0x28, 0x20, 0xFF);
@@ -87,6 +91,19 @@ void Gamestate::render() {
 }
 
 // === Pause Helpers ===
+void Gamestate::pause_update() {
+    background.update(screenW, screenH, static_cast<int>(currentState));
+    camera.update();
+    user.update(scale, camera.xOffset);
+
+    for (Chunk& chunk : currentMap) {
+        chunk.update(scale, camera.xOffset);
+    }
+
+    if (input.is_key_just_pressed(SDLK_ESCAPE)) {
+        currentState = State::GAME;
+    }
+}
 void Gamestate::pause_render() {
     SDL_SetRenderDrawBlendMode(window.get_renderer(), SDL_BLENDMODE_BLEND);
     SDL_SetRenderDrawColor(window.get_renderer(), 0x14, 0x28, 0x20, 0xFF);
@@ -146,6 +163,12 @@ void Gamestate::suicide_render() {
 
 // === Tarot Reading Helpers ===
 void Gamestate::tarot_update() {
+    if (currentState == State::TAROTREADING) {
+        if (tarotScene.exit_reader(input)) {
+            currentState = State::GAME;
+        }
+    }
+
 
     background.update(screenW, screenH, static_cast<int>(currentState));
 
@@ -197,16 +220,9 @@ void Gamestate::change_state() {
         }
     }
 
-    if (input.is_key_just_pressed(SDLK_ESCAPE)) {
-        if (get_current_state() == State::PAUSE) {
-            currentState = State::GAME;
-        }
-        else if (get_current_state() == State::GAME) {
-            currentState = State::PAUSE;
-        }
-    }
-
     if (get_current_state() == State::TAROTREADING) {
+
+        // Card Selection Button
         float stainedWindowX, stainedWindowY;
         int stainedWindowW, stainedWindowH;
             stainedWindowX = 1463 * scale;
@@ -215,7 +231,6 @@ void Gamestate::change_state() {
             stainedWindowH = 603 * scale;
 
         if (input.is_clicking_square(stainedWindowX, stainedWindowY, stainedWindowW, stainedWindowH)) {
-            std::cout << "CLICK!\n";
             currentState = State::TAROTCARDS;
         }
     }

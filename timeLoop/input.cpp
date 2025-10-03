@@ -31,6 +31,8 @@ bool Input::is_key_just_pressed(SDL_Keycode key) {
 
 		if (e.key.key != key) continue;
 
+		if (e.key.repeat != 0) continue;
+
 		return true;
 	}
 
@@ -46,6 +48,8 @@ bool Input::is_event_occurring(SDL_EventType eventType) {
 
 	return false;
 }
+
+
 
 bool Input::is_clicking_square(float x, float y, int w, int h) {
 	bool clickedSquare = false;
@@ -65,4 +69,25 @@ bool Input::is_clicking_square(float x, float y, int w, int h) {
 		}
 	}
 	return clickedSquare;
+}
+
+bool Input::is_clicking_circle(float x, float y, int d) {
+	bool clickedCircle = false;
+	for (const SDL_Event& e : events) {
+		if (e.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
+
+			float mouseX, mouseY;
+			SDL_GetMouseState(&mouseX, &mouseY);
+
+			if (
+				(mouseX - (x + (d / 2))) * (mouseX - (x + (d / 2))) + 
+				(mouseY - (y + (d / 2))) * (mouseY - (y + (d / 2))) <= 
+				(d / 2) * (d / 2)
+				) {
+				clickedCircle = true;
+			}
+
+		}
+	}
+	return clickedCircle;
 }

@@ -19,6 +19,7 @@ public:
 	bool is_event_occurring(SDL_EventType eventType);
 
 	bool is_clicking_square(float x, float y, int w, int h);
+	bool is_clicking_circle(float x, float y, int d);
 
 private:
 	const bool* keys = nullptr;

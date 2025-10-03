@@ -34,7 +34,7 @@ int main(int argc, char* argsp[]) {
 		case (mint.PAUSE):
 			mint.handle_event();
 
-			mint.update();
+			mint.pause_update();
 
 			mint.pause_render();
 

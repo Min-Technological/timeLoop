@@ -9,17 +9,18 @@
 
 class TarotReader {
 public:
-	TarotReader(AppWindow window, float& s);
-	void update();
+	TarotReader(AppWindow& w, float& s);
 	void render(bool bounding);
 
-	bool return_scene();
+	bool exit_reader(Input& input);
+	bool reading_cards(Input& input);
+
 private:
 	Renderer renderer;
+	AppWindow& window;
+	float& renderScale;
 
 	bool readerFacing = true;
-	void scene_reader();
-	void scene_cards();
 
 
 };

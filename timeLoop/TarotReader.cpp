@@ -1,11 +1,10 @@
 #include "TarotReader.h"
 
-TarotReader::TarotReader(AppWindow window, float& s) :
-	renderer(window.get_renderer(), 0, 0, 1920, 1080, s) {}
+TarotReader::TarotReader(AppWindow& w, float& s) :
+	renderer(w.get_renderer(), 0, 0, 1920, 1080, s), window(w), renderScale(s) {}
 
-void TarotReader::update() {
 
-}
+
 void TarotReader::render(bool bounding) {
 	if (bounding) {
 		if (readerFacing) {
@@ -14,17 +13,30 @@ void TarotReader::render(bool bounding) {
 	}
 }
 
-bool TarotReader::return_scene() {
-	return readerFacing;
+
+
+bool TarotReader::exit_reader(Input& input) {
+	// Exit Card Reading Button
+
+	float exitX, exitY;
+	int exitD;
+	exitX = 46 * renderScale;
+	exitY = 46 * renderScale;
+	exitD = 252 * renderScale;
+	if (!window.is_fullscreen()) {
+		exitY += 25;
+	}
+	if (input.is_clicking_circle(exitX, exitY, exitD)) {
+		return true;
+	}
+	else if (input.is_key_just_pressed(SDLK_ESCAPE)) {
+		return true;
+	}
+	else {
+		return false;
+	}
 }
 
-
-
-void TarotReader::scene_reader() {
-	readerFacing = true;
-
-}
-void TarotReader::scene_cards() {
-	readerFacing = false;
+bool TarotReader::reading_cards(Input& input) {
 
 }
