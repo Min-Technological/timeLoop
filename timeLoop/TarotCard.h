@@ -10,7 +10,7 @@
 
 class TarotCard {
 public:
-	TarotCard(int cardType, float X, float Y, AppWindow appWindow);
+	TarotCard(int cardType, float X, float Y, AppWindow appWindow, float& s);
 	enum CardNumber {
 		FOOL,
 		MAGICIAN,
@@ -45,6 +45,8 @@ public:
 	std::string get_card_name() const;
 	Hitbox hitbox;
 
+	TarotCard(const TarotCard&) = delete;
+	TarotCard& operator=(const TarotCard&) = delete;
 private:
 	// === General Information ===
 	CardNumber cardNumber;

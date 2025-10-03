@@ -6,11 +6,12 @@ Gamestate::Gamestate() :
     titlebar(960, 25, "titleBarIcons.png", window.get_renderer(), &window),
     input(),
     time(60),
-    background(window.get_renderer()),
-    user(920, 600, window, time),
+    background(window.get_renderer(), scale),
+    user(920, 600, window, time, scale),
     camera(user, time, screenW, screenH, scale),
-    gameMap0("map_test.png", 40, window, camera),
+    gameMap0("map_test.png", 40, window, camera, scale),
     loopData(),
+    tarotScene(window, scale),
     quit(false)
 {
     event.type = SDL_EVENT_FIRST;
@@ -143,6 +144,26 @@ void Gamestate::suicide_render() {
     SDL_RenderPresent(window.get_renderer());
 }
 
+// === Tarot Reading Helpers ===
+void Gamestate::tarot_update() {
+
+    background.update(screenW, screenH, static_cast<int>(currentState));
+
+}
+void Gamestate::tarot_render() {
+    SDL_SetRenderDrawColor(window.get_renderer(), 0x14, 0x28, 0x20, 0xFF);
+    SDL_RenderClear(window.get_renderer());
+
+    titlebar.render();
+    set_render_canvas();
+
+    background.render();
+    tarotScene.render(bounding);
+
+
+    SDL_RenderPresent(window.get_renderer());
+}
+
 // === Cleanup ===
 void Gamestate::increment_frame() {
     time.sleep_delta();
@@ -173,7 +194,7 @@ void Gamestate::change_state() {
         user.bounding = bounding;
         for (Chunk& chunk : currentMap) {
             chunk.showBounding = bounding;
-        }    
+        }
     }
 
     if (input.is_key_just_pressed(SDLK_ESCAPE)) {
@@ -185,10 +206,21 @@ void Gamestate::change_state() {
         }
     }
 
-    /*if (keys[SDL_SCANCODE_F]) {
-        loopData.update_passive(user);
-    }*/
+    if (get_current_state() == State::TAROTREADING) {
+        float stainedWindowX, stainedWindowY;
+        int stainedWindowW, stainedWindowH;
+            stainedWindowX = 1463 * scale;
+            stainedWindowY = 83 * scale;
+            stainedWindowW = 342 * scale;
+            stainedWindowH = 603 * scale;
+
+        if (input.is_clicking_square(stainedWindowX, stainedWindowY, stainedWindowW, stainedWindowH)) {
+            std::cout << "CLICK!\n";
+            currentState = State::TAROTCARDS;
+        }
+    }
 }
+
 void Gamestate::print_state() const {
     std::cout << "GAMESTATE ";
 
@@ -208,8 +240,11 @@ void Gamestate::print_state() const {
     case State::SUICIDE:
         std::cout << "SUICIDE\n";
         break;
-    case State::TAROT:
-        std::cout << "TAROT\n";
+    case State::TAROTREADING:
+        std::cout << "TAROTREADING\n";
+        break;
+    case State::TAROTCARDS:
+        std::cout << "TAROTCARDS\n";
         break;
     case State::TOTAL:
         std::cout << "TOTAL\n";

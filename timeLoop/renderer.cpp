@@ -1,7 +1,7 @@
 #include "Renderer.h"
 
-Renderer::Renderer(SDL_Renderer* r, float X, float Y, float W, float H) :
-	renderer(r), viewport( { X, Y, W, H } ) {
+Renderer::Renderer(SDL_Renderer* r, float X, float Y, float W, float H, float& s) :
+	renderer(r), viewport( { X, Y, W, H } ), scale(s) {
 }
 
 
@@ -34,10 +34,6 @@ void Renderer::new_position(float newX, float newY, float newW, float newH, floa
 	viewport.h = newH * scale;
 }
 
-void Renderer::new_scale(float newScale) {
-	scale = newScale;
-}
-
 void Renderer::render_colour(Uint8 red, Uint8 green, Uint8 blue, Uint8 alpha) {
 	SDL_SetRenderDrawColor(renderer, red, green, blue, alpha);
 	SDL_RenderFillRect(renderer, &viewport);
@@ -62,6 +58,18 @@ void Renderer::render_hitbox(Hitbox hitbox, Uint8 green) {
 	};
 
 	SDL_SetRenderDrawColor(renderer, 255, green, 0, 255);
+	SDL_RenderRect(renderer, &bounding);
+}
+void Renderer::render_clickbox(float x, float y, float w, float h, Uint8 green) {
+	SDL_FRect bounding = {
+		x * scale,
+		y * scale,
+		w * scale,
+		h * scale
+	};
+
+	std::cout << "RENDERING! at scale: " << scale << "\n";
+	SDL_SetRenderDrawColor(renderer, 0, green, 255, 255);
 	SDL_RenderRect(renderer, &bounding);
 }
 

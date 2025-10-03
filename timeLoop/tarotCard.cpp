@@ -1,14 +1,13 @@
 #include "TarotCard.h"
 
-TarotCard::TarotCard(int cardType, float X, float Y, AppWindow appWindow) :
-	cardNumber(static_cast<CardNumber>(cardType)), hitbox(X, Y - 40, 10, 10), renderer(appWindow.get_renderer(), X, Y - 40,  10, 20), x(X), y(Y - 40) {
+TarotCard::TarotCard(int cardType, float X, float Y, AppWindow appWindow, float& s) :
+	cardNumber(static_cast<CardNumber>(cardType)), hitbox(X, Y - 40, 10, 10), renderer(appWindow.get_renderer(), X, Y - 40,  10, 20, s), x(X), y(Y - 40) {
     renderer.load_texture("tarotCards.png");
 }
 
 void TarotCard::update(float viewScale, float offset) {
     if (scale != viewScale) {
         scale = viewScale;
-        renderer.new_scale(scale);
     }
 
     renderer.new_position(x, y, w, h, offset);

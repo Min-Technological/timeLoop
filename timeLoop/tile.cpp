@@ -1,8 +1,8 @@
 #include "Tile.h"
 
 // === Constructor ===
-Tile::Tile(TileType tileType, float xPos, float yPos, SDL_Renderer* r) :
-    x(xPos), y(yPos), type(tileType), renderer(r, xPos, yPos, w, w) {
+Tile::Tile(TileType tileType, float xPos, float yPos, SDL_Renderer* r, float& s) :
+    x(xPos), y(yPos), type(tileType), renderer(r, xPos, yPos, w, w, s) {
     hitbox = Hitbox(xPos, yPos, w, w);
 }
 
@@ -14,7 +14,6 @@ void Tile::handle_event(bool fullscreen) {
 void Tile::update(float viewScale, float offset) {
     if (scale != viewScale) {
         scale = viewScale;
-        renderer.new_scale(scale);
     }
 
     renderer.new_position(x, y, w, w, offset);
@@ -52,6 +51,19 @@ void Tile::render(std::vector<float> screenDimensions) {
         case TileType::CHARACTERSWAP_WAND:
             renderer.render_colour(0xFF, 0xC9, 0xB7, 0xFF);
             break;
+
+        case TileType::CHARACTERSWAP_CUP:
+            renderer.render_colour(0xFF, 0xB7, 0xFD, 0xFF);
+            break;
+
+        case TileType::CHARACTERSWAP_PENTACLE:
+            renderer.render_colour(0xB7, 0xFF, 0xB8, 0xFF);
+            break;
+
+        case TileType::CHARACTERSWAP_SWORD:
+            renderer.render_colour(0xFF, 0xB7, 0xB8, 0xFF);
+            break;
+
 
 
         case TileType::NILL:

@@ -46,3 +46,23 @@ bool Input::is_event_occurring(SDL_EventType eventType) {
 
 	return false;
 }
+
+bool Input::is_clicking_square(float x, float y, int w, int h) {
+	bool clickedSquare = false;
+	for (const SDL_Event& e : events) {
+		if (e.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
+
+			float mouseX, mouseY;
+			SDL_GetMouseState(&mouseX, &mouseY);
+
+			if (mouseY >= y &&
+				mouseY <= y + h &&
+				mouseX >= x &&
+				mouseX <= x + w) {
+				clickedSquare = true;
+			}
+
+		}
+	}
+	return clickedSquare;
+}

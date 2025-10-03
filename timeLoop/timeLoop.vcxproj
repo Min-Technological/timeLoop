@@ -152,6 +152,7 @@
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="tarotCard.cpp" />
     <ClCompile Include="tarotDeck.cpp" />
+    <ClCompile Include="TarotReader.cpp" />
     <ClCompile Include="tile.cpp" />
     <ClCompile Include="time.cpp" />
     <ClCompile Include="titlebar.cpp" />
@@ -172,6 +173,7 @@
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="TarotCard.h" />
     <ClInclude Include="TarotDeck.h" />
+    <ClInclude Include="TarotReader.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="Time.h" />
     <ClInclude Include="Titlebar.h" />

@@ -18,7 +18,7 @@
 class Character {
 public:
     // === Constructor ===
-    Character(float x, float y, AppWindow window, Time& timer);
+    Character(float x, float y, AppWindow window, Time& timer, float& s);
 
     // === Public Methods ===
     void handle_event(Input input);
@@ -95,6 +95,7 @@ private:
     Renderer renderer;
     Time& time;  // Timer
 
+    bool jumping = false; // Generating Upward Velocity
     bool grounded = true;   // On a platform
     bool sprinting = false; // Running
 

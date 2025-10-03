@@ -1,11 +1,11 @@
 #include "Background.h"
 
 // === Constructor ===
-Background::Background(SDL_Renderer* r) : renderer(r, 0, 0, 1920, 1080) {}
+Background::Background(SDL_Renderer* r, float& s) : renderer(r, 0, 0, 1920, 1080, s) {}
 
 // === Update ===
 void Background::update(int screenW, int screenH, int gameState) {
-    renderer.new_position(0, 0, static_cast<float>(screenW), static_cast<float>(screenH), 0);
+    renderer.new_position(0, 0, 1920, 1080, 0);
     if (newState != gameState) {
         newState = gameState;
         switch (newState) {
@@ -20,10 +20,14 @@ void Background::update(int screenW, int screenH, int gameState) {
             break;
         case 4: // REWIND
             break;
-        case 5: // TAROT
+        case 5: // TAROTREADER
+            renderer.load_texture("tarotBasic.png");
+            break;
+        case 6: // TAROTCARDS
+            renderer.load_texture("tarotSelect.png");
             break;
         default:
-            std::cout << "SOMETHING WENT WRONG, BACKGROUND STATE\n";
+            std::cout << "SOMETHING WENT WRONG, BACKGROUND UPDATE\n";
             break;
         }
     }
@@ -47,11 +51,14 @@ void Background::render() {
     case 4: // REWIND
         renderer.render_colour(0x50, 0xe0, 0xa0, 0xff);
         break;
-    case 5: // TAROT
-        renderer.render_colour(0x50, 0xe0, 0xa0, 0xff);
+    case 5: // TAROTREADER
+        renderer.render_texture();
+        break;
+    case 6: // TAROTCARDS
+        renderer.render_texture();
         break;
     default:
-        std::cout << "SOMETHING WENT WRONG, BACKGROUND STATE\n";
+        std::cout << "SOMETHING WENT WRONG, BACKGROUND RENDER\n";
         break;
     }
 

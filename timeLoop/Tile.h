@@ -24,7 +24,7 @@ public:
     };
 
     // === Constructor ===
-    Tile(TileType tileType, float xPos, float yPos, SDL_Renderer* r);
+    Tile(TileType tileType, float xPos, float yPos, SDL_Renderer* r, float& s);
 
     // === Public Methods ===
     void handle_event(bool fullscreen);

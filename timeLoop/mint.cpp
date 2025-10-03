@@ -48,6 +48,17 @@ int main(int argc, char* argsp[]) {
 			mint.suicide_render();
 
 			break;
+
+		case (mint.TAROTREADING):
+		case (mint.TAROTCARDS):
+			mint.handle_event();
+
+			mint.tarot_update();
+
+			mint.tarot_render();
+
+			break;
+
 		}
 
 		mint.change_state();

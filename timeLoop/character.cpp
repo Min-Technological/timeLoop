@@ -1,8 +1,8 @@
 #include "Character.h"
 
 // === Constructor ===
-Character::Character(float x, float y, AppWindow window, Time& timer)
-    : newX(x), newY(y), appWindow(window), renderer(window.get_renderer(), x, y, w, h), time(timer) {
+Character::Character(float x, float y, AppWindow window, Time& timer, float& s)
+    : newX(x), newY(y), appWindow(window), renderer(window.get_renderer(), x, y, w, h, s), time(timer) {
     hitbox = std::move(Hitbox(x, y, w, h));
     change_persona(currentPersona);
 }
@@ -42,6 +42,13 @@ void Character::move(Input input) {
 
     if (input.is_key_pressed(SDL_SCANCODE_SPACE)) {
         move_jump();
+        if (yVelocity <= 0) {
+            jumping = false;
+        }
+    }
+    else if (!input.is_key_pressed(SDL_SCANCODE_SPACE) && jumping == true) {
+        yVelocity = 0;
+        jumping = false;
     }
 }
 
@@ -76,8 +83,14 @@ void Character::collide(std::vector<Chunk>& map) {
             }
             break;
         case 6: // CUP
+            if (currentPersona != CUP) {
+                change_persona(CUP);
+            }
             break;
         case 7: // SWORD
+            if (currentPersona != SWORD) {
+                change_persona(SWORD);
+            }
             break;
         case 8: // WAND
             if (currentPersona != WAND) {
@@ -85,6 +98,9 @@ void Character::collide(std::vector<Chunk>& map) {
             }
             break;
         case 9: // PENTACLE
+            if (currentPersona != PENTACLE) {
+                change_persona(PENTACLE);
+            }
             break;
         default:
             break;
@@ -147,7 +163,6 @@ void Character::update(float viewScale, float offset) {
 
     if (scale != viewScale) {
         scale = viewScale;
-        renderer.new_scale(scale);
     }
 
     renderer.new_position(newX, newY, w, h, offset);
@@ -237,6 +252,7 @@ void Character::move_right(int px) {
 void Character::move_jump() {
     if (grounded) {
         yVelocity = jumpVelocity;
+        jumping = true;
         grounded = false;
     }
 }
@@ -297,12 +313,11 @@ std::vector<TarotCard*> Character::get_collided_tarot(std::vector<Chunk>& map) {
         }
 
         chunk.set_debug('G');
-        for (TarotCard& tarot : chunk.cards) {
-            if (hitbox.check_collision(tarot.hitbox)) {
-                collidedTarot.push_back(&tarot);
-                TarotCard* tarotPointer = &tarot;
-                tarotDeck.evaporate_card(tarotPointer);
-                chunk.remove_card(tarotPointer);
+        for (TarotCard* tarot : chunk.cards) {
+            if (hitbox.check_collision(tarot->hitbox)) {
+                collidedTarot.push_back(tarot);
+                tarotDeck.evaporate_card(tarot);
+                chunk.remove_card(tarot);
             }
         }
     }
@@ -314,19 +329,23 @@ void Character::solid_Y_collision(Tile& tile) {
     if (yVelocity < 0) {
         newY = tile.hitbox.ya - h;
         grounded = true;
+        jumping = false;
     }
     else if (yVelocity > 0) {
         newY = tile.hitbox.yb;
         yVelocity = 0;
+        jumping = false;
     }
 }
 
 void Character::solid_X_collision(Tile& tile) {
     if (xVelocity < 0) {
         newX = tile.hitbox.xb;
+        xVelocity = 0;
     }
     else if (xVelocity > 0) {
         newX = tile.hitbox.xa - w;
+        xVelocity = 0;
     }
     walkingNum = 0;
 }
@@ -344,13 +363,13 @@ void Character::change_persona(Persona persona) {
         renderer.load_texture("cVelara.png");
         break;
     case CUP:
-        renderer.load_texture("NAH");
+        renderer.load_texture("cEmma.png");
         break;
     case SWORD:
-        renderer.load_texture("NAH");
+        renderer.load_texture("cAmber.png");
         break;
     case PENTACLE:
-        renderer.load_texture("NAH");
+        renderer.load_texture("cRachel.png");
         break;
     default:
         std::cout << "NO CHARACTER SELECTED!\n";

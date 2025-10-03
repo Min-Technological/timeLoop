@@ -15,7 +15,7 @@
 class Map {
 public:
     // === Constructor ===
-    Map(const std::string& path, int tileWidth, AppWindow window, Camera& windowCamera);
+    Map(const std::string& path, int tileWidth, AppWindow window, Camera& windowCamera, float& s);
 
     // === Public Methods ===
     std::vector<Chunk> generate_map();
@@ -30,6 +30,7 @@ private:
     AppWindow appWindow;
     SDL_Renderer* r = nullptr;
     std::vector<Chunk> map;
+    float& tempScale;
 
     // === Camera Reference ===
     Camera& camera;

@@ -18,6 +18,8 @@ public:
 	bool is_key_just_pressed(SDL_Keycode key);
 	bool is_event_occurring(SDL_EventType eventType);
 
+	bool is_clicking_square(float x, float y, int w, int h);
+
 private:
 	const bool* keys = nullptr;
 	std::vector<SDL_Event> events;

@@ -16,6 +16,7 @@
 #include "Camera.h"
 #include "Map.h"
 #include "LoopData.h"
+#include "TarotReader.h"
 
 class Gamestate {
 public:
@@ -41,6 +42,10 @@ public:
     void suicide_update();
     void suicide_render();
 
+    // === Tarot Reading Loop Functions ===
+    void tarot_update();
+    void tarot_render();
+
     // === Cleanup ===
     void increment_frame();
     void close();
@@ -52,10 +57,11 @@ public:
         PAUSE,
         SUICIDE,
         REWIND,
-        TAROT,
+        TAROTREADING,
+        TAROTCARDS,
         TOTAL
     };
-    State currentState = State::GAME;
+    State currentState = State::TAROTREADING;
     State get_current_state() const;
     void change_state();
     void print_state() const;
@@ -78,6 +84,7 @@ private:
     Camera camera;
     Map gameMap0;
     LoopData loopData;
+    TarotReader tarotScene;
 
     // === Input & Map ===
     SDL_Event event{};

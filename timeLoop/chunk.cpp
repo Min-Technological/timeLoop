@@ -1,24 +1,25 @@
 #include "Chunk.h"
 
 // === Constructor ===
-Chunk::Chunk(float leftEdge, AppWindow window) :
+Chunk::Chunk(float leftEdge, AppWindow window, float& s) :
     hitbox(leftEdge, 0, 640, 1080), x(leftEdge),
-    renderer(window.get_renderer(), leftEdge, 0, 640, 1080) {
+    renderer(window.get_renderer(), leftEdge, 0, 640, 1080, s) {
 }
 
 // === Manage Tiles ===
-void Chunk::append(Tile::TileType type, float x, float y, SDL_Renderer* renderer) {
-    chunk.emplace_back(type, x, y, renderer);
+void Chunk::append(Tile::TileType type, float x, float y, SDL_Renderer* renderer, float& s) {
+    chunk.emplace_back(type, x, y, renderer, s);
 }
 
 // === Manage Tarot Cards ===
-void Chunk::add_cards(int type, float x, float y, AppWindow appWindow) {
-    cards.emplace_back(type, x, y, appWindow);
+void Chunk::add_cards(int type, float x, float y, AppWindow appWindow, float& s) {
+    TarotCard* newCard = new TarotCard(type, x, y, appWindow, s);
+    cards.push_back(newCard);
 }
 
 void Chunk::remove_card(TarotCard* tarotCard) {
     for ( int i = 0; i < cards.size(); i++ ) {
-        TarotCard* currentTarot = &cards[i];
+        TarotCard* currentTarot = cards[i];
         if (currentTarot->get_card_number() == tarotCard->get_card_number()) {
             std::cout << currentTarot->get_card_name() << "\n";
             cards.erase(cards.begin() + i);
@@ -30,7 +31,6 @@ void Chunk::remove_card(TarotCard* tarotCard) {
 void Chunk::update(float viewScale, float offset) {
     if (scale != viewScale) {
         scale = viewScale;
-        renderer.new_scale(scale);
     }
 
     renderer.new_position(x, y, w, h, offset);
@@ -38,8 +38,8 @@ void Chunk::update(float viewScale, float offset) {
     for (Tile& tile : chunk) {
         tile.update(viewScale, offset);
     }
-    for (TarotCard& card : cards) {
-        card.update(viewScale, offset);
+    for (TarotCard* card : cards) {
+        card->update(viewScale, offset);
     }
 }
 
@@ -49,8 +49,8 @@ void Chunk::render(std::vector<float> screenDimensions) {
         for (Tile& tile : chunk) {
             tile.render(screenDimensions);
         }
-        for (TarotCard& card : cards) {
-            card.render(screenDimensions);
+        for (TarotCard* card : cards) {
+            card->render(screenDimensions);
         }
     }
 
