@@ -167,6 +167,14 @@ void Gamestate::tarot_update() {
         if (tarotScene.exit_reader(input)) {
             currentState = State::GAME;
         }
+        else if (tarotScene.reading_cards(input)) {
+            currentState = State::TAROTCARDS;
+        }
+    }
+    else if (currentState == State::TAROTCARDS) {
+        if (tarotScene.exit_cards(input)) {
+            currentState = State::TAROTREADING;
+        }
     }
 
 
@@ -217,21 +225,6 @@ void Gamestate::change_state() {
         user.bounding = bounding;
         for (Chunk& chunk : currentMap) {
             chunk.showBounding = bounding;
-        }
-    }
-
-    if (get_current_state() == State::TAROTREADING) {
-
-        // Card Selection Button
-        float stainedWindowX, stainedWindowY;
-        int stainedWindowW, stainedWindowH;
-            stainedWindowX = 1463 * scale;
-            stainedWindowY = 83 * scale;
-            stainedWindowW = 342 * scale;
-            stainedWindowH = 603 * scale;
-
-        if (input.is_clicking_square(stainedWindowX, stainedWindowY, stainedWindowW, stainedWindowH)) {
-            currentState = State::TAROTCARDS;
         }
     }
 }

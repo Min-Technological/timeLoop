@@ -216,6 +216,7 @@ int Character::return_state() const {
     return gameState;
 }
 
+
 void Character::load_data(PassiveData passive) {
     hitbox.update_hitbox(passive.x, passive.y, w, h);
     xVelocity = passive.xVelocity;

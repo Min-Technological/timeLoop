@@ -55,7 +55,8 @@ void Map::create_tile(Uint32 color, float x, float y, int mapIndex) {
 
     enum ObjectType {
         OBJECT_TILE,
-        OBJECT_TAROT
+        OBJECT_TAROT,
+        TAROT_STATION
     };
     ObjectType objectType;
     Tile::TileType type;
@@ -113,7 +114,7 @@ void Map::create_tile(Uint32 color, float x, float y, int mapIndex) {
 
     // === Tarot Cards ===
     else if (R == B) {
-        if (G == 0x00) {
+        if (G == 0x00 && R >= 0xEA) {
             objectType = OBJECT_TAROT;
             if (R == 0xFF) {
                 tarotType = 0; // FOOL
@@ -204,6 +205,10 @@ void Map::create_tile(Uint32 color, float x, float y, int mapIndex) {
                 // std::cout << "WORLD!\n";
             }
         }
+        else if (R == 0xE9) {
+            objectType = TAROT_STATION;
+
+        }
 
     }
 
@@ -219,6 +224,9 @@ void Map::create_tile(Uint32 color, float x, float y, int mapIndex) {
         break;
     case OBJECT_TAROT:
         map[mapIndex].add_cards(tarotType, x * tileSize, y * tileSize, appWindow, tempScale);
+        break;
+    case TAROT_STATION:
+        std::cout << "NOT DEVELOPED YET!\n";
         break;
     default:
         break;

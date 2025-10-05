@@ -42,6 +42,8 @@ private:
     Uint64 shakeStart = 0;
 
     // === Private Helpers ===
+    float lerp(float current, float target, float blend);
+    float target(float velocity);
     void shake_effect();
 };
 

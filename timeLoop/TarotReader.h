@@ -15,6 +15,8 @@ public:
 	bool exit_reader(Input& input);
 	bool reading_cards(Input& input);
 
+	bool exit_cards(Input& input);
+
 private:
 	Renderer renderer;
 	AppWindow& window;

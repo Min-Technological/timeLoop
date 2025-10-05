@@ -16,11 +16,14 @@ public:
         DIRT_DARK,
         GRASS_LIGHT,
         GRASS_DARK,
+
         CHARACTERSWAP_PROTAG,
         CHARACTERSWAP_CUP,
         CHARACTERSWAP_SWORD,
         CHARACTERSWAP_WAND,
-        CHARACTERSWAP_PENTACLE
+        CHARACTERSWAP_PENTACLE,
+
+        TAROT_STATION,
     };
 
     // === Constructor ===

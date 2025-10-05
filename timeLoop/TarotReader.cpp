@@ -26,6 +26,7 @@ bool TarotReader::exit_reader(Input& input) {
 	if (!window.is_fullscreen()) {
 		exitY += 25;
 	}
+
 	if (input.is_clicking_circle(exitX, exitY, exitD)) {
 		return true;
 	}
@@ -38,5 +39,31 @@ bool TarotReader::exit_reader(Input& input) {
 }
 
 bool TarotReader::reading_cards(Input& input) {
+	// Card Selection Button
+	float stainedWindowX, stainedWindowY;
+	int stainedWindowW, stainedWindowH;
+	stainedWindowX = 1463 * renderScale;
+	stainedWindowY = 83 * renderScale;
+	stainedWindowW = 342 * renderScale;
+	stainedWindowH = 603 * renderScale;
+	if (!window.is_fullscreen()) {
+		stainedWindowY += 25;
+	}
 
+	if (input.is_clicking_square(stainedWindowX, stainedWindowY, stainedWindowW, stainedWindowH)) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+bool TarotReader::exit_cards(Input& input) {
+
+	if (input.is_key_just_pressed(SDLK_ESCAPE)) {
+		return true;
+	}
+	else {
+		return false;
+	}
 }

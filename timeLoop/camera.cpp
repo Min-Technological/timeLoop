@@ -11,17 +11,20 @@ void Camera::affect(Input input) {
 
 // === Update Camera Position & Effects ===
 void Camera::update() {
+
     leftBounds = static_cast<float>(w) / boundsCount;
     rightBounds = leftBounds * (boundsCount - 1);
 
     float userCentre = user.hitbox.xa + (user.w / 2.0f);
     float screenPlayerPos = (userCentre - xOffset) * scale;
 
-    if (screenPlayerPos < leftBounds) {
-        xOffset = (userCentre - leftBounds / scale);
+    float xVelocity = user.get_velocity()[0];
+
+    if (xVelocity <= 5 && xVelocity >= -5) {
+        xOffset = lerp(xOffset, userCentre - target(xVelocity), 0.02f);
     }
-    else if (screenPlayerPos > rightBounds) {
-        xOffset = (userCentre - rightBounds / scale);
+    else {
+        xOffset = lerp(xOffset, userCentre - target(xVelocity), 0.04f);
     }
 
     // Clamp camera within edges
@@ -45,6 +48,45 @@ void Camera::update() {
     else {
         shaking = false;
     }
+}
+
+// === LERP (Smooth transition) ===
+float Camera::lerp(float current, float target, float blend) {
+    return current + (target - current) * blend;
+}
+float Camera::target(float velocity) {
+
+    float tempVelocity = velocity;
+    float factor = -1;
+    bool neg = false;
+
+    // if negative, set state and make it positive
+    if (velocity < 0) {
+        neg = true;
+        tempVelocity = -velocity;
+    }
+
+    // check boundary
+    if (tempVelocity > 10) {
+        factor = 1;
+    }
+    else {
+        factor = tempVelocity / 10;
+    }
+
+    //window width
+    float width = static_cast<float>(w) / scale;
+
+    // Exponential Factor
+    float eFactor = factor * factor * factor;
+
+    if (neg) {
+        return  (width / 2) * eFactor + (width / 2);
+    }
+    else {
+        return (width / 2) * (1 - eFactor);
+    }
+
 }
 
 // === Start Shake Effect ===
