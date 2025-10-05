@@ -15,20 +15,32 @@ void Camera::update() {
     leftBounds = static_cast<float>(w) / boundsCount;
     rightBounds = leftBounds * (boundsCount - 1);
 
+    // Right Edge Clamp
+    float rightClamp = rightEdge - (static_cast<float>(w) / scale);
+
     float userCentre = user.hitbox.xa + (user.w / 2.0f);
     float screenPlayerPos = (userCentre - xOffset) * scale;
 
     float xVelocity = user.get_velocity()[0];
 
-    if (xVelocity <= 5 && xVelocity >= -5) {
-        xOffset = lerp(xOffset, userCentre - target(xVelocity), 0.02f);
+    float camTarget = target(xVelocity);
+    if (xVelocity < 0) {
+        if (camTarget < leftEdge) {
+            camTarget = leftEdge;
+        }
     }
-    else {
-        xOffset = lerp(xOffset, userCentre - target(xVelocity), 0.04f);
+    else if (xVelocity > 0) {
+        if (camTarget > rightClamp) {
+            camTarget = rightClamp;
+        }
     }
 
-    // Clamp camera within edges
-    float rightClamp = rightEdge - (static_cast<float>(w) / scale);
+    if (xVelocity <= 5 && xVelocity >= -5) {
+        xOffset = lerp(xOffset, userCentre - camTarget, 0.02f);
+    }
+    else {
+        xOffset = lerp(xOffset, userCentre - camTarget, 0.04f);
+    }
 
     if (xOffset < leftEdge) {
         xOffset = leftEdge;
