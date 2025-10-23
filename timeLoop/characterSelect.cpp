@@ -4,7 +4,9 @@ CharacterSelect::CharacterSelect(AppWindow* w, float& s) :
 	windowScale(s), 
 	window(w),
 	renderer(window->get_renderer(), 0, 0, 1920, 1080, s)
-{}
+{
+	renderer.load_texture("charSelectionWheel.png");
+}
 
 void CharacterSelect::update(Input& input) {
 	// Exit Card Reading Button
@@ -77,7 +79,6 @@ void CharacterSelect::render() {
 	};
 
 	renderer.new_position(555, 135, 810, 810, 0);
-	renderer.load_texture("charSelectionWheel.png");
 	renderer.render_texture();
 
 
