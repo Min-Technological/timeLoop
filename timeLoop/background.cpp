@@ -16,28 +16,34 @@ void Background::update(int screenW, int screenH, int gameState) {
         case 2: // PAUSE
             break;
         case 3: // SUICIDE
+
             switch (currentPersona) {
             case (Persona::PROTAG):
+                renderer.destroy_texture();
                 renderer.load_texture("suicideNone.png");
 
                 break;
 
             case (Persona::CUP):
+                renderer.destroy_texture();
                 renderer.load_texture("suicidePistol.png");
 
                 break;
 
             case (Persona::SWORD):
+                renderer.destroy_texture();
                 renderer.load_texture("suicideNone.png");
 
                 break;
 
             case (Persona::WAND):
+                renderer.destroy_texture();
                 renderer.load_texture("suicideShotgun.png");
 
                 break;
 
             case (Persona::PENTACLE):
+                renderer.destroy_texture();
                 renderer.load_texture("suicideHammer.png");
 
                 break;
@@ -52,9 +58,11 @@ void Background::update(int screenW, int screenH, int gameState) {
         case 5: // SELECTION
             break;
         case 6: // TAROTREADER
+            renderer.destroy_texture();
             renderer.load_texture("tarotBasic.png");
             break;
         case 7: // TAROTCARDS
+            renderer.destroy_texture();
             renderer.load_texture("tarotSelect.png");
             break;
         default:
