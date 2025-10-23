@@ -20,10 +20,10 @@ public:
 private:
     enum Persona {
         PROTAG,     // No Name
-        CUP,        // TBD
-        SWORD,      // TBD
+        CUP,        // Zoe
+        SWORD,      // Amber
         WAND,       // Velara
-        PENTACLE    // TBD
+        PENTACLE    // Emma
     };
     Persona currentPersona = PROTAG;
 

@@ -23,7 +23,7 @@ void Background::update(int screenW, int screenH, int gameState) {
                 break;
 
             case (Persona::CUP):
-                renderer.load_texture("suicideHammer.png");
+                renderer.load_texture("suicidePistol.png");
 
                 break;
 
@@ -38,7 +38,7 @@ void Background::update(int screenW, int screenH, int gameState) {
                 break;
 
             case (Persona::PENTACLE):
-                renderer.load_texture("suicidePistol.png");
+                renderer.load_texture("suicideHammer.png");
 
                 break;
 

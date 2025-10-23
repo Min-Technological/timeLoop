@@ -90,7 +90,7 @@ void Gamestate::render() {
 // === Pause Helpers ===
 void Gamestate::pause_update() {
     background.update(screenW, screenH, static_cast<int>(currentState));
-    camera.update();
+    // camera.update();
     user.update(scale, camera.xOffset);
 
     for (Chunk& chunk : currentMap) {
@@ -146,7 +146,7 @@ void Gamestate::suicide_render() {
 // === Selection Helpers ===
 void Gamestate::selection_update() {
     background.update(screenW, screenH, static_cast<int>(currentState));
-    camera.update();
+    // camera.update();
     user.update(scale, camera.xOffset);
 
     for (Chunk& chunk : currentMap) {
@@ -248,7 +248,7 @@ void Gamestate::change_state() {
     case (State::SUICIDE):
         if (waiting) {
             if (time.current_time() - waitTime >= 1000) {
-                currentState = State::GAME;
+                currentState = State::TAROTREADING;
                 waiting = false;
             }
         }
