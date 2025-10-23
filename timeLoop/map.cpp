@@ -58,9 +58,9 @@ void Map::create_tile(Uint32 color, float x, float y, int mapIndex) {
         OBJECT_TAROT,
         TAROT_STATION
     };
-    ObjectType objectType;
-    Tile::TileType type;
-    int tarotType;
+    ObjectType objectType = OBJECT_TAROT;
+    Tile::TileType type = Tile::TileType::NILL;
+    int tarotType = 0;
     int xPos = static_cast<int>(x);
     int yPos = static_cast<int>(y);
 
@@ -92,9 +92,10 @@ void Map::create_tile(Uint32 color, float x, float y, int mapIndex) {
         }
     }
 
-    // === Character Swapper ===
+    // === ORANGE ===
     else if (G == R / 2) {
         objectType = OBJECT_TILE;
+        // === Character Swapper (Discontinued) ===
         if (R == 255) {
             type = Tile::TileType::CHARACTERSWAP_PROTAG;
         }

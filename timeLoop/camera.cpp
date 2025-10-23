@@ -8,7 +8,7 @@ Camera::Camera(Character& character, Time& mainTime, int& screenW, int& screenH,
 // === Apply Camera Effects ===
 void Camera::affect(Input input) {
 }
-
+ 
 // === Update Camera Position & Effects ===
 void Camera::update() {
 

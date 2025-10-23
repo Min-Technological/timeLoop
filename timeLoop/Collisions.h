@@ -5,6 +5,7 @@
 #include <iostream>
 #include "Hitbox.h"
 #include "Tile.h"
+#include "TarotCard.h"
 
 class Collisions {
 public:
@@ -15,12 +16,13 @@ public:
 	};
 
 	// === Assuming the user collides with an external ===;
-	CollisionType collide_with_tile(Hitbox hitbox1, Hitbox hitbox2, int tileType) {
+	CollisionType collide_with_tiles(Hitbox& hitbox1, std::vector<Tile*>* tiles);
+	CollisionType collide_with_tarot(Hitbox& hitbox1, Hitbox& hitbox2, TarotCard::CardNumber cardNumber);
+	 
+private:
+	void solid_y_collision(Tile* tile) {
 
 	}
-
-private:
-
 };
 
 #endif

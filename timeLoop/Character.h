@@ -25,10 +25,11 @@ public:
     void move(Input input);
     void collide(std::vector<Chunk>& map);
     void update(float viewScale, float xOffset);
+    void change_character(int selection);
+    int get_current_character();
     void render();
     void destroy();
 
-    int return_state() const;
     void load_data(PassiveData passive);
 
     std::array<float, 2> get_velocity() const;
@@ -38,6 +39,15 @@ public:
     bool bounding = false;  // Display Hitbox
     float w = 40; // Width
     float h = 160; // Height
+
+    // === Public Persona Fields ===
+    enum Persona {
+        PROTAG,     // No Name
+        CUP,        // Zoe
+        SWORD,      // Amber
+        WAND,       // Velara
+        PENTACLE    // Emma
+    };
 
 private:
     // === Movement Helpers ===
@@ -56,7 +66,6 @@ private:
     void solid_X_collision(Tile& tile);
 
     // === Event Helpers ===
-    void suicide();
 
     // === State Fields ===
     enum State {    // List of Animation States
@@ -74,15 +83,8 @@ private:
     int spriteColumn = 0;
 
     // === Persona Fields ===
-    enum Persona {
-        PROTAG,     // No Name
-        CUP,        // TBD
-        WAND,       // Velara
-        SWORD,      // TBD
-        PENTACLE    // TBD
-    };
     Persona currentPersona = WAND;
-    int personasUnlocked = 0;
+    std::array<bool, 5> personasUnlocked = { 1, 1, 1, 1, 1 };
 
     void change_persona(Persona persona);
 
@@ -110,6 +112,18 @@ private:
 
     // === UHHHH Tarot? ===
     TarotDeck tarotDeck;
+
+
+
+    // === PROTAG ABILITIES ===
+
+    // === WANDS ABILITIES ===
+
+    // === PENTACLES ABILITIES ===
+
+    // === CUPS ABILITIES ===
+
+    // === SWORDS ABILITIES ===
 };
 
 #endif

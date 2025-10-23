@@ -18,8 +18,10 @@ public:
 	bool is_key_just_pressed(SDL_Keycode key);
 	bool is_event_occurring(SDL_EventType eventType);
 
-	bool is_clicking_square(float x, float y, int w, int h);
-	bool is_clicking_circle(float x, float y, int d);
+	bool is_clicking_square(float x, float y, float w, float h);
+	bool is_clicking_circle(float x, float y, float d);
+	bool is_clicking_ring(float x, float y, float innerR, float outerR);
+	int get_quadrant(float x, float y, float d, float buffer);
 
 private:
 	const bool* keys = nullptr;

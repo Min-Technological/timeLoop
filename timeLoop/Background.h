@@ -15,8 +15,18 @@ public:
     void handle_event(bool fullscreenState);
     void update(int screenW, int screenH, int gameState);
     void render();
+    void change_persona(int newPersona);
 
 private:
+    enum Persona {
+        PROTAG,     // No Name
+        CUP,        // TBD
+        SWORD,      // TBD
+        WAND,       // Velara
+        PENTACLE    // TBD
+    };
+    Persona currentPersona = PROTAG;
+
     // === Fields ===
     Renderer renderer;
     int newState = 0;

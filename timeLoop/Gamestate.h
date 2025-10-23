@@ -16,6 +16,7 @@
 #include "Camera.h"
 #include "Map.h"
 #include "LoopData.h"
+#include "CharacterSelect.h"
 #include "TarotReader.h"
 
 class Gamestate {
@@ -43,6 +44,10 @@ public:
     void suicide_update();
     void suicide_render();
 
+    // === Selection Functions ===
+    void selection_update();
+    void selection_render();
+
     // === Tarot Reading Loop Functions ===
     void tarot_update();
     void tarot_render();
@@ -58,6 +63,7 @@ public:
         PAUSE,
         SUICIDE,
         REWIND,
+        SELECTION,
         TAROTREADING,
         TAROTCARDS,
         TOTAL
@@ -85,6 +91,7 @@ private:
     Camera camera;
     Map gameMap0;
     LoopData loopData;
+    CharacterSelect characterSelect;
     TarotReader tarotScene;
 
     // === Input & Map ===
@@ -102,6 +109,8 @@ private:
     bool waiting = false;
     Uint64 waitTime = 0;
     Uint64 loopTime = 0;
+
+    bool charChange = false;
 };
 
 #endif

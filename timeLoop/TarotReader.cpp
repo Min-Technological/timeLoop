@@ -18,11 +18,10 @@ void TarotReader::render(bool bounding) {
 bool TarotReader::exit_reader(Input& input) {
 	// Exit Card Reading Button
 
-	float exitX, exitY;
-	int exitD;
-	exitX = 46 * renderScale;
-	exitY = 46 * renderScale;
-	exitD = 252 * renderScale;
+	float exitX, exitY, exitD;
+	exitX = renderScale * 46;
+	exitY = renderScale * 46;
+	exitD = renderScale * 252;
 	if (!window.is_fullscreen()) {
 		exitY += 25;
 	}
@@ -40,8 +39,10 @@ bool TarotReader::exit_reader(Input& input) {
 
 bool TarotReader::reading_cards(Input& input) {
 	// Card Selection Button
-	float stainedWindowX, stainedWindowY;
-	int stainedWindowW, stainedWindowH;
+	float stainedWindowX, 
+		stainedWindowY, 
+		stainedWindowW, 
+		stainedWindowH;
 	stainedWindowX = 1463 * renderScale;
 	stainedWindowY = 83 * renderScale;
 	stainedWindowW = 342 * renderScale;

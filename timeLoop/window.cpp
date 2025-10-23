@@ -62,6 +62,14 @@ bool AppWindow::is_running() const {
 	return windowRunning;
 }
 
+std::array<float, 2> AppWindow::get_window_dimensions() {
+	return {
+		static_cast<float>(windowWidth),
+		static_cast<float>(windowHeight)
+	};
+}
+
+
 // === Private: Create SDL Window ===
 void AppWindow::create_window(Uint16 windowArgs) {
 	mainWindow = SDL_CreateWindow(windowTitle.c_str(), windowWidth, windowHeight, windowArgs);

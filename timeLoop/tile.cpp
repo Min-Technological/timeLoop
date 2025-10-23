@@ -43,7 +43,9 @@ void Tile::render(std::vector<float> screenDimensions) {
             renderer.render_colour(224, 80, 144, 0xFF);
             break;
 
-        // === CHARACTER SWAPPER ===
+
+
+        // === CHARACTER SWAPPER (CHARACTER SWAPPER) ===
         case TileType::CHARACTERSWAP_PROTAG:
             renderer.render_colour(0xC6, 0xD5, 0xFF, 0xFF);
             break;
@@ -53,11 +55,11 @@ void Tile::render(std::vector<float> screenDimensions) {
             break;
 
         case TileType::CHARACTERSWAP_CUP:
-            renderer.render_colour(0xFF, 0xB7, 0xFD, 0xFF);
+            renderer.render_colour(0xB7, 0xFF, 0xB8, 0xFF);
             break;
 
         case TileType::CHARACTERSWAP_PENTACLE:
-            renderer.render_colour(0xB7, 0xFF, 0xB8, 0xFF);
+            renderer.render_colour(0xFF, 0xB7, 0xFD, 0xFF);
             break;
 
         case TileType::CHARACTERSWAP_SWORD:

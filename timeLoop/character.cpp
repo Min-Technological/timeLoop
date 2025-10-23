@@ -7,16 +7,6 @@ Character::Character(float x, float y, AppWindow window, Time& timer, float& s)
     change_persona(currentPersona);
 }
 
-// === Input & Movement ===
-void Character::handle_event(Input input) {
-    stateChanged = false;
-    gameState = 1;
-
-    if (input.is_key_just_pressed(SDLK_R)) {
-        suicide();
-    }
-}
-
 void Character::move(Input input) {
     if (stateChanged) {
         return;
@@ -67,6 +57,10 @@ void Character::collide(std::vector<Chunk>& map) {
     for (Tile* tile : collidedTiles) {
         int responseType = tile->get_type();
         if (responseType == 0) continue;
+        Persona newPersona;
+        if (responseType >= 5 && responseType < 10) {
+            newPersona = static_cast<Persona>(responseType - 5);
+        }
 
         switch (responseType) {
             // === TERRAIN ===
@@ -78,28 +72,12 @@ void Character::collide(std::vector<Chunk>& map) {
             break;
             // === CHARACTER SWAPPER ===
         case 5: // PROTAG
-            if (currentPersona != PROTAG) {
-                change_persona(PROTAG);
-            }
-            break;
         case 6: // CUP
-            if (currentPersona != CUP) {
-                change_persona(CUP);
-            }
-            break;
         case 7: // SWORD
-            if (currentPersona != SWORD) {
-                change_persona(SWORD);
-            }
-            break;
         case 8: // WAND
-            if (currentPersona != WAND) {
-                change_persona(WAND);
-            }
-            break;
         case 9: // PENTACLE
-            if (currentPersona != PENTACLE) {
-                change_persona(PENTACLE);
+            if (currentPersona != newPersona) {
+                change_persona(newPersona);
             }
             break;
         default:
@@ -195,6 +173,24 @@ void Character::update(float viewScale, float offset) {
     }
 }
 
+void Character::change_character(int selection) {
+    Persona newPersona = static_cast<Persona>(selection);
+
+    if (newPersona != currentPersona) {
+        if (personasUnlocked[selection]) {
+            change_persona(newPersona);
+        }
+        else {
+            std::cout << "PERSONA LOCKED!\n";
+        }
+    }
+
+}
+
+int Character::get_current_character() {
+    return static_cast<int>(currentPersona);
+}
+
 void Character::render() {
     if (stateChanged) {
         return;
@@ -212,9 +208,6 @@ void Character::destroy() {
     renderer.destroy_texture();
 }
 
-int Character::return_state() const {
-    return gameState;
-}
 
 
 void Character::load_data(PassiveData passive) {
@@ -226,6 +219,8 @@ void Character::load_data(PassiveData passive) {
 std::array<float, 2> Character::get_velocity() const {
     return { xVelocity, yVelocity };
 }
+
+
 
 // === Movement Helpers ===
 void Character::move_up(int px) {
@@ -274,12 +269,6 @@ void Character::increment_walk() {
             walkingNum = 0;
         }
     }
-}
-
-// === Event Helpers ===
-void Character::suicide() {
-    stateChanged = true;
-    gameState = 3;
 }
 
 // === Collision Helpers ===
@@ -358,19 +347,19 @@ void Character::change_persona(Persona persona) {
     currentPersona = persona;
     switch (persona) {
     case PROTAG:
-        renderer.load_texture("cProtagonist.png");
+        renderer.load_texture("charProtagonist.png");
         break;
     case WAND:
-        renderer.load_texture("cVelara.png");
+        renderer.load_texture("charVelara.png");
         break;
     case CUP:
-        renderer.load_texture("cEmma.png");
+        renderer.load_texture("charRachel.png");
         break;
     case SWORD:
-        renderer.load_texture("cAmber.png");
+        renderer.load_texture("charAmber.png");
         break;
     case PENTACLE:
-        renderer.load_texture("cRachel.png");
+        renderer.load_texture("charEmma.png");
         break;
     default:
         std::cout << "NO CHARACTER SELECTED!\n";

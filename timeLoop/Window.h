@@ -5,6 +5,7 @@
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
 #include <iostream>
+#include <array>
 
 class AppWindow {
 public:
@@ -23,6 +24,8 @@ public:
     void close();
     bool is_running() const;
     void destroy();
+
+    std::array<float, 2> get_window_dimensions();
 
 private:
     // === Window Properties ===

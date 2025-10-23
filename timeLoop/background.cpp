@@ -16,14 +16,45 @@ void Background::update(int screenW, int screenH, int gameState) {
         case 2: // PAUSE
             break;
         case 3: // SUICIDE
-            renderer.load_texture("suicideNone.png");
+            switch (currentPersona) {
+            case (Persona::PROTAG):
+                renderer.load_texture("suicideNone.png");
+
+                break;
+
+            case (Persona::CUP):
+                renderer.load_texture("suicideHammer.png");
+
+                break;
+
+            case (Persona::SWORD):
+                renderer.load_texture("suicideNone.png");
+
+                break;
+
+            case (Persona::WAND):
+                renderer.load_texture("suicideShotgun.png");
+
+                break;
+
+            case (Persona::PENTACLE):
+                renderer.load_texture("suicidePistol.png");
+
+                break;
+
+            default:
+                std::cout << "Can't select correct Persona Background\n";
+            }
             break;
         case 4: // REWIND
             break;
-        case 5: // TAROTREADER
+
+        case 5: // SELECTION
+            break;
+        case 6: // TAROTREADER
             renderer.load_texture("tarotBasic.png");
             break;
-        case 6: // TAROTCARDS
+        case 7: // TAROTCARDS
             renderer.load_texture("tarotSelect.png");
             break;
         default:
@@ -51,10 +82,14 @@ void Background::render() {
     case 4: // REWIND
         renderer.render_colour(0x50, 0xe0, 0xa0, 0xff);
         break;
-    case 5: // TAROTREADER
+    case 5: // SELECTION
+        renderer.render_colour(0x50, 0xe0, 0xa0, 0xff);
+        break;
+
+    case 6: // TAROTREADER
         renderer.render_texture();
         break;
-    case 6: // TAROTCARDS
+    case 7: // TAROTCARDS
         renderer.render_texture();
         break;
     default:
@@ -62,4 +97,8 @@ void Background::render() {
         break;
     }
 
+}
+
+void Background::change_persona(int newPersona) {
+    currentPersona = static_cast<Persona>(newPersona);
 }

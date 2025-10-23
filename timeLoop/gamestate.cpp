@@ -11,6 +11,7 @@ Gamestate::Gamestate() :
     camera(user, time, screenW, screenH, scale),
     gameMap0("map_test.png", 40, window, camera, scale),
     loopData(),
+    characterSelect(&window, scale),
     tarotScene(window, scale),
     quit(false)
 {
@@ -34,6 +35,7 @@ void Gamestate::set_render_canvas() {
         renderWindow = { 0, 0, screenW, screenH };
     }
     SDL_SetRenderViewport(window.get_renderer(), &renderWindow);
+    SDL_SetRenderDrawBlendMode(window.get_renderer(), SDL_BLENDMODE_BLEND);
 }
 
 // === Event Handling ===
@@ -46,7 +48,6 @@ void Gamestate::handle_event() {
 
     titlebar.handle_event(input);
 
-    user.handle_event(input);
     calculate_scale();
 }
 
@@ -66,10 +67,6 @@ void Gamestate::update() {
     }
 
     update_loop_data();
-
-    if (input.is_key_just_pressed(SDLK_ESCAPE)) {
-        currentState = State::PAUSE;
-    }
 }
 void Gamestate::render() {
     SDL_SetRenderDrawColor(window.get_renderer(), 0x14, 0x28, 0x20, 0xFF);
@@ -99,10 +96,6 @@ void Gamestate::pause_update() {
     for (Chunk& chunk : currentMap) {
         chunk.update(scale, camera.xOffset);
     }
-
-    if (input.is_key_just_pressed(SDLK_ESCAPE)) {
-        currentState = State::GAME;
-    }
 }
 void Gamestate::pause_render() {
     SDL_SetRenderDrawBlendMode(window.get_renderer(), SDL_BLENDMODE_BLEND);
@@ -131,21 +124,10 @@ void Gamestate::pause_render() {
 
 // === Suicide Helpers ===
 void Gamestate::suicide_update() {
-
+    background.change_persona(user.get_current_character());
     background.update(screenW, screenH, static_cast<int>(currentState));
 
     user.load_data(loopData.dump_passive_data());
-
-    if (!waiting) {
-        waitTime = time.current_time();
-        waiting = true;
-    }
-    if (waiting) {
-        if (time.current_time() - waitTime >= 1000) {
-            currentState = State::GAME;
-            waiting = false;
-        }
-    }
 
 }
 void Gamestate::suicide_render() {
@@ -161,21 +143,50 @@ void Gamestate::suicide_render() {
     SDL_RenderPresent(window.get_renderer());
 }
 
+// === Selection Helpers ===
+void Gamestate::selection_update() {
+    background.update(screenW, screenH, static_cast<int>(currentState));
+    camera.update();
+    user.update(scale, camera.xOffset);
+
+    for (Chunk& chunk : currentMap) {
+        chunk.update(scale, camera.xOffset);
+    }
+
+    characterSelect.set_current_selection(user.get_current_character());
+    characterSelect.update(input);
+    int characterChange = characterSelect.get_selection();
+    user.change_character(characterChange);
+}
+void Gamestate::selection_render() {
+    SDL_SetRenderDrawColor(window.get_renderer(), 0x14, 0x28, 0x20, 0xFF);
+    SDL_RenderClear(window.get_renderer());
+
+    titlebar.render();
+    set_render_canvas();
+
+    background.render();
+
+    std::vector<float> screenDimensions = { static_cast<float>(camera.w), static_cast<float>(camera.h) };
+    for (Chunk& chunk : currentMap) {
+        chunk.render(screenDimensions);
+    }
+
+    user.render();
+
+
+    // Render Pause Overlay
+    SDL_FRect v = { 0, 0, static_cast<float>(screenW), static_cast<float>(screenH) };
+    SDL_SetRenderDrawColor(window.get_renderer(), 0x14, 0x28, 0x20, 0x5F);
+    SDL_RenderFillRect(window.get_renderer(), &v);
+
+    characterSelect.render();
+
+    SDL_RenderPresent(window.get_renderer());
+}
+
 // === Tarot Reading Helpers ===
 void Gamestate::tarot_update() {
-    if (currentState == State::TAROTREADING) {
-        if (tarotScene.exit_reader(input)) {
-            currentState = State::GAME;
-        }
-        else if (tarotScene.reading_cards(input)) {
-            currentState = State::TAROTCARDS;
-        }
-    }
-    else if (currentState == State::TAROTCARDS) {
-        if (tarotScene.exit_cards(input)) {
-            currentState = State::TAROTREADING;
-        }
-    }
 
 
     background.update(screenW, screenH, static_cast<int>(currentState));
@@ -212,12 +223,69 @@ Gamestate::State Gamestate::get_current_state() const {
 }
 void Gamestate::change_state() {
 
-    int userState = user.return_state();
-    if (currentState == State::GAME && userState != State::GAME) {
-        if (userState >= 0 && userState < State::TOTAL) {
-            currentState = static_cast<State>(userState);
+    switch (currentState) {
+    case (State::MENU):
+        break;
+
+    case (State::GAME):
+        if (input.is_key_just_pressed(SDLK_R)) {
+            currentState = State::SUICIDE;
         }
+        else if (input.is_key_just_pressed(SDLK_ESCAPE)) {
+            currentState = State::PAUSE;
+        }
+        else if (input.is_key_just_pressed(SDLK_E)) {
+            currentState = State::SELECTION;
+        }
+        break;
+
+    case (State::PAUSE):
+        if (input.is_key_just_pressed(SDLK_ESCAPE)) {
+            currentState = State::GAME;
+        }
+        break;
+
+    case (State::SUICIDE):
+        if (waiting) {
+            if (time.current_time() - waitTime >= 1000) {
+                currentState = State::GAME;
+                waiting = false;
+            }
+        }
+        else {
+            waitTime = time.current_time();
+            waiting = true;
+        }
+        break;
+
+    case (State::SELECTION):
+        if (input.is_key_just_pressed(SDLK_E) || charChange) {
+            currentState = State::GAME;
+        }
+        break;
+
+    case (State::TAROTREADING):
+        if (tarotScene.exit_reader(input)) {
+            currentState = State::GAME;
+        }
+        else if (tarotScene.reading_cards(input)) {
+            currentState = State::TAROTCARDS;
+        }
+        break;
+
+    case (State::TAROTCARDS):
+        if (tarotScene.exit_cards(input)) {
+            currentState = State::TAROTREADING;
+        }
+        break;
+
+    default: 
+        std::cout << "CAN'T CHANGE STATE!\n";
+        break;
+
     }
+
+
 
     if (input.is_key_just_pressed(SDLK_F3)) {
         bounding = bounding ? false : true;
