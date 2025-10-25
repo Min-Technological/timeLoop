@@ -74,12 +74,12 @@ public:
     void print_state() const;
 
     // === Loop Management ===
-    void update_loop_data();
+    void save_loop_data();
+    void load_loop_data();
 
 private:
     // === Private Helpers ===
     void calculate_scale();
-    void increment_loop_data();
 
     // === Subsystems ===
     AppWindow window;

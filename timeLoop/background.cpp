@@ -77,31 +77,47 @@ void Background::render() {
     switch (newState) {
     case 0: // MENU
         renderer.render_colour(0x50, 0xe0, 0xa0, 0xff);
+
         break;
+
     case 1: // GAME
         renderer.render_colour(0x50, 0xe0, 0xa0, 0xff);
+
         break;
+
     case 2: // PAUSE
         renderer.render_colour(0x50, 0xe0, 0xa0, 0xff);
+
         break;
+
     case 3: // SUICIDE
         renderer.render_texture();
+
         break;
+
     case 4: // REWIND
         renderer.render_colour(0x50, 0xe0, 0xa0, 0xff);
+
         break;
+
     case 5: // SELECTION
         renderer.render_colour(0x50, 0xe0, 0xa0, 0xff);
+
         break;
 
     case 6: // TAROTREADER
         renderer.render_texture();
+
         break;
+
     case 7: // TAROTCARDS
         renderer.render_texture();
+
         break;
+
     default:
         std::cout << "SOMETHING WENT WRONG, BACKGROUND RENDER\n";
+
         break;
     }
 

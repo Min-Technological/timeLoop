@@ -10,21 +10,23 @@
 
 class LoopData {
 public:
-	LoopData();
+	LoopData(Uint64 saveTime);
 
-	void update_passive(const Character& character, Uint64 frame);
-	PassiveData dump_passive_data();
+	void save_passive(PassiveData passiveData);
+	PassiveData* load_passive();
 
-	Uint64 return_passive_size();
+	void save_persona(int persona);
+	int load_persona();
 
-	void kull_passive_data();
 private:
 
+	int currentPersona = Character::Persona::PROTAG;
+
 	// === Data Vectors ===
-	std::vector<PassiveData> passive;
+	PassiveData currentPassive;
 
 	// === Private Variables
-	Uint64 cliffPoint = 50;
+	Uint64 saveTime;
 };
 
 

@@ -10,7 +10,7 @@ Gamestate::Gamestate() :
     user(920, 600, window, time, scale),
     camera(user, time, screenW, screenH, scale),
     gameMap0("map_test.png", 40, window, camera, scale),
-    loopData(),
+    loopData(static_cast<Uint64>(0)),
     characterSelect(&window, scale),
     tarotScene(window, scale),
     quit(false)
@@ -66,7 +66,7 @@ void Gamestate::update() {
         chunk.update(scale, camera.xOffset);
     }
 
-    update_loop_data();
+    // update_loop_data();
 }
 void Gamestate::render() {
     SDL_SetRenderDrawColor(window.get_renderer(), 0x14, 0x28, 0x20, 0xFF);
@@ -86,6 +86,7 @@ void Gamestate::render() {
 
     SDL_RenderPresent(window.get_renderer());
 }
+
 
 // === Pause Helpers ===
 void Gamestate::pause_update() {
@@ -127,7 +128,7 @@ void Gamestate::suicide_update() {
     background.change_persona(user.get_current_character());
     background.update(screenW, screenH, static_cast<int>(currentState));
 
-    user.load_data(loopData.dump_passive_data());
+    load_loop_data();
 
 }
 void Gamestate::suicide_render() {
@@ -237,6 +238,10 @@ void Gamestate::change_state() {
         else if (input.is_key_just_pressed(SDLK_E)) {
             currentState = State::SELECTION;
         }
+        // === TEMPORARY, SHOULD BE A PASSIVE THING IN GAME.UPDATE().
+        else if (input.is_key_just_pressed(SDLK_F)) {
+            save_loop_data();
+        }
         break;
 
     case (State::PAUSE):
@@ -332,20 +337,20 @@ void Gamestate::print_state() const {
 }
 
 // === Loop Management ===
-void Gamestate::update_loop_data() {
-    Uint64 currentPassiveSize = loopData.return_passive_size();
-    increment_loop_data();
-    if (currentPassiveSize < loopData.return_passive_size()) {
-        loopData.kull_passive_data();
-    }
-}
+void Gamestate::save_loop_data() {
+    std::cout << "Saving Time Loop Data!\n";
+    LoopData newLoopData(time.current_time());
 
-void Gamestate::increment_loop_data() {
-    Uint64 currentTime = time.current_time();
-    if (currentTime - loopTime > 500) {
-        loopData.update_passive(user, currentTime);
-        loopTime = currentTime;
-    }
+    user.save_data(newLoopData.load_passive());
+    newLoopData.save_persona(user.get_current_character());
+    camera.save_loop_data(newLoopData.load_passive());
+
+    loopData = newLoopData;
+}
+void Gamestate::load_loop_data() {
+    user.load_data(loopData.load_passive()->get_player_position());
+    user.change_character(loopData.load_persona());
+    camera.load_loop_data(loopData.load_passive()->get_camera_position());
 }
 
 // === Utility ===

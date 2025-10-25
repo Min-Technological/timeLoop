@@ -15,6 +15,10 @@ public:
     void affect(Input input);
     void update();
 
+    // === Loop Management ===
+    void save_loop_data(PassiveData* passiveData);
+    void load_loop_data(std::array<float, 2> cameraData);
+
     // === Public Fields ===
     int& w;  // Viewport Width
     int& h;  // Viewport Height

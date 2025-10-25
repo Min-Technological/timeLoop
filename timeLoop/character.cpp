@@ -210,10 +210,19 @@ void Character::destroy() {
 
 
 
-void Character::load_data(PassiveData passive) {
-    hitbox.update_hitbox(passive.x, passive.y, w, h);
-    xVelocity = passive.xVelocity;
-    yVelocity = passive.yVelocity;
+void Character::save_data(PassiveData* passiveData) {
+    passiveData->set_player_postition(
+        hitbox.xa,
+        hitbox.ya,
+        xVelocity,
+        yVelocity
+    );
+}
+
+void Character::load_data(std::array<float, 4> playerData) {
+    hitbox.update_hitbox(playerData[0], playerData[1], w, h);
+    xVelocity = playerData[2];
+    yVelocity = playerData[3];
 }
 
 std::array<float, 2> Character::get_velocity() const {
