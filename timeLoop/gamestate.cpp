@@ -342,15 +342,13 @@ void Gamestate::save_loop_data() {
     LoopData newLoopData(time.current_time());
 
     user.save_data(newLoopData.load_passive());
-    newLoopData.save_persona(user.get_current_character());
     camera.save_loop_data(newLoopData.load_passive());
 
     loopData = newLoopData;
 }
 void Gamestate::load_loop_data() {
-    user.load_data(loopData.load_passive()->get_player_position());
-    user.change_character(loopData.load_persona());
-    camera.load_loop_data(loopData.load_passive()->get_camera_position());
+    user.load_data(loopData.load_passive());
+    camera.load_loop_data(loopData.load_passive());
 }
 
 // === Utility ===

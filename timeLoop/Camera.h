@@ -17,7 +17,7 @@ public:
 
     // === Loop Management ===
     void save_loop_data(PassiveData* passiveData);
-    void load_loop_data(std::array<float, 2> cameraData);
+    void load_loop_data(PassiveData* passiveData);
 
     // === Public Fields ===
     int& w;  // Viewport Width

@@ -11,12 +11,11 @@ PassiveData* LoopData::load_passive() {
 }
 
 
-
-
-void LoopData::save_persona(int persona) {
-	currentPersona = static_cast<Character::Persona>(persona);
+void LoopData::save_tarot_deck(TarotDeck tarotDeck) {
+	currentDeck = tarotDeck;
+}
+TarotDeck* LoopData::load_tarot_deck() {
+	return &currentDeck;
 }
 
-int LoopData::load_persona() {
-	return static_cast<int>(currentPersona);
-}
+

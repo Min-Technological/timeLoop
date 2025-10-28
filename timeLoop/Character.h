@@ -31,7 +31,8 @@ public:
     void destroy();
 
     void save_data(PassiveData *passiveData);
-    void load_data(std::array<float, 4> playerData);
+    void load_data(PassiveData* passiveData);
+    
 
     std::array<float, 2> get_velocity() const;
 

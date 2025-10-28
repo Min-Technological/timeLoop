@@ -66,9 +66,11 @@ void Camera::update() {
 void Camera::save_loop_data(PassiveData* passiveData) {
     passiveData->set_camera_position(xOffset, yOffset);
 }
-void Camera::load_loop_data(std::array<float, 2> cameraData) {
-    xOffset = cameraData[0];
-    yOffset = cameraData[1];
+void Camera::load_loop_data(PassiveData* passiveData) {
+    std::array<float, 2> cameraPos = passiveData->get_camera_position();
+
+    xOffset = cameraPos[0];
+    yOffset = cameraPos[1];
 }
 
 

@@ -173,24 +173,6 @@ void Character::update(float viewScale, float offset) {
     }
 }
 
-void Character::change_character(int selection) {
-    Persona newPersona = static_cast<Persona>(selection);
-
-    if (newPersona != currentPersona) {
-        if (personasUnlocked[selection]) {
-            change_persona(newPersona);
-        }
-        else {
-            std::cout << "PERSONA LOCKED!\n";
-        }
-    }
-
-}
-
-int Character::get_current_character() {
-    return static_cast<int>(currentPersona);
-}
-
 void Character::render() {
     if (stateChanged) {
         return;
@@ -210,6 +192,24 @@ void Character::destroy() {
 
 
 
+void Character::change_character(int selection) {
+    Persona newPersona = static_cast<Persona>(selection);
+
+    if (newPersona != currentPersona) {
+        if (personasUnlocked[selection]) {
+            change_persona(newPersona);
+        }
+        else {
+            std::cout << "PERSONA LOCKED!\n";
+        }
+    }
+
+}
+
+int Character::get_current_character() {
+    return static_cast<int>(currentPersona);
+}
+
 void Character::save_data(PassiveData* passiveData) {
     passiveData->set_player_postition(
         hitbox.xa,
@@ -217,12 +217,22 @@ void Character::save_data(PassiveData* passiveData) {
         xVelocity,
         yVelocity
     );
+
+    std::cout << currentPersona << "\n";
+
+    passiveData->set_persona(static_cast<int>(currentPersona));
 }
 
-void Character::load_data(std::array<float, 4> playerData) {
-    hitbox.update_hitbox(playerData[0], playerData[1], w, h);
-    xVelocity = playerData[2];
-    yVelocity = playerData[3];
+void Character::load_data(PassiveData* passiveData) {
+    std::array<float, 4> playerPos = passiveData->get_player_position();
+
+    hitbox.update_hitbox(playerPos[0], playerPos[1], w, h);
+    xVelocity = playerPos[2];
+    yVelocity = playerPos[3];
+
+    this->change_persona(static_cast<Persona>(passiveData->get_persona()));
+
+    std::cout << currentPersona << "\n";
 }
 
 std::array<float, 2> Character::get_velocity() const {

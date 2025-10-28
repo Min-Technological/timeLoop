@@ -7,6 +7,7 @@
 #include "PassiveData.h"
 
 #include "Character.h"
+#include "TarotDeck.h"
 
 class LoopData {
 public:
@@ -15,15 +16,14 @@ public:
 	void save_passive(PassiveData passiveData);
 	PassiveData* load_passive();
 
-	void save_persona(int persona);
-	int load_persona();
+	void save_tarot_deck(TarotDeck tarotDeck);
+	TarotDeck* load_tarot_deck();
 
 private:
 
-	int currentPersona = Character::Persona::PROTAG;
-
 	// === Data Vectors ===
 	PassiveData currentPassive;
+	TarotDeck currentDeck;
 
 	// === Private Variables
 	Uint64 saveTime;
