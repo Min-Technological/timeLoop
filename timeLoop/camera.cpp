@@ -12,13 +12,15 @@ void Camera::affect(Input input) {
 // === Update Camera Position & Effects ===
 void Camera::update() {
 
+    std::array<float, 4> userCurrentPos = user.hitbox.get_current_pos();
+
     leftBounds = static_cast<float>(w) / boundsCount;
     rightBounds = leftBounds * (boundsCount - 1);
 
     // Right Edge Clamp
     float rightClamp = rightEdge - (static_cast<float>(w) / scale);
 
-    float userCentre = user.hitbox.xa + (user.w / 2.0f);
+    float userCentre = userCurrentPos[0] + (user.w / 2.0f);
     float screenPlayerPos = (userCentre - xOffset) * scale;
 
     float xVelocity = user.get_velocity()[0];

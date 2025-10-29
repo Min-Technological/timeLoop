@@ -4,6 +4,9 @@
 
 #include <iostream>
 #include <SDL3/SDL.h>
+#include <array>
+
+#include "Renderer.h"
 
 class Hitbox {
 public:
@@ -13,23 +16,23 @@ public:
 
     // === Public Methods ===
     void update_hitbox(float x, float y, float width, float height);
+    void set_bounding_green(Uint8 debug);
+    void render(Renderer *renderer);
+    void destroy();
+
     void enable_collisions(bool status);
     bool allows_collisions() const;
 
-    bool check_x_collision(Hitbox& other) const;
-    bool check_y_collision(Hitbox& other) const;
-    bool check_collision(Hitbox& other) const;
+    std::array<float, 4> get_current_pos();
+    std::array<float, 4> get_previous_pos();
 
-    void destroy();
+private:
 
-    // === Public Fields ===
+    // === Private Fields ===
     float xa; // Left Side
     float xb; // Right Side
     float ya; // Top Side
     float yb; // Bottom Side
-
-private:
-    // === Private Fields ===
 
     float previousXA; // Previous Left Side
     float previousXB; // Previous Right Side
@@ -37,8 +40,8 @@ private:
     float previousYB; // Previous Bottom Side
 
     float w, h;
-    SDL_FRect bounding;
     bool allowsCollisions = true;
+    Uint8 boundingGreen = 0x00;
 };
 
 #endif

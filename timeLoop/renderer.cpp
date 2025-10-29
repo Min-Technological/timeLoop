@@ -6,7 +6,7 @@ Renderer::Renderer(SDL_Renderer* r, float X, float Y, float W, float H, float& s
 
 
 
-void Renderer::load_texture(const std::string& path) {
+void Renderer::load_texture(const std::string &path) {
 	SDL_Surface* loadedSurface = IMG_Load(path.c_str());
 	if (!loadedSurface) {
 		std::cout << "UNABLE TO LOAD IMAGE! " << SDL_GetError() << std::endl;
@@ -46,13 +46,13 @@ void Renderer::render_sprite(float x, float y, float w, float h) {
 
 	SDL_RenderTexture(renderer, texture, &sprite, &viewport);
 }
-void Renderer::render_hitbox(Hitbox hitbox, Uint8 green) {
+void Renderer::render_hitbox(float xa, float ya, float xb, float yb, Uint8 green) {
 
-	float width = hitbox.xb - hitbox.xa;
-	float height = hitbox.yb - hitbox.ya;
+	float width = xb - xa;
+	float height = yb - ya;
 	SDL_FRect bounding = {
-		(hitbox.xa - xOffset) * scale,
-		hitbox.ya * scale,
+		(xa - xOffset) * scale,
+		ya * scale,
 		width * scale,
 		height * scale
 	};

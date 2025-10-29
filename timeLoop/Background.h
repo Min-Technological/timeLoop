@@ -5,6 +5,7 @@
 #include <iostream>
 #include <SDL3/SDL.h>
 #include "Renderer.h"
+#include "Enums.h"
 
 class Background {
 public:
@@ -13,23 +14,16 @@ public:
 
     // === Public Methods ===
     void handle_event(bool fullscreenState);
-    void update(int screenW, int screenH, int gameState);
+    void update(int screenW, int screenH, State gameState);
     void render();
-    void change_persona(int newPersona);
+    void change_persona(Persona newPersona);
 
 private:
-    enum Persona {
-        PROTAG,     // No Name
-        CUP,        // Zoe
-        SWORD,      // Amber
-        WAND,       // Velara
-        PENTACLE    // Emma
-    };
-    Persona currentPersona = PROTAG;
 
     // === Fields ===
     Renderer renderer;
-    int newState = 0;
+    Persona currentPersona = Persona::PROTAG;
+    State newState = State::MENU;
 
 };
 

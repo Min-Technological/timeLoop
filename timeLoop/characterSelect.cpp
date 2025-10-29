@@ -33,24 +33,24 @@ void CharacterSelect::update(Input& input) {
 // Velara 3
 // Emma 4
 	if (input.is_clicking_circle(innerX, innerY, innerD)) {
-		selectedCharacter = 0;
+		selectedCharacter = Persona::PROTAG;
 	}
 	else if (input.is_clicking_ring(outerX, outerY, innerD + 40, outerD)) {
 		switch (input.get_quadrant(outerX, outerY, outerD, 30 * windowScale)) {
 		case 1:
-			selectedCharacter = 4;
+			selectedCharacter = Persona::PENTACLE;
 			break;
 
 		case 2:
-			selectedCharacter = 1;
+			selectedCharacter = Persona::CUP;
 			break;
 
 		case 3:
-			selectedCharacter = 2;
+			selectedCharacter = Persona::SWORD;
 			break;
 
 		case 4:
-			selectedCharacter = 3;
+			selectedCharacter = Persona::WAND;
 			break;
 
 		default:
@@ -60,11 +60,11 @@ void CharacterSelect::update(Input& input) {
 	}
 }
 
-void CharacterSelect::set_current_selection(int selection) {
+void CharacterSelect::set_current_selection(Persona selection) {
 	selectedCharacter = selection;
 }
 
-int CharacterSelect::get_selection() const {
+Persona CharacterSelect::get_selection() const {
 	return selectedCharacter;
 }
 

@@ -4,18 +4,18 @@
 Background::Background(SDL_Renderer* r, float& s) : renderer(r, 0, 0, 1920, 1080, s) {}
 
 // === Update ===
-void Background::update(int screenW, int screenH, int gameState) {
+void Background::update(int screenW, int screenH, State gameState) {
     renderer.new_position(0, 0, 1920, 1080, 0);
     if (newState != gameState) {
         newState = gameState;
         switch (newState) {
-        case 0: // MENU
+        case State::MENU:
             break;
-        case 1: // GAME
+        case State::GAME:
             break;
-        case 2: // PAUSE
+        case State::PAUSE:
             break;
-        case 3: // SUICIDE
+        case State::SUICIDE:
 
             switch (currentPersona) {
             case (Persona::PROTAG):
@@ -52,16 +52,16 @@ void Background::update(int screenW, int screenH, int gameState) {
                 std::cout << "Can't select correct Persona Background\n";
             }
             break;
-        case 4: // REWIND
+        case State::REWIND:
             break;
 
-        case 5: // SELECTION
+        case State::SELECTION:
             break;
-        case 6: // TAROTREADER
+        case State::TAROTREADING:
             renderer.destroy_texture();
             renderer.load_texture("tarotBasic.png");
             break;
-        case 7: // TAROTCARDS
+        case State::TAROTCARDS:
             renderer.destroy_texture();
             renderer.load_texture("tarotSelect.png");
             break;
@@ -75,42 +75,42 @@ void Background::update(int screenW, int screenH, int gameState) {
 // === Render ===
 void Background::render() {
     switch (newState) {
-    case 0: // MENU
+    case State::MENU:
         renderer.render_colour(0x50, 0xe0, 0xa0, 0xff);
 
         break;
 
-    case 1: // GAME
+    case State::GAME:
         renderer.render_colour(0x50, 0xe0, 0xa0, 0xff);
 
         break;
 
-    case 2: // PAUSE
+    case State::PAUSE:
         renderer.render_colour(0x50, 0xe0, 0xa0, 0xff);
 
         break;
 
-    case 3: // SUICIDE
+    case State::SUICIDE:
         renderer.render_texture();
 
         break;
 
-    case 4: // REWIND
+    case State::REWIND:
         renderer.render_colour(0x50, 0xe0, 0xa0, 0xff);
 
         break;
 
-    case 5: // SELECTION
+    case State::SELECTION:
         renderer.render_colour(0x50, 0xe0, 0xa0, 0xff);
 
         break;
 
-    case 6: // TAROTREADER
+    case State::TAROTREADING:
         renderer.render_texture();
 
         break;
 
-    case 7: // TAROTCARDS
+    case State::TAROTCARDS:
         renderer.render_texture();
 
         break;
@@ -123,6 +123,6 @@ void Background::render() {
 
 }
 
-void Background::change_persona(int newPersona) {
-    currentPersona = static_cast<Persona>(newPersona);
+void Background::change_persona(Persona newPersona) {
+    currentPersona = newPersona;
 }

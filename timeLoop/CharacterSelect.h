@@ -5,20 +5,21 @@
 #include "Window.h"
 #include "Input.h"
 #include "Renderer.h"
+#include "Enums.h"
 
 class CharacterSelect {
 public:
 	CharacterSelect(AppWindow* w, float& s);
 	void update(Input& input);
-	void set_current_selection(int selection);
-	int get_selection() const;
+	void set_current_selection(Persona selection);
+	Persona get_selection() const;
 	void render();
 private:
 	AppWindow* window;
 	float& windowScale;
 	Renderer renderer;
 
-	int selectedCharacter = 0;
+	Persona selectedCharacter = Persona::PROTAG;
 };
 
 

@@ -12,17 +12,19 @@ int main(int argc, char* argsp[]) {
 
 	mint.initialise_map();
 
-	while (!mint.quit) {
+
+
+	while (!mint.get_quit()) {
 		mint.handle_event();
 		mint.change_state();
 
 		switch (mint.get_current_state()) {
-		case (mint.MENU):
+		case (State::MENU):
 
 			std::cout << "IN DEVELOPMENT!\n";
 			break;
 
-		case (mint.GAME):
+		case (State::GAME):
 			
 			mint.move(); // handle game movement inputs.
 
@@ -31,7 +33,7 @@ int main(int argc, char* argsp[]) {
 			mint.render(); // render game to screen.
 			break;
 
-		case (mint.PAUSE):
+		case (State::PAUSE):
 			
 			mint.pause_update();
 
@@ -39,7 +41,7 @@ int main(int argc, char* argsp[]) {
 
 			break;
 
-		case (mint.SUICIDE):
+		case (State::SUICIDE):
 
 			mint.suicide_update();
 
@@ -47,7 +49,7 @@ int main(int argc, char* argsp[]) {
 
 			break;
 
-		case (mint.SELECTION):
+		case (State::SELECTION):
 
 			mint.selection_update(); // update game object collisions.
 
@@ -55,8 +57,8 @@ int main(int argc, char* argsp[]) {
 
 			break;
 
-		case (mint.TAROTREADING):
-		case (mint.TAROTCARDS):
+		case (State::TAROTREADING):
+		case (State::TAROTCARDS):
 
 			mint.tarot_update();
 
@@ -67,7 +69,6 @@ int main(int argc, char* argsp[]) {
 		}
 		// mint.print_state();
 		mint.increment_frame();
-		mint.frameCount++;
 
 	}
 

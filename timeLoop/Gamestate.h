@@ -18,15 +18,12 @@
 #include "LoopData.h"
 #include "CharacterSelect.h"
 #include "TarotReader.h"
+#include "Enums.h"
 
 class Gamestate {
 public:
     // === Constructor ===
     Gamestate();
-
-    // === Public Fields ===
-    bool quit;
-    Uint64 frameCount = 0;
 
     // === Game Loop Functions ===
     void initialise_map();
@@ -56,28 +53,27 @@ public:
     void increment_frame();
     void close();
 
-    // === Game State Management ===
-    enum State {
-        MENU,
-        GAME,
-        PAUSE,
-        SUICIDE,
-        REWIND,
-        SELECTION,
-        TAROTREADING,
-        TAROTCARDS,
-        TOTAL
-    };
-    State currentState = State::TAROTREADING;
-    State get_current_state() const;
-    void change_state();
-    void print_state() const;
-
     // === Loop Management ===
     void save_loop_data();
     void load_loop_data();
 
+    // === Game State Helpers ===
+    State get_current_state() const;
+    void change_state();
+    void print_state() const;
+
+    // === Quit Status ===
+    bool get_quit();
+
 private:
+
+    // === Public Fields ===
+    bool quit;
+    Uint64 frameCount = 0;
+
+    // === Game State Management ===
+    State currentState = State::TAROTREADING;
+
     // === Private Helpers ===
     void calculate_scale();
 

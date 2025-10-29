@@ -54,11 +54,11 @@ void Gamestate::handle_event() {
 // === Game Helpers ===
 void Gamestate::move() {
     user.move(input);
-    user.collide(currentMap);
+    // user.collide(currentMap);
     camera.affect(input);
 }
 void Gamestate::update() {
-    background.update(screenW, screenH, static_cast<int>(currentState));
+    background.update(screenW, screenH, currentState);
     camera.update();
     user.update(scale, camera.xOffset);
 
@@ -90,7 +90,7 @@ void Gamestate::render() {
 
 // === Pause Helpers ===
 void Gamestate::pause_update() {
-    background.update(screenW, screenH, static_cast<int>(currentState));
+    background.update(screenW, screenH, currentState);
     // camera.update();
     user.update(scale, camera.xOffset);
 
@@ -125,8 +125,8 @@ void Gamestate::pause_render() {
 
 // === Suicide Helpers ===
 void Gamestate::suicide_update() {
-    background.change_persona(user.get_current_character());
-    background.update(screenW, screenH, static_cast<int>(currentState));
+    background.change_persona(user.get_persona());
+    background.update(screenW, screenH, currentState);
 
     load_loop_data();
 
@@ -146,7 +146,7 @@ void Gamestate::suicide_render() {
 
 // === Selection Helpers ===
 void Gamestate::selection_update() {
-    background.update(screenW, screenH, static_cast<int>(currentState));
+    background.update(screenW, screenH, currentState);
     // camera.update();
     user.update(scale, camera.xOffset);
 
@@ -154,10 +154,10 @@ void Gamestate::selection_update() {
         chunk.update(scale, camera.xOffset);
     }
 
-    characterSelect.set_current_selection(user.get_current_character());
+    characterSelect.set_current_selection(user.get_persona());
     characterSelect.update(input);
-    int characterChange = characterSelect.get_selection();
-    user.change_character(characterChange);
+    Persona characterChange = characterSelect.get_selection();
+    user.change_persona(characterChange);
 }
 void Gamestate::selection_render() {
     SDL_SetRenderDrawColor(window.get_renderer(), 0x14, 0x28, 0x20, 0xFF);
@@ -190,7 +190,7 @@ void Gamestate::selection_render() {
 void Gamestate::tarot_update() {
 
 
-    background.update(screenW, screenH, static_cast<int>(currentState));
+    background.update(screenW, screenH, currentState);
 
 }
 void Gamestate::tarot_render() {
@@ -210,6 +210,7 @@ void Gamestate::tarot_render() {
 // === Cleanup ===
 void Gamestate::increment_frame() {
     time.sleep_delta();
+    frameCount++;
 }
 void Gamestate::close() {
     user.destroy();
@@ -219,7 +220,7 @@ void Gamestate::close() {
 }
 
 // === State Management ===
-Gamestate::State Gamestate::get_current_state() const {
+State Gamestate::get_current_state() const {
     return currentState;
 }
 void Gamestate::change_state() {
@@ -349,6 +350,11 @@ void Gamestate::save_loop_data() {
 void Gamestate::load_loop_data() {
     user.load_data(loopData.load_passive());
     camera.load_loop_data(loopData.load_passive());
+}
+
+// === Quit Status ===
+bool Gamestate::get_quit() {
+    return quit;
 }
 
 // === Utility ===

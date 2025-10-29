@@ -140,6 +140,9 @@
     <ClInclude Include="CharacterSelect.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Enums.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="map_test.png">

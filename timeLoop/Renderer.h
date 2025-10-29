@@ -4,14 +4,14 @@
 
 #include <SDL3/SDL.h>
 #include <SDL3_image\SDL_image.h>
+#include <iostream>
 #include <vector>
-#include "Hitbox.h"
 
 class Renderer {
 public:
 	Renderer(SDL_Renderer* r, float x, float y, float w, float h, float& s);
 
-	void load_texture(const std::string& path);
+	void load_texture(const std::string &path);
 
 	void new_position(float newX, float newY, float newW, float newH, float xOff);
 
@@ -20,7 +20,7 @@ public:
 	void render_colour(Uint8 red, Uint8 green, Uint8 blue, Uint8 alpha);
 	void render_texture();
 	void render_sprite(float x, float y, float w, float h);
-	void render_hitbox(Hitbox hitbox, Uint8 green);
+	void render_hitbox(float xa, float ya, float xb, float yb, Uint8 green);
 	void render_clickbox(float x, float y, float w, float h, Uint8 green);
 
 	void destroy_texture();

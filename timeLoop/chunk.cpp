@@ -55,7 +55,8 @@ void Chunk::render(std::vector<float> screenDimensions) {
     }
 
     if (showBounding) {
-        renderer.render_hitbox(hitbox, debug);
+        hitbox.set_bounding_green(debug);
+        hitbox.render(&renderer);
     }
 }
 

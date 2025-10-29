@@ -3,7 +3,6 @@
 // === Constructors ===
 Hitbox::Hitbox() :
     xa(0), xb(20), ya(0), yb(40), w(1920), h(1080) {
-    bounding = { 0, 0, 40, 40 };
     previousXA = xa;
     previousXB = xb;
     previousYA = ya;
@@ -15,7 +14,6 @@ Hitbox::Hitbox(float x, float y, float width, float height) :
     xb = x + width;   // Right Edge
     yb = y + height;  // Bottom Edge
 
-    bounding = { x, y, width, height };
     previousXA = xa;
     previousXB = xb;
     previousYA = ya;
@@ -35,6 +33,16 @@ void Hitbox::update_hitbox(float x, float y, float width, float height) {
     yb = y + height;
 }
 
+void Hitbox::set_bounding_green(Uint8 debug) {
+    boundingGreen = debug;
+}
+
+void Hitbox::render(Renderer* renderer) {
+
+    renderer->render_hitbox(xa, ya, xb, yb, boundingGreen);
+    
+}
+
 // === Collision Settings ===
 void Hitbox::enable_collisions(bool status) {
     allowsCollisions = status;
@@ -44,48 +52,20 @@ bool Hitbox::allows_collisions() const {
     return allowsCollisions;
 }
 
-bool Hitbox::check_x_collision(Hitbox& other) const {
-    if (other.allows_collisions()) {
-
-        if (xa > previousXA) {
-            if (xb > other.xa && previousXB < other.xb) return true;
-        }
-        else if (xa < previousXA) {
-            if (previousXA > other.xb &&
-                xa < other.xb) return true;
-        }
-    }
-    else return false;
+std::array<float, 4> Hitbox::get_current_pos() {
+    return {
+        xa,
+        ya,
+        xb,
+        yb
+    };
 }
 
-bool Hitbox::check_y_collision(Hitbox& other) const {
-    if (other.allows_collisions()) {
-
-        if (ya > previousYA) {
-            if (yb > other.ya && previousYB < other.yb) return true;
-        }
-        else if (ya < previousYA) {
-            if (previousYA > other.yb &&
-                ya < other.yb) return true;
-        }
-    }
-    else return false;
-}
-
-// === Collision Detection ===
-bool Hitbox::check_collision(Hitbox& other) const {
-    if (other.allows_collisions()) {
-        if (xb > other.xa &&    // inside left
-            xa < other.xb &&    // inside right
-            yb > other.ya &&    // inside top
-            ya < other.yb) {    // inside bottom
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-    else {
-        return false;
-    }
+std::array<float, 4> Hitbox::get_previous_pos() {
+    return {
+        previousXA,
+        previousYA,
+        previousXB,
+        previousYB
+    };
 }

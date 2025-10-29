@@ -1,19 +1,24 @@
 #include "Character.h"
 
 // === Constructor ===
-Character::Character(float x, float y, AppWindow window, Time& timer, float& s)
-    : newX(x), newY(y), appWindow(window), renderer(window.get_renderer(), x, y, w, h, s), time(timer) {
-    hitbox = std::move(Hitbox(x, y, w, h));
+Character::Character(float initialX, float initialY, AppWindow window, Time& timer, float& s)
+    : newX(initialX), 
+    newY(initialY), 
+    renderer(window.get_renderer(), initialX, initialY, w, h, s), 
+    time(timer)
+{
+    hitbox = std::move(Hitbox(initialX, initialY, w, h));
     change_persona(currentPersona);
 }
 
 void Character::move(Input input) {
-    if (stateChanged) {
-        return;
-    }
 
-    newX = hitbox.xa;
-    newY = hitbox.ya;
+    std::array currentPos = hitbox.get_current_pos();
+
+    newX = currentPos[0];
+    newY = currentPos[1];
+    xVelocity = xVelocity * 0.75;
+    yVelocity += gravity;
 
     bool yMoved = false;
     bool xMoved = false;
@@ -40,104 +45,15 @@ void Character::move(Input input) {
         yVelocity = 0;
         jumping = false;
     }
-}
 
-// === Collision Handling ===
-void Character::collide(std::vector<Chunk>& map) {
-    if (stateChanged) {
-        return;
-    }
-
-    newY -= yVelocity;
-    hitbox.update_hitbox(newX, newY, w, h);
-    grounded = false;
-
-    // Y-axis collision
-    std::vector<Tile*> collidedTiles = get_collided_tiles(map);
-    for (Tile* tile : collidedTiles) {
-        int responseType = tile->get_type();
-        if (responseType == 0) continue;
-        Persona newPersona;
-        if (responseType >= 5 && responseType < 10) {
-            newPersona = static_cast<Persona>(responseType - 5);
-        }
-
-        switch (responseType) {
-            // === TERRAIN ===
-        case 1: // Dirt Light
-        case 2: // Dirt Dark
-        case 3: // Grass Light
-        case 4: // Grass Dark
-            solid_Y_collision(*tile);
-            break;
-            // === CHARACTER SWAPPER ===
-        case 5: // PROTAG
-        case 6: // CUP
-        case 7: // SWORD
-        case 8: // WAND
-        case 9: // PENTACLE
-            if (currentPersona != newPersona) {
-                change_persona(newPersona);
-            }
-            break;
-        default:
-            break;
-        }
-    }
-
-    if (grounded) {
-        yVelocity = 0;
-    }
-    else {
-        yVelocity += (-gravity);
-        if (yVelocity < -40) {
-            yVelocity = -40;
-        }
-    }
-
-    if (xVelocity == 0) {
-        walkingNum = 0;
-    }
     newX += xVelocity;
-    hitbox.update_hitbox(newX, newY, w, h);
-
-    // X-axis collision
-    collidedTiles = get_collided_tiles(map);
-    for (Tile* tile : collidedTiles) {
-        int responseType = tile->get_type();
-        if (responseType == 0) continue;
-
-        switch (responseType) {
-        case 1: // Dirt Light
-        case 2: // Dirt Dark
-        case 3: // Grass Light
-        case 4: // Grass Dark
-            solid_X_collision(*tile);
-            break;
-        default:
-            break;
-        }
-    }
-    if (xVelocity < 1 && xVelocity > -1) {
-        xVelocity = 0;
-    }
-    xVelocity = xVelocity * 0.8f;
+    newY += yVelocity;
 
     hitbox.update_hitbox(newX, newY, w, h);
-
-
-
-    // === This Can be After Movement ===
-    std::vector<TarotCard*> collidedTarot = get_collided_tarot(map);
-
-
 }
 
 // === Update & Render ===
 void Character::update(float viewScale, float offset) {
-    if (stateChanged) {
-        return;
-    }
 
     if (scale != viewScale) {
         scale = viewScale;
@@ -146,22 +62,22 @@ void Character::update(float viewScale, float offset) {
     renderer.new_position(newX, newY, w, h, offset);
 
     switch (currentState) {
-    case State::WALKING_RIGHT:
+    case AnimationState::WALKING_RIGHT:
         spriteColumn = 0;
         renderer.new_position(newX - 40, newY, 120, h, offset);
         break;
 
-    case State::WALKING_LEFT:
+    case AnimationState::WALKING_LEFT:
         spriteColumn = 1;
         renderer.new_position(newX - 40, newY, 120, h, offset);
         break;
 
-    case State::RUNNING_RIGHT:
+    case AnimationState::RUNNING_RIGHT:
         spriteColumn = 2;
         renderer.new_position(newX - 40, newY, 120, h, offset);
         break;
 
-    case State::RUNNING_LEFT:
+    case AnimationState::RUNNING_LEFT:
         spriteColumn = 3;
         renderer.new_position(newX - 40, newY, 120, h, offset);
         break;
@@ -174,15 +90,12 @@ void Character::update(float viewScale, float offset) {
 }
 
 void Character::render() {
-    if (stateChanged) {
-        return;
-    }
 
     renderer.render_sprite(60.0f * walkingNum, 80.0f * spriteColumn, 60, 80);
     // SDL_RenderFillRect(r, &v);
 
     if (bounding) {
-        renderer.render_hitbox(hitbox, 0);
+        hitbox.render(&renderer);
     }
 }
 
@@ -192,35 +105,47 @@ void Character::destroy() {
 
 
 
-void Character::change_character(int selection) {
-    Persona newPersona = static_cast<Persona>(selection);
-
-    if (newPersona != currentPersona) {
-        if (personasUnlocked[selection]) {
-            change_persona(newPersona);
-        }
-        else {
-            std::cout << "PERSONA LOCKED!\n";
-        }
+void Character::change_persona(Persona persona) {
+    renderer.destroy_texture();
+    currentPersona = persona;
+    switch (persona) {
+    case Persona::PROTAG:
+        renderer.load_texture("charProtagonist.png");
+        break;
+    case Persona::WAND:
+        renderer.load_texture("charVelara.png");
+        break;
+    case Persona::CUP:
+        renderer.load_texture("charRachel.png");
+        break;
+    case Persona::SWORD:
+        renderer.load_texture("charAmber.png");
+        break;
+    case Persona::PENTACLE:
+        renderer.load_texture("charEmma.png");
+        break;
+    default:
+        std::cout << "NO CHARACTER SELECTED!\n";
+        break;
     }
-
 }
 
-int Character::get_current_character() {
-    return static_cast<int>(currentPersona);
+Persona Character::get_persona() {
+    return currentPersona;
 }
 
 void Character::save_data(PassiveData* passiveData) {
+
+    std::array<float, 4> currentPos = hitbox.get_current_pos();
+
     passiveData->set_player_postition(
-        hitbox.xa,
-        hitbox.ya,
+        currentPos[0],
+        currentPos[1],
         xVelocity,
         yVelocity
     );
 
-    std::cout << currentPersona << "\n";
-
-    passiveData->set_persona(static_cast<int>(currentPersona));
+    passiveData->set_persona(currentPersona);
 }
 
 void Character::load_data(PassiveData* passiveData) {
@@ -232,7 +157,6 @@ void Character::load_data(PassiveData* passiveData) {
 
     this->change_persona(static_cast<Persona>(passiveData->get_persona()));
 
-    std::cout << currentPersona << "\n";
 }
 
 std::array<float, 2> Character::get_velocity() const {
@@ -249,7 +173,7 @@ void Character::move_up(int px) {
 void Character::move_left(int px) {
     xVelocity -= sprinting ? px * 2 : px;
 
-    currentState = sprinting ? State:: RUNNING_LEFT : State::WALKING_LEFT;
+    currentState = sprinting ? AnimationState::RUNNING_LEFT : AnimationState::WALKING_LEFT;
     increment_walk();
 }
 
@@ -260,7 +184,7 @@ void Character::move_down(int px) {
 void Character::move_right(int px) {
     xVelocity += sprinting ? px * 2 : px;
 
-    currentState = sprinting ? State::RUNNING_RIGHT : State::WALKING_RIGHT;
+    currentState = sprinting ? AnimationState::RUNNING_RIGHT : AnimationState::WALKING_RIGHT;
     increment_walk();
 }
 
@@ -290,98 +214,3 @@ void Character::increment_walk() {
     }
 }
 
-// === Collision Helpers ===
-std::vector<Tile*> Character::get_collided_tiles(std::vector<Chunk>& map) const {
-    std::vector<Tile*> collidedTiles;
-
-    for (Chunk& chunk : map) {
-        if (!hitbox.check_collision(chunk.hitbox)) {
-            chunk.set_debug('R');
-            continue;
-        }
-
-        chunk.set_debug('G');
-        for (Tile& tile : chunk.chunk) {
-            if (hitbox.check_collision(tile.hitbox)) {
-                collidedTiles.push_back(&tile);
-            }
-        }
-    }
-
-    return collidedTiles;
-}
-
-// === Collision Helpers ===
-std::vector<TarotCard*> Character::get_collided_tarot(std::vector<Chunk>& map) {
-    std::vector<TarotCard*> collidedTarot;
-
-    for (Chunk& chunk : map) {
-        if (!hitbox.check_collision(chunk.hitbox)) {
-            chunk.set_debug('R');
-            continue;
-        }
-
-        chunk.set_debug('G');
-        for (TarotCard* tarot : chunk.cards) {
-            if (hitbox.check_collision(tarot->hitbox)) {
-                collidedTarot.push_back(tarot);
-                tarotDeck.evaporate_card(tarot);
-                chunk.remove_card(tarot);
-            }
-        }
-    }
-
-    return collidedTarot;
-}
-
-void Character::solid_Y_collision(Tile& tile) {
-    if (yVelocity < 0) {
-        newY = tile.hitbox.ya - h;
-        grounded = true;
-        jumping = false;
-    }
-    else if (yVelocity > 0) {
-        newY = tile.hitbox.yb;
-        yVelocity = 0;
-        jumping = false;
-    }
-}
-
-void Character::solid_X_collision(Tile& tile) {
-    if (xVelocity < 0) {
-        newX = tile.hitbox.xb;
-        xVelocity = 0;
-    }
-    else if (xVelocity > 0) {
-        newX = tile.hitbox.xa - w;
-        xVelocity = 0;
-    }
-    walkingNum = 0;
-}
-
-
-
-void Character::change_persona(Persona persona) {
-    renderer.destroy_texture();
-    currentPersona = persona;
-    switch (persona) {
-    case PROTAG:
-        renderer.load_texture("charProtagonist.png");
-        break;
-    case WAND:
-        renderer.load_texture("charVelara.png");
-        break;
-    case CUP:
-        renderer.load_texture("charRachel.png");
-        break;
-    case SWORD:
-        renderer.load_texture("charAmber.png");
-        break;
-    case PENTACLE:
-        renderer.load_texture("charEmma.png");
-        break;
-    default:
-        std::cout << "NO CHARACTER SELECTED!\n";
-        break;
-    }
-}

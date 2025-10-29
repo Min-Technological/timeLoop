@@ -173,6 +173,7 @@
     <ClInclude Include="LoopData.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="PassiveData.h" />
+    <ClInclude Include="Enums.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="TarotCard.h" />
     <ClInclude Include="TarotDeck.h" />
