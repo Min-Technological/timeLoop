@@ -11,10 +11,7 @@ void Tile::handle_event(bool fullscreen) {
 }
 
 // === Update position and scale ===
-void Tile::update(float viewScale, float offset) {
-    if (scale != viewScale) {
-        scale = viewScale;
-    }
+void Tile::update(float offset) {
 
     renderer.new_position(x, y, w, w, offset);
 
@@ -74,6 +71,11 @@ void Tile::render(std::vector<float> screenDimensions) {
         }
     }
 }
+
+Hitbox* Tile::get_hitbox() {
+    return &hitbox;
+}
+
 
 // === Get numeric type value ===
 int Tile::get_type() const {

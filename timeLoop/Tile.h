@@ -31,9 +31,10 @@ public:
 
     // === Public Methods ===
     void handle_event(bool fullscreen);
-    void update(float viewScale, float offset);
+    void update(float offset);
     void render(std::vector<float> screenDimensions);
 
+    Hitbox* get_hitbox();
     int get_type() const;
 
     // === Public Fields ===
@@ -46,7 +47,6 @@ private:
 
     // === Render State ===
     Renderer renderer;
-    float scale = 1;
 
     // === Miscellaneous Tile Info ===
     TileType type;

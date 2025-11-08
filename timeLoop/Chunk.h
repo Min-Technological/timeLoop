@@ -20,11 +20,11 @@ public:
     void render(std::vector<float> screenDimensions);
     void set_debug(char a);
 
+    Hitbox* get_hitbox();
+
     // === Public Fields ===
     std::vector<Tile> chunk;
     std::vector<TarotCard*> cards;
-    Hitbox hitbox;
-    bool showBounding = false;
 
 private:
     // === Internal State ===
@@ -36,6 +36,9 @@ private:
     Renderer renderer;
     float scale = 1;
     int debug = 0;
+
+    Hitbox hitbox;
+    bool showBounding = false;
 
 };
 

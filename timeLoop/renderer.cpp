@@ -33,7 +33,9 @@ void Renderer::new_position(float newX, float newY, float newW, float newH, floa
 	viewport.w = newW * scale;
 	viewport.h = newH * scale;
 }
-
+void Renderer::set_x_offset(float xOff) {
+	xOffset = xOff;
+}
 void Renderer::render_colour(Uint8 red, Uint8 green, Uint8 blue, Uint8 alpha) {
 	SDL_SetRenderDrawColor(renderer, red, green, blue, alpha);
 	SDL_RenderFillRect(renderer, &viewport);
@@ -62,7 +64,7 @@ void Renderer::render_hitbox(float xa, float ya, float xb, float yb, Uint8 green
 }
 void Renderer::render_clickbox(float x, float y, float w, float h, Uint8 green) {
 	SDL_FRect bounding = {
-		x * scale,
+		(x - xOffset) * scale,
 		y * scale,
 		w * scale,
 		h * scale

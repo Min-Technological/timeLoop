@@ -2,7 +2,9 @@
 
 // === Constructor ===
 Character::Character(float initialX, float initialY, AppWindow window, Time& timer, float& s)
-    : newX(initialX), 
+    : x(initialX),
+    y(initialY),
+    newX(initialX), 
     newY(initialY), 
     renderer(window.get_renderer(), initialX, initialY, w, h, s), 
     time(timer)
@@ -17,7 +19,7 @@ void Character::move(Input input) {
 
     newX = currentPos[0];
     newY = currentPos[1];
-    xVelocity = xVelocity * 0.75;
+    xVelocity = xVelocity * 0.75f;
     yVelocity += gravity;
 
     bool yMoved = false;
@@ -35,14 +37,16 @@ void Character::move(Input input) {
         xMoved = true;
     }
 
+
+
     if (input.is_key_pressed(SDL_SCANCODE_SPACE)) {
         move_jump();
-        if (yVelocity <= 0) {
-            jumping = false;
-        }
     }
     else if (!input.is_key_pressed(SDL_SCANCODE_SPACE) && jumping == true) {
-        yVelocity = 0;
+        yVelocity = yVelocity * 0.7f;
+    }
+
+    if (yVelocity >= 0) {
         jumping = false;
     }
 
@@ -52,6 +56,12 @@ void Character::move(Input input) {
     hitbox.update_hitbox(newX, newY, w, h);
 }
 
+void Character::resolve_collision() {
+    std::array<float, 4> userPos = hitbox.get_current_pos();
+    x = userPos[0];
+    y = userPos[1];
+}
+
 // === Update & Render ===
 void Character::update(float viewScale, float offset) {
 
@@ -59,32 +69,32 @@ void Character::update(float viewScale, float offset) {
         scale = viewScale;
     }
 
-    renderer.new_position(newX, newY, w, h, offset);
+    renderer.new_position(x, y, w, h, offset);
 
     switch (currentState) {
     case AnimationState::WALKING_RIGHT:
         spriteColumn = 0;
-        renderer.new_position(newX - 40, newY, 120, h, offset);
+        renderer.new_position(x - 40, y, 120, h, offset);
         break;
 
     case AnimationState::WALKING_LEFT:
         spriteColumn = 1;
-        renderer.new_position(newX - 40, newY, 120, h, offset);
+        renderer.new_position(x - 40, y, 120, h, offset);
         break;
 
     case AnimationState::RUNNING_RIGHT:
         spriteColumn = 2;
-        renderer.new_position(newX - 40, newY, 120, h, offset);
+        renderer.new_position(x - 40, y, 120, h, offset);
         break;
 
     case AnimationState::RUNNING_LEFT:
         spriteColumn = 3;
-        renderer.new_position(newX - 40, newY, 120, h, offset);
+        renderer.new_position(x - 40, y, 120, h, offset);
         break;
 
     default:
         spriteColumn = 0;
-        renderer.new_position(newX, newY, w, h, offset);
+        renderer.new_position(x, y, w, h, offset);
         break;
     }
 }
@@ -159,8 +169,40 @@ void Character::load_data(PassiveData* passiveData) {
 
 }
 
+void Character::set_velocity(float x, float y) {
+    xVelocity = x;
+    yVelocity = y;
+}
+
 std::array<float, 2> Character::get_velocity() const {
     return { xVelocity, yVelocity };
+}
+
+Hitbox* Character::get_hitbox() {
+    return &hitbox;
+}
+
+
+
+void Character::landed() {
+    yVelocity = 0;
+    grounded = true;
+
+}
+
+void Character::hit_head() {
+    yVelocity = 0;
+
+}
+
+void Character::hit_left() {
+    xVelocity = 0;
+
+}
+
+void Character::hit_right() {
+    xVelocity = 0;
+
 }
 
 
@@ -170,7 +212,7 @@ void Character::move_up(int px) {
     yVelocity += sprinting ? px * 2 : px;
 }
 
-void Character::move_left(int px) {
+void Character::move_left(float px) {
     xVelocity -= sprinting ? px * 2 : px;
 
     currentState = sprinting ? AnimationState::RUNNING_LEFT : AnimationState::WALKING_LEFT;
@@ -181,7 +223,7 @@ void Character::move_down(int px) {
     yVelocity -= sprinting ? px * 2 : px;
 }
 
-void Character::move_right(int px) {
+void Character::move_right(float px) {
     xVelocity += sprinting ? px * 2 : px;
 
     currentState = sprinting ? AnimationState::RUNNING_RIGHT : AnimationState::WALKING_RIGHT;

@@ -23,31 +23,43 @@ public:
     // === Public Methods ===
     void handle_event(Input input);
     void move(Input input);
+    void resolve_collision();
     void update(float viewScale, float xOffset);
     void render();
     void destroy();
 
+
+    // === Data-Based Helpers ===
     void change_persona(Persona persona);
     Persona get_persona();
 
     void save_data(PassiveData *passiveData);
     void load_data(PassiveData* passiveData);
     
-
+    // === Collision/Movement Helpers ===
+    void set_velocity(float x, float y);
     std::array<float, 2> get_velocity() const;
+    Hitbox* get_hitbox();
+
+    void landed();
+    void hit_head();
+    void hit_left();
+    void hit_right();
+
+
 
     // === Public Fields ===
     Hitbox hitbox;
     bool bounding = false;  // Display Hitbox
-    float w = 40; // Width
-    float h = 160; // Height
+    float w = 40;   // Width
+    float h = 160;  // Height
 
 private:
     // === Movement Helpers ===
     void move_up(int px);
-    void move_left(int px);
+    void move_left(float px);
     void move_down(int px);
-    void move_right(int px);
+    void move_right(float px);
     void move_jump();
 
 
@@ -88,6 +100,8 @@ private:
     // --- Location ---
     float newX; // Predicted x
     float newY; // Predicted y
+    float x;        // Left Position
+    float y;        // Top Position
 
     // --- Velocity ---
     float xVelocity = 0;

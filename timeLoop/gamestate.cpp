@@ -7,12 +7,14 @@ Gamestate::Gamestate() :
     input(),
     time(60),
     background(window.get_renderer(), scale),
-    user(920, 600, window, time, scale),
+    user(960, 500, window, time, scale),
     camera(user, time, screenW, screenH, scale),
     gameMap0("map_test.png", 40, window, camera, scale),
     loopData(static_cast<Uint64>(0)),
+    tarotDeck(),
     characterSelect(&window, scale),
     tarotScene(window, scale),
+    collisionManager(),
     quit(false)
 {
     event.type = SDL_EVENT_FIRST;
@@ -54,8 +56,32 @@ void Gamestate::handle_event() {
 // === Game Helpers ===
 void Gamestate::move() {
     user.move(input);
-    // user.collide(currentMap);
+    
+    for (Chunk& chunk : currentMap) {
+        
+        if (!collisionManager.collide_character_chunk(&user, chunk.get_hitbox())) {
+            chunk.get_hitbox()->set_bounding_green(0x00);
+            continue;
+        }
+
+        chunk.get_hitbox()->set_bounding_green(0xff);
+        for (Tile& tile : chunk.chunk) {
+            collisionManager.collide_character_tile(&user, &tile);
+        }
+        for (TarotCard* card : chunk.cards) {
+            if (card->collected()) continue;
+
+            if (collisionManager.collide_character_card(&user, card)) {
+                tarotDeck.add_card(card->get_card_number());
+                card->collect(true);
+            }
+        }
+    }
+
+    user.resolve_collision();
+
     camera.affect(input);
+
 }
 void Gamestate::update() {
     background.update(screenW, screenH, currentState);
@@ -84,14 +110,31 @@ void Gamestate::render() {
 
     user.render();
 
+    render_hitbox();
+
     SDL_RenderPresent(window.get_renderer());
+}
+void Gamestate::render_hitbox() {
+
+    Renderer hitboxRenderer = Renderer(window.get_renderer(), 0, 0, 1, 1, scale);
+    hitboxRenderer.set_x_offset(camera.xOffset);
+
+    if (bounding) {
+        for (Chunk& chunk : currentMap) {
+            chunk.get_hitbox()->render(&hitboxRenderer);
+            for (TarotCard* card : chunk.cards) {
+                if (card->collected()) continue;
+                card->get_hitbox()->render(&hitboxRenderer);
+            }
+        }
+        user.get_hitbox()->render(&hitboxRenderer);
+    }
 }
 
 
 // === Pause Helpers ===
 void Gamestate::pause_update() {
     background.update(screenW, screenH, currentState);
-    // camera.update();
     user.update(scale, camera.xOffset);
 
     for (Chunk& chunk : currentMap) {
@@ -295,11 +338,6 @@ void Gamestate::change_state() {
 
     if (input.is_key_just_pressed(SDLK_F3)) {
         bounding = bounding ? false : true;
-
-        user.bounding = bounding;
-        for (Chunk& chunk : currentMap) {
-            chunk.showBounding = bounding;
-        }
     }
 }
 

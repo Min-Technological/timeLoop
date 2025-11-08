@@ -21,9 +21,9 @@ private:
 
 	std::array<bool, static_cast<int>(TarotCard::CardNumber::TOTAL)> deck { false };
 
-	TarotCard::CardNumber past;
-	TarotCard::CardNumber present;
-	TarotCard::CardNumber future;
+	TarotCard::CardNumber past = static_cast<TarotCard::CardNumber>(0);
+	TarotCard::CardNumber present = static_cast<TarotCard::CardNumber>(0);
+	TarotCard::CardNumber future = static_cast<TarotCard::CardNumber>(0);
 
 };
 

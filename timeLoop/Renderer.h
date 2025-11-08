@@ -14,6 +14,7 @@ public:
 	void load_texture(const std::string &path);
 
 	void new_position(float newX, float newY, float newW, float newH, float xOff);
+	void set_x_offset(float xOff);
 
 	bool test_frame(std::vector<float> camera) const;
 

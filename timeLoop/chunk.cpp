@@ -36,10 +36,10 @@ void Chunk::update(float viewScale, float offset) {
     renderer.new_position(x, y, w, h, offset);
 
     for (Tile& tile : chunk) {
-        tile.update(viewScale, offset);
+        tile.update(offset);
     }
     for (TarotCard* card : cards) {
-        card->update(viewScale, offset);
+        card->update(offset);
     }
 }
 
@@ -71,3 +71,8 @@ void Chunk::set_debug(char a) {
         break;
     }
 }
+
+Hitbox* Chunk::get_hitbox() {
+    return &hitbox;
+}
+

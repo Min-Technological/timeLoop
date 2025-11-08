@@ -16,9 +16,9 @@ public:
 
     // === Public Methods ===
     void update_hitbox(float x, float y, float width, float height);
+    void change_current(float x, float y, float width, float height);
     void set_bounding_green(Uint8 debug);
     void render(Renderer *renderer);
-    void destroy();
 
     void enable_collisions(bool status);
     bool allows_collisions() const;

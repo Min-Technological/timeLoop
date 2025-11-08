@@ -31,6 +31,7 @@ int main(int argc, char* argsp[]) {
 			mint.update(); // update game object collisions.
 
 			mint.render(); // render game to screen.
+
 			break;
 
 		case (State::PAUSE):

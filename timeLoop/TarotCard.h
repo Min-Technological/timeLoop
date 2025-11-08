@@ -36,14 +36,17 @@ public:
 		WORLD,
 		TOTAL
 	};
-	void update(float viewScale, float offset);
+	void update(float offset);
 	void render(std::vector<float> screenDimensions);
-
 	void destroy();
+
+	Hitbox* get_hitbox();
 
 	CardNumber get_card_number() const;
 	std::string get_card_name() const;
-	Hitbox hitbox;
+
+	void collect(bool state);
+	bool collected();
 
 	TarotCard(const TarotCard&) = delete;
 	TarotCard& operator=(const TarotCard&) = delete;
@@ -55,13 +58,13 @@ private:
 
 	// === Location Parameters ===
 	float x, y;
-	float w = 40;
-	float h = 80;
-	float scale = 1;
+	float w = 40; // 40
+	float h = 80; // 80
+	Hitbox hitbox;
 	Renderer renderer;
 
 	// === States ===
-	bool collected = false;
+	bool cardCollected = false;
 	bool bounding = true;
 };
 

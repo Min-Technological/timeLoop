@@ -32,13 +32,18 @@ void Hitbox::update_hitbox(float x, float y, float width, float height) {
     ya = y;
     yb = y + height;
 }
+void Hitbox::change_current(float x, float y, float width, float height) {
+    xa = x;
+    xb = x + width;
+    ya = y;
+    yb = y + height;
+}
 
 void Hitbox::set_bounding_green(Uint8 debug) {
     boundingGreen = debug;
 }
 
 void Hitbox::render(Renderer* renderer) {
-
     renderer->render_hitbox(xa, ya, xb, yb, boundingGreen);
     
 }

@@ -10,15 +10,17 @@
 #include "Titlebar.h"
 #include "Input.h"
 #include "Time.h"
-#include "Chunk.h"
 #include "Background.h"
 #include "Character.h"
 #include "Camera.h"
 #include "Map.h"
+#include "Chunk.h"
+#include "TarotDeck.h"
 #include "LoopData.h"
 #include "CharacterSelect.h"
 #include "TarotReader.h"
 #include "Enums.h"
+#include "Collisions.h"
 
 class Gamestate {
 public:
@@ -32,6 +34,7 @@ public:
     void move();
     void update();
     void render();
+    void render_hitbox();
 
     // === Pause Loop Functions ===
     void pause_update();
@@ -89,6 +92,8 @@ private:
     LoopData loopData;
     CharacterSelect characterSelect;
     TarotReader tarotScene;
+    Collisions collisionManager;
+    TarotDeck tarotDeck;
 
     // === Input & Map ===
     SDL_Event event{};
