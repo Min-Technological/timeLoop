@@ -11,11 +11,11 @@ PassiveData* LoopData::load_passive() {
 }
 
 
-void LoopData::save_tarot_deck(TarotDeck tarotDeck) {
-	currentDeck = tarotDeck;
+void LoopData::save_tarot_deck(std::array<bool, static_cast<int>(CardNumber::TOTAL)> deck) {
+	currentDeck = deck;
 }
-TarotDeck* LoopData::load_tarot_deck() {
-	return &currentDeck;
+std::array<bool, static_cast<int>(CardNumber::TOTAL)> LoopData::load_tarot_deck() {
+	return currentDeck;
 }
 
 

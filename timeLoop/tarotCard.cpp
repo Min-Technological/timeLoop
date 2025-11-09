@@ -21,97 +21,98 @@ Hitbox* TarotCard::get_hitbox() {
 	return &hitbox;
 }
 
-TarotCard::CardNumber TarotCard::get_card_number() const {
+CardNumber TarotCard::get_card_number() const {
 	return cardNumber;
 }
 
 std::string TarotCard::get_card_name() const {
+
     switch (cardNumber) {
-	case FOOL:
+	case CardNumber::FOOL:
 		return "Fool";
 		break;
 
-	case MAGICIAN:
+	case CardNumber::MAGICIAN:
 		return "Magician";
 		break;
 
-	case HIGH_PRIESTESS:
+	case CardNumber::HIGH_PRIESTESS:
 		return "High Priestess";
 		break;
 
-	case EMPRESS:
+	case CardNumber::EMPRESS:
 		return "Empress";
 		break;
 
-	case EMPEROR:
+	case CardNumber::EMPEROR:
 		return "Emperor";
 		break;
 
-	case HIGH_PRIEST:
+	case CardNumber::HIGH_PRIEST:
 		return "High Priest";
 		break;
 
-	case LOVERS:
+	case CardNumber::LOVERS:
 		return "Lovers";
 		break;
 
-	case CHARIOT:
+	case CardNumber::CHARIOT:
 		return "Chariot";
 		break;
 
-	case STRENGTH:
+	case CardNumber::STRENGTH:
 		return "Strength";
 		break;
 
-	case HERMIT:
+	case CardNumber::HERMIT:
 		return "Hermit";
 		break;
 
-	case WHEEL_OF_FORTUNE:
+	case CardNumber::WHEEL_OF_FORTUNE:
 		return "Wheel of Fortune";
 		break;
 
-	case JUSTICE:
+	case CardNumber::JUSTICE:
 		return "Justice";
 		break;
 
-	case HANGED_MAN:
+	case CardNumber::HANGED_MAN:
 		return "Hanged Man";
 		break;
 
-	case DEATH:
+	case CardNumber::DEATH:
 		return "Death";
 		break;
 
-	case TEMPERANCE:
+	case CardNumber::TEMPERANCE:
 		return "Temperance";
 		break;
 
-	case DEVIL:
+	case CardNumber::DEVIL:
 		return "Devil";
 		break;
 
-	case TOWER:
+	case CardNumber::TOWER:
 		return "Tower";
 		break;
 
-	case STAR:
+	case CardNumber::STAR:
 		return "Star";
 		break;
 
-	case MOON:
+	case CardNumber::MOON:
 		return "Moon";
 		break;
 
-	case SUN:
+	case CardNumber::SUN:
 		return "Sun";
 		break;
 
-	case JUDGEMENT:
+	case CardNumber::JUDGEMENT:
 		return "Judgement";
 		break;
 
-	case WORLD:
+	case CardNumber::WORLD:
 		return "World";
 		break;
 

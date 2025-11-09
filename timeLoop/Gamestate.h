@@ -98,6 +98,7 @@ private:
     // === Input & Map ===
     SDL_Event event{};
     std::vector<Chunk> currentMap;
+    std::array<TarotCard*, static_cast<int>(CardNumber::TOTAL)> tarotCards = { nullptr };
 
     // === Display State ===
     int screenW = 1920;

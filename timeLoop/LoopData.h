@@ -4,10 +4,8 @@
 
 #include <vector>
 #include <array>
+#include "Enums.h"
 #include "PassiveData.h"
-
-#include "Character.h"
-#include "TarotDeck.h"
 
 class LoopData {
 public:
@@ -16,14 +14,14 @@ public:
 	void save_passive(PassiveData passiveData);
 	PassiveData* load_passive();
 
-	void save_tarot_deck(TarotDeck tarotDeck);
-	TarotDeck* load_tarot_deck();
+	void save_tarot_deck(std::array<bool, static_cast<int>(CardNumber::TOTAL)> deck);
+	std::array<bool, static_cast<int>(CardNumber::TOTAL)> load_tarot_deck();
 
 private:
 
 	// === Data Vectors ===
+	std::array<bool, static_cast<int>(CardNumber::TOTAL)> currentDeck = { false };
 	PassiveData currentPassive;
-	TarotDeck currentDeck;
 
 	// === Private Variables
 	Uint64 saveTime;

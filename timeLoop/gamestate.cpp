@@ -25,6 +25,11 @@ Gamestate::Gamestate() :
 // === Map Initialization ===
 void Gamestate::initialise_map() {
     currentMap = gameMap0.generate_map();
+    for (Chunk& chunk : currentMap) {
+        for (TarotCard* card : chunk.cards) {
+            tarotCards[static_cast<int>(card->get_card_number())] = card;
+        }
+    }
 }
 
 // === Rendering Setup ===
@@ -382,12 +387,23 @@ void Gamestate::save_loop_data() {
 
     user.save_data(newLoopData.load_passive());
     camera.save_loop_data(newLoopData.load_passive());
+    tarotDeck.save_cards(&newLoopData);
 
     loopData = newLoopData;
 }
 void Gamestate::load_loop_data() {
     user.load_data(loopData.load_passive());
     camera.load_loop_data(loopData.load_passive());
+    tarotDeck.load_cards(&loopData);
+    for (TarotCard* card : tarotCards) {
+        bool collected = tarotDeck.has_card(card->get_card_number());
+        if (collected) {
+            card->destroy();
+        }
+        else {
+            card->collect(false);
+        }
+    }
 }
 
 // === Quit Status ===

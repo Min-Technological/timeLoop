@@ -7,35 +7,11 @@
 #include "Renderer.h"
 #include "Window.h"
 #include "Hitbox.h"
+#include "Enums.h"
 
 class TarotCard {
 public:
 	TarotCard(int cardType, float X, float Y, AppWindow appWindow, float& s);
-	enum CardNumber {
-		FOOL,
-		MAGICIAN,
-		HIGH_PRIESTESS,
-		EMPRESS,
-		EMPEROR,
-		HIGH_PRIEST,
-		LOVERS,
-		CHARIOT,
-		STRENGTH,
-		HERMIT,
-		WHEEL_OF_FORTUNE,
-		JUSTICE,
-		HANGED_MAN,
-		DEATH,
-		TEMPERANCE,
-		DEVIL,
-		TOWER,
-		STAR,
-		MOON,
-		SUN,
-		JUDGEMENT,
-		WORLD,
-		TOTAL
-	};
 	void update(float offset);
 	void render(std::vector<float> screenDimensions);
 	void destroy();
