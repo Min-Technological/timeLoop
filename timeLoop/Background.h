@@ -10,7 +10,7 @@
 class Background {
 public:
     // === Constructor ===
-    Background(SDL_Renderer* r, float& s);
+    Background(SDL_Renderer* r, float& s, float& depth);
 
     // === Public Methods ===
     void handle_event(bool fullscreenState);

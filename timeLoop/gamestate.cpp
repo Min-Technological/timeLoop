@@ -6,14 +6,14 @@ Gamestate::Gamestate() :
     titlebar(960, 25, "titleBarIcons.png", window.get_renderer(), &window),
     input(),
     time(60),
-    background(window.get_renderer(), scale),
-    user(960, 500, window, time, scale),
-    camera(user, time, screenW, screenH, scale),
-    gameMap0("map_test.png", 40, window, camera, scale),
+    background(window.get_renderer(), scale, cameraDepthBack),
+    user(960, 500, window, time, scale, cameraDepthMain),
+    camera(user, time, screenW, screenH, scale, cameraDepthMain),
+    gameMap0("map_test.png", 40, window, camera, scale, cameraDepthMain),
     loopData(static_cast<Uint64>(0)),
     tarotDeck(),
     characterSelect(&window, scale),
-    tarotScene(window, scale),
+    tarotScene(window, scale, cameraDepthBack),
     collisionManager(),
     quit(false)
 {
@@ -121,7 +121,7 @@ void Gamestate::render() {
 }
 void Gamestate::render_hitbox() {
 
-    Renderer hitboxRenderer = Renderer(window.get_renderer(), 0, 0, 1, 1, scale);
+    Renderer hitboxRenderer = Renderer(window.get_renderer(), 0, 0, 1, 1, scale, cameraDepthMain);
     hitboxRenderer.set_x_offset(camera.xOffset);
 
     if (bounding) {
@@ -303,6 +303,7 @@ void Gamestate::change_state() {
         if (waiting) {
             if (time.current_time() - waitTime >= 1000) {
                 currentState = State::TAROTREADING;
+                tarotScene.set_reader_state(true);
                 waiting = false;
             }
         }
@@ -324,12 +325,14 @@ void Gamestate::change_state() {
         }
         else if (tarotScene.reading_cards(input)) {
             currentState = State::TAROTCARDS;
+            tarotScene.set_reader_state(false);
         }
         break;
 
     case (State::TAROTCARDS):
         if (tarotScene.exit_cards(input)) {
             currentState = State::TAROTREADING;
+            tarotScene.set_reader_state(true);
         }
         break;
 

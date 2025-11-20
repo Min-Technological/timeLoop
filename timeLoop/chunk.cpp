@@ -1,19 +1,20 @@
 #include "Chunk.h"
 
-// === Constructor ===
-Chunk::Chunk(float leftEdge, AppWindow window, float& s) :
+// === Constructor === 
+Chunk::Chunk(float leftEdge, AppWindow window, float& s, float& depth) :
     hitbox(leftEdge, 0, 640, 1080), x(leftEdge),
-    renderer(window.get_renderer(), leftEdge, 0, 640, 1080, s) {
+    renderer(window.get_renderer(), leftEdge, 0, 640, 1080, s, depth),
+    depthValue(depth) {
 }
 
 // === Manage Tiles ===
 void Chunk::append(Tile::TileType type, float x, float y, SDL_Renderer* renderer, float& s) {
-    chunk.emplace_back(type, x, y, renderer, s);
+    chunk.emplace_back(type, x, y, renderer, s, depthValue);
 }
 
 // === Manage Tarot Cards ===
 void Chunk::add_cards(int type, float x, float y, AppWindow appWindow, float& s) {
-    TarotCard* newCard = new TarotCard(type, x, y, appWindow, s);
+    TarotCard* newCard = new TarotCard(type, x, y, appWindow, s, depthValue);
     cards.push_back(newCard);
 }
 

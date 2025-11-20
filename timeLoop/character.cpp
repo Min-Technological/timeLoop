@@ -1,12 +1,12 @@
 #include "Character.h"
 
 // === Constructor ===
-Character::Character(float initialX, float initialY, AppWindow window, Time& timer, float& s)
+Character::Character(float initialX, float initialY, AppWindow window, Time& timer, float& s, float& depth)
     : x(initialX),
     y(initialY),
-    newX(initialX), 
-    newY(initialY), 
-    renderer(window.get_renderer(), initialX, initialY, w, h, s), 
+    newX(initialX),
+    newY(initialY),
+    renderer(window.get_renderer(), initialX, initialY, w, h, s, depth),
     time(timer)
 {
     hitbox = std::move(Hitbox(initialX, initialY, w, h));
@@ -69,32 +69,30 @@ void Character::update(float viewScale, float offset) {
         scale = viewScale;
     }
 
-    renderer.new_position(x, y, w, h, offset);
-
     switch (currentState) {
     case AnimationState::WALKING_RIGHT:
         spriteColumn = 0;
-        renderer.new_position(x - 40, y, 120, h, offset);
+        renderer.new_position(x - w, y, 120.0f, h, offset);
         break;
 
     case AnimationState::WALKING_LEFT:
         spriteColumn = 1;
-        renderer.new_position(x - 40, y, 120, h, offset);
+        renderer.new_position(x - w, y, 120.0f, h, offset);
         break;
 
     case AnimationState::RUNNING_RIGHT:
         spriteColumn = 2;
-        renderer.new_position(x - 40, y, 120, h, offset);
+        renderer.new_position(x - w, y, 120.0f, h, offset);
         break;
 
     case AnimationState::RUNNING_LEFT:
         spriteColumn = 3;
-        renderer.new_position(x - 40, y, 120, h, offset);
+        renderer.new_position(x - w, y, 120.0f, h, offset);
         break;
 
     default:
         spriteColumn = 0;
-        renderer.new_position(x, y, w, h, offset);
+        renderer.new_position(x - w, y, 120.0f, h, offset);
         break;
     }
 }

@@ -81,6 +81,9 @@
     <ClCompile Include="attack.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="cameraDepth.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h">
@@ -147,6 +150,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Attack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraDepth.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

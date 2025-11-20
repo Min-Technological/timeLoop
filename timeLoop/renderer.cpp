@@ -1,7 +1,7 @@
 #include "Renderer.h"
 
-Renderer::Renderer(SDL_Renderer* r, float X, float Y, float W, float H, float& s) :
-	renderer(r), viewport( { X, Y, W, H } ), scale(s) {
+Renderer::Renderer(SDL_Renderer* r, float X, float Y, float W, float H, float& s, float& depth) :
+	renderer(r), viewport( { X, Y, W, H } ), scale(s), cameraDepth(depth) {
 }
 
 
@@ -28,14 +28,16 @@ void Renderer::load_texture(const std::string &path) {
 
 void Renderer::new_position(float newX, float newY, float newW, float newH, float xOff) {
 	xOffset = xOff;
-	viewport.x = (newX -  xOffset) * scale;
-	viewport.y = newY * scale;
-	viewport.w = newW * scale;
-	viewport.h = newH * scale;
+
+	viewport.x = cameraDepth.scale_value((newX - xOffset) * scale);
+	viewport.y = cameraDepth.scale_value(newY * scale);
+	viewport.w = cameraDepth.scale_value(newW * scale);
+	viewport.h = cameraDepth.scale_value(newH * scale);
 }
 void Renderer::set_x_offset(float xOff) {
 	xOffset = xOff;
 }
+
 void Renderer::render_colour(Uint8 red, Uint8 green, Uint8 blue, Uint8 alpha) {
 	SDL_SetRenderDrawColor(renderer, red, green, blue, alpha);
 	SDL_RenderFillRect(renderer, &viewport);
@@ -53,10 +55,10 @@ void Renderer::render_hitbox(float xa, float ya, float xb, float yb, Uint8 green
 	float width = xb - xa;
 	float height = yb - ya;
 	SDL_FRect bounding = {
-		(xa - xOffset) * scale,
-		ya * scale,
-		width * scale,
-		height * scale
+		cameraDepth.scale_value((xa - xOffset) * scale),
+		cameraDepth.scale_value(ya * scale),
+		cameraDepth.scale_value(width * scale),
+		cameraDepth.scale_value(height * scale)
 	};
 
 	SDL_SetRenderDrawColor(renderer, 255, green, 0, 255);

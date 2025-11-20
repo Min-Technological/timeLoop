@@ -1,7 +1,7 @@
 #include "TarotReader.h"
 
-TarotReader::TarotReader(AppWindow& w, float& s) :
-	renderer(w.get_renderer(), 0, 0, 1920, 1080, s), window(w), renderScale(s) {}
+TarotReader::TarotReader(AppWindow& w, float& s, float& depth) :
+	renderer(w.get_renderer(), 0, 0, 1920, 1080, s, depth), window(w), renderScale(s) {}
 
 
 
@@ -11,6 +11,10 @@ void TarotReader::render(bool bounding) {
 			renderer.render_clickbox(1463, 83, 342, 603, 0x00);
 		}
 	}
+}
+
+void TarotReader::set_reader_state(bool facingReader) {
+	readerFacing = facingReader;
 }
 
 

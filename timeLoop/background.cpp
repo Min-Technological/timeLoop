@@ -1,7 +1,8 @@
 #include "Background.h"
 
 // === Constructor ===
-Background::Background(SDL_Renderer* r, float& s) : renderer(r, 0, 0, 1920, 1080, s) {}
+Background::Background(SDL_Renderer* r, float& s, float& depth) : 
+    renderer(r, 0, 0, 1920, 1080, s, depth) {}
 
 // === Update ===
 void Background::update(int screenW, int screenH, State gameState) {

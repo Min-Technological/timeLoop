@@ -3,7 +3,7 @@
 CharacterSelect::CharacterSelect(AppWindow* w, float& s) :
 	windowScale(s), 
 	window(w),
-	renderer(window->get_renderer(), 0, 0, 1920, 1080, s)
+	renderer(window->get_renderer(), 0, 0, 1920, 1080, s, UIdepth)
 {
 	renderer.load_texture("charSelectionWheel.png");
 }

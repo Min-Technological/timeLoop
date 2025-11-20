@@ -17,6 +17,8 @@ public:
 private:
 	AppWindow* window;
 	float& windowScale;
+
+	float UIdepth = 1.0f;
 	Renderer renderer;
 
 	Persona selectedCharacter = Persona::PROTAG;

@@ -10,7 +10,7 @@
 class Chunk {
 public:
     // === Constructor ===
-    Chunk(float leftEdge, AppWindow window, float& s);
+    Chunk(float leftEdge, AppWindow window, float& s, float& depth);
 
     // === Public Methods ===
     void append(Tile::TileType type, float x, float y, SDL_Renderer* renderer, float& s);
@@ -36,6 +36,7 @@ private:
     Renderer renderer;
     float scale = 1;
     int debug = 0;
+    float& depthValue;
 
     Hitbox hitbox;
     bool showBounding = false;

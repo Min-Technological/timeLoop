@@ -1,8 +1,14 @@
 #include "Map.h"
 
 // === Constructor ===
-Map::Map(const std::string& path, int tileWidth, AppWindow window, Camera& windowCamera, float& scale) :
-    mapPath(path), tileSize(tileWidth), appWindow(window), r(window.get_renderer()), camera(windowCamera), tempScale(scale) {
+Map::Map(const std::string& path, int tileWidth, AppWindow window, Camera& windowCamera, float& scale, float& depth) :
+    mapPath(path), 
+    tileSize(tileWidth), 
+    appWindow(window), 
+    r(window.get_renderer()), 
+    camera(windowCamera), 
+    tempScale(scale), 
+    depthValue(depth) {
     s = load_surface();
 }
 
@@ -28,7 +34,7 @@ std::vector<Chunk> Map::generate_map() {
     for (int x = 0; x < s->w; x++) {
         if (x % 16 == 0) {
             index += 1;
-            map.emplace_back(40.0f * x, appWindow, tempScale);
+            map.emplace_back(40.0f * x, appWindow, tempScale, depthValue);
         }
 
         for (int y = 0; y < s->h; y++) {

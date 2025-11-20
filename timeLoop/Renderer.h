@@ -6,10 +6,11 @@
 #include <SDL3_image\SDL_image.h>
 #include <iostream>
 #include <vector>
+#include "CameraDepth.h"
 
 class Renderer {
 public:
-	Renderer(SDL_Renderer* r, float x, float y, float w, float h, float& s);
+	Renderer(SDL_Renderer* r, float x, float y, float w, float h, float& s, float& depth);
 
 	void load_texture(const std::string &path);
 
@@ -32,6 +33,8 @@ private:
 	SDL_Texture* texture = nullptr;
 	SDL_Renderer* renderer = nullptr;
 	SDL_FRect viewport;
+
+	CameraDepth cameraDepth;
 
 	float& scale;
 	float xOffset = 0;

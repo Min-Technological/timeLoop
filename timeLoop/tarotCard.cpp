@@ -1,7 +1,7 @@
 #include "TarotCard.h"
 
-TarotCard::TarotCard(int cardType, float X, float Y, AppWindow appWindow, float& s) :
-	cardNumber(static_cast<CardNumber>(cardType)), hitbox(X, Y - 40, w, h), renderer(appWindow.get_renderer(), X, Y - 40,  w, h, s), x(X), y(Y - 40) {
+TarotCard::TarotCard(int cardType, float X, float Y, AppWindow appWindow, float& s, float& depth) :
+	cardNumber(static_cast<CardNumber>(cardType)), hitbox(X, Y - 40, w, h), renderer(appWindow.get_renderer(), X, Y - 40,  w, h, s, depth), x(X), y(Y - 40) {
     renderer.load_texture("tarotCards.png");
 }
 

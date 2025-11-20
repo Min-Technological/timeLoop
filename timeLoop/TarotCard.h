@@ -11,7 +11,7 @@
 
 class TarotCard {
 public:
-	TarotCard(int cardType, float X, float Y, AppWindow appWindow, float& s);
+	TarotCard(int cardType, float X, float Y, AppWindow appWindow, float& s, float& depth);
 	void update(float offset);
 	void render(std::vector<float> screenDimensions);
 	void destroy();

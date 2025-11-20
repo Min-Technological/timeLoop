@@ -1,8 +1,8 @@
 #include "Camera.h"
 
 // === Constructor ===
-Camera::Camera(Character& character, Time& mainTime, int& screenW, int& screenH, float& screenScale) :
-    user(character), w(screenW), h(screenH), scale(screenScale), time(mainTime) {
+Camera::Camera(Character& character, Time& mainTime, int& screenW, int& screenH, float& screenScale, float& playerDepthValue) :
+    user(character), w(screenW), h(screenH), scale(screenScale), time(mainTime), playerDepth(playerDepthValue) {
 }
 
 // === Apply Camera Effects ===
@@ -18,10 +18,9 @@ void Camera::update() {
     rightBounds = leftBounds * (boundsCount - 1);
 
     // Right Edge Clamp
-    float rightClamp = rightEdge - (static_cast<float>(w) / scale);
+    float rightClamp = (rightEdge - ((static_cast<float>(w) * playerDepth) / scale)) * playerDepth;
 
     float userCentre = userCurrentPos[0] + (user.w / 2.0f);
-    float screenPlayerPos = (userCentre - xOffset) * scale;
 
     float xVelocity = user.get_velocity()[0];
 
@@ -38,10 +37,10 @@ void Camera::update() {
     }
 
     if (xVelocity <= 5 && xVelocity >= -5) {
-        xOffset = lerp(xOffset, userCentre - camTarget, 0.02f);
+        xOffset = lerp(xOffset, (userCentre - camTarget), 0.02f);
     }
     else {
-        xOffset = lerp(xOffset, userCentre - camTarget, 0.04f);
+        xOffset = lerp(xOffset, (userCentre - camTarget), 0.04f);
     }
 
     if (xOffset < leftEdge) {
@@ -101,7 +100,7 @@ float Camera::target(float velocity) {
     }
 
     //window width
-    float width = static_cast<float>(w) / scale;
+    float width = (static_cast<float>(w) / scale) * playerDepth;
 
     // Exponential Factor
     float eFactor = factor * factor * factor;

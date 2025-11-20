@@ -12,13 +12,14 @@
 #include "Input.h"
 #include "Time.h"
 #include "Hitbox.h"
+#include "CameraDepth.h"
 #include "PassiveData.h"
 #include "Enums.h"
 
 class Character {
 public:
     // === Constructor ===
-    Character(float initialX, float initialY, AppWindow window, Time& timer, float& s);
+    Character(float initialX, float initialY, AppWindow window, Time& timer, float& s, float& depth);
 
     // === Public Methods ===
     void handle_event(Input input);

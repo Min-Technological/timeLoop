@@ -138,6 +138,7 @@
     <ClCompile Include="attack.cpp" />
     <ClCompile Include="background.cpp" />
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="cameraDepth.cpp" />
     <ClCompile Include="character.cpp" />
     <ClCompile Include="characterSelect.cpp" />
     <ClCompile Include="chunk.cpp">
@@ -165,6 +166,7 @@
     <ClInclude Include="Attack.h" />
     <ClInclude Include="Background.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CameraDepth.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="CharacterSelect.h" />
     <ClInclude Include="Chunk.h" />

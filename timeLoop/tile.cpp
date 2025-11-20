@@ -1,8 +1,8 @@
 #include "Tile.h"
 
 // === Constructor ===
-Tile::Tile(TileType tileType, float xPos, float yPos, SDL_Renderer* r, float& s) :
-    x(xPos), y(yPos), type(tileType), renderer(r, xPos, yPos, w, w, s) {
+Tile::Tile(TileType tileType, float xPos, float yPos, SDL_Renderer* r, float& s, float& depth) :
+    x(xPos), y(yPos), type(tileType), renderer(r, xPos, yPos, w, w, s, depth) {
     hitbox = Hitbox(xPos, yPos, w, w);
 }
 
@@ -12,7 +12,6 @@ void Tile::handle_event(bool fullscreen) {
 
 // === Update position and scale ===
 void Tile::update(float offset) {
-
     renderer.new_position(x, y, w, w, offset);
 
 }

@@ -6,6 +6,7 @@
 #include <vector>
 #include "Renderer.h"
 #include "Hitbox.h"
+#include "CameraDepth.h"
 
 class Tile {
 public:
@@ -27,7 +28,7 @@ public:
     };
 
     // === Constructor ===
-    Tile(TileType tileType, float xPos, float yPos, SDL_Renderer* r, float& s);
+    Tile(TileType tileType, float xPos, float yPos, SDL_Renderer* r, float& s, float& depth);
 
     // === Public Methods ===
     void handle_event(bool fullscreen);

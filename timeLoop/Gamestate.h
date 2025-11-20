@@ -73,9 +73,11 @@ private:
     // === Public Fields ===
     bool quit;
     Uint64 frameCount = 0;
+    float cameraDepthMain = 1.0f;
+    float cameraDepthBack = 1.0f;
 
     // === Game State Management ===
-    State currentState = State::TAROTREADING;
+    State currentState = State::TAROTREADING; 
 
     // === Private Helpers ===
     void calculate_scale();

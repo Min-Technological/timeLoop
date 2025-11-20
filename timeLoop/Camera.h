@@ -9,7 +9,7 @@
 class Camera {
 public:
     // === Constructor ===
-    Camera(Character& character, Time& mainTime, int& screenW, int& screenH, float& screenScale);
+    Camera(Character& character, Time& mainTime, int& screenW, int& screenH, float& screenScale, float& playerDepthValue);
 
     // === Public Methods ===
     void affect(Input input);
@@ -30,6 +30,7 @@ private:
     Character& user;
     Time& time;
     float& scale;
+    float& playerDepth;
 
     // === Internal State ===
     float x = 0;

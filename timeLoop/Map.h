@@ -15,7 +15,7 @@
 class Map {
 public:
     // === Constructor ===
-    Map(const std::string& path, int tileWidth, AppWindow window, Camera& windowCamera, float& s);
+    Map(const std::string& path, int tileWidth, AppWindow window, Camera& windowCamera, float& s, float& depth);
 
     // === Public Methods ===
     std::vector<Chunk> generate_map();
@@ -24,6 +24,7 @@ private:
     // === File & Surface State ===
     std::string mapPath;
     SDL_Surface* s = nullptr;
+    float& depthValue;
 
     // === Map Properties ===
     int tileSize;

@@ -9,8 +9,10 @@
 
 class TarotReader {
 public:
-	TarotReader(AppWindow& w, float& s);
+	TarotReader(AppWindow& w, float& s, float& depth);
 	void render(bool bounding);
+
+	void set_reader_state(bool facingReader);
 
 	bool exit_reader(Input& input);
 	bool reading_cards(Input& input);
