@@ -70,7 +70,7 @@ void Renderer::render_clickbox(float x, float y, float w, float h, Uint8 green) 
 		h * scale
 	};
 
-	std::cout << "RENDERING! at scale: " << scale << "\n";
+
 	SDL_SetRenderDrawColor(renderer, 0, green, 255, 255);
 	SDL_RenderRect(renderer, &bounding);
 }
