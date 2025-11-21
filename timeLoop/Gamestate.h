@@ -73,6 +73,10 @@ private:
     // === Public Fields ===
     bool quit;
     Uint64 frameCount = 0;
+
+    float depthMain = 1.0f;
+    float depthBack = 1.0f;
+
     float cameraDepthMain = 1.0f;
     float cameraDepthBack = 1.0f;
 
@@ -81,6 +85,7 @@ private:
 
     // === Private Helpers ===
     void calculate_scale();
+    void calculate_depth();
 
     // === Subsystems ===
     AppWindow window;

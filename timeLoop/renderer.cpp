@@ -39,18 +39,29 @@ void Renderer::set_x_offset(float xOff) {
 }
 
 void Renderer::render_colour(Uint8 red, Uint8 green, Uint8 blue, Uint8 alpha) {
+	if (cameraDepth.get_depth() <= 0) return;
+
 	SDL_SetRenderDrawColor(renderer, red, green, blue, alpha);
 	SDL_RenderFillRect(renderer, &viewport);
 }
 void Renderer::render_texture() {
+	if (cameraDepth.get_depth() <= 0) return;
+
+
 	SDL_RenderTexture(renderer, texture, NULL, &viewport);
 }
 void Renderer::render_sprite(float x, float y, float w, float h) {
+	if (cameraDepth.get_depth() <= 0) return;
+
+
 	SDL_FRect sprite = { x, y, w, h };
 
 	SDL_RenderTexture(renderer, texture, &sprite, &viewport);
 }
 void Renderer::render_hitbox(float xa, float ya, float xb, float yb, Uint8 green) {
+	if (cameraDepth.get_depth() <= 0) return;
+
+
 
 	float width = xb - xa;
 	float height = yb - ya;
@@ -65,6 +76,9 @@ void Renderer::render_hitbox(float xa, float ya, float xb, float yb, Uint8 green
 	SDL_RenderRect(renderer, &bounding);
 }
 void Renderer::render_clickbox(float x, float y, float w, float h, Uint8 green) {
+	if (cameraDepth.get_depth() <= 0) return;
+
+
 	SDL_FRect bounding = {
 		(x - xOffset) * scale,
 		y * scale,

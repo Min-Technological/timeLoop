@@ -89,12 +89,15 @@ void Gamestate::move() {
 
 }
 void Gamestate::update() {
+    camera.zoom(0.0f);
+    calculate_depth();
+
     background.update(screenW, screenH, currentState);
     camera.update();
-    user.update(scale, camera.xOffset);
+    user.update(scale, camera.get_coordinate(0));
 
     for (Chunk& chunk : currentMap) {
-        chunk.update(scale, camera.xOffset);
+        chunk.update(scale, camera.get_coordinate(0));
     }
 
     // update_loop_data();
@@ -108,7 +111,7 @@ void Gamestate::render() {
 
     background.render();
 
-    std::vector<float> screenDimensions = { static_cast<float>(camera.w), static_cast<float>(camera.h) };
+    std::vector<float> screenDimensions = { camera.get_coordinate(2), camera.get_coordinate(3)};
     for (Chunk& chunk : currentMap) {
         chunk.render(screenDimensions);
     }
@@ -122,7 +125,7 @@ void Gamestate::render() {
 void Gamestate::render_hitbox() {
 
     Renderer hitboxRenderer = Renderer(window.get_renderer(), 0, 0, 1, 1, scale, cameraDepthMain);
-    hitboxRenderer.set_x_offset(camera.xOffset);
+    hitboxRenderer.set_x_offset(camera.get_coordinate(0));
 
     if (bounding) {
         for (Chunk& chunk : currentMap) {
@@ -139,11 +142,13 @@ void Gamestate::render_hitbox() {
 
 // === Pause Helpers ===
 void Gamestate::pause_update() {
+    camera.move_position(user.get_hitbox()->get_current_pos()[0], user.get_hitbox()->get_current_pos()[1], 0.29f);
+    calculate_depth();
     background.update(screenW, screenH, currentState);
-    user.update(scale, camera.xOffset);
+    user.update(scale, camera.get_coordinate(0));
 
     for (Chunk& chunk : currentMap) {
-        chunk.update(scale, camera.xOffset);
+        chunk.update(scale, camera.get_coordinate(0));
     }
 }
 void Gamestate::pause_render() {
@@ -156,7 +161,7 @@ void Gamestate::pause_render() {
 
     background.render();
 
-    std::vector<float> screenDimensions = { static_cast<float>(camera.w), static_cast<float>(camera.h) };
+    std::vector<float> screenDimensions = { camera.get_coordinate(2), camera.get_coordinate(3) };
     for (Chunk& chunk : currentMap) {
         chunk.render(screenDimensions);
     }
@@ -173,6 +178,8 @@ void Gamestate::pause_render() {
 
 // === Suicide Helpers ===
 void Gamestate::suicide_update() {
+    calculate_depth();
+
     background.change_persona(user.get_persona());
     background.update(screenW, screenH, currentState);
 
@@ -194,12 +201,14 @@ void Gamestate::suicide_render() {
 
 // === Selection Helpers ===
 void Gamestate::selection_update() {
+    calculate_depth();
+
     background.update(screenW, screenH, currentState);
     // camera.update();
-    user.update(scale, camera.xOffset);
+    user.update(scale, camera.get_coordinate(0));
 
     for (Chunk& chunk : currentMap) {
-        chunk.update(scale, camera.xOffset);
+        chunk.update(scale, camera.get_coordinate(0));
     }
 
     characterSelect.set_current_selection(user.get_persona());
@@ -216,7 +225,7 @@ void Gamestate::selection_render() {
 
     background.render();
 
-    std::vector<float> screenDimensions = { static_cast<float>(camera.w), static_cast<float>(camera.h) };
+    std::vector<float> screenDimensions = { camera.get_coordinate(2), camera.get_coordinate(3) };
     for (Chunk& chunk : currentMap) {
         chunk.render(screenDimensions);
     }
@@ -420,4 +429,7 @@ void Gamestate::calculate_scale() {
     screenH = window.is_fullscreen() ? int(windowH) : int(windowH) - titlebar.titleHeight;
     scale = static_cast<float>(screenH) / 1080;
 }
-
+void Gamestate::calculate_depth() {
+    cameraDepthMain = depthMain - camera.get_depth();
+    cameraDepthBack = depthBack - camera.get_depth();
+}

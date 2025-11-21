@@ -18,7 +18,7 @@ void Camera::update() {
     rightBounds = leftBounds * (boundsCount - 1);
 
     // Right Edge Clamp
-    float rightClamp = (rightEdge - ((static_cast<float>(w) * playerDepth) / scale)) * playerDepth;
+    float rightClamp = (rightEdge - ((static_cast<float>(w) / scale) * playerDepth));
 
     float userCentre = userCurrentPos[0] + (user.w / 2.0f);
 
@@ -72,6 +72,32 @@ void Camera::load_loop_data(PassiveData* passiveData) {
 
     xOffset = cameraPos[0];
     yOffset = cameraPos[1];
+}
+
+float Camera::get_coordinate(int coord) {
+    switch (coord) {
+    case 0:
+        return static_cast<float>(xOffset);
+    case 1:
+        return static_cast<float>(yOffset);
+    case 2:
+        return static_cast<float>(w);
+    case 3:
+        return static_cast<float>(h);
+    default:
+        return 0.0f;
+    }
+}
+float Camera::get_depth() {
+    return cameraDepth;
+}
+void Camera::move_position(float x, float y, float z) {
+    xOffset = lerp(xOffset, x, 0.1f);
+    yOffset = lerp(yOffset, y, 0.1f);
+    cameraDepth = lerp(cameraDepth, z, 0.1f);
+}
+void Camera::zoom(float z) {
+    cameraDepth = lerp(cameraDepth, z, 0.1f);
 }
 
 

@@ -19,22 +19,26 @@ public:
     void save_loop_data(PassiveData* passiveData);
     void load_loop_data(PassiveData* passiveData);
 
-    // === Public Fields ===
-    int& w;  // Viewport Width
-    int& h;  // Viewport Height
-    float xOffset = 0;
-    float yOffset = 0;
+    /// x = 0, y = 1, w = 2, h = 3
+    float get_coordinate(int coord);
+    float get_depth();
+
+    void move_position(float x, float y, float z);
+    void zoom(float z);
 
 private:
     // === References ===
     Character& user;
     Time& time;
     float& scale;
+    float cameraDepth = 0;
     float& playerDepth;
 
     // === Internal State ===
-    float x = 0;
-    float y = 0;
+    float xOffset = 0;
+    float yOffset = 0;
+    int& w;  // Viewport Width
+    int& h;  // Viewport Height
 
     float leftBounds = 480;
     float rightBounds = 1440;
