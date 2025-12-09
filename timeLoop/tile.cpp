@@ -11,8 +11,8 @@ void Tile::handle_event(bool fullscreen) {
 }
 
 // === Update position and scale ===
-void Tile::update(float offset) {
-    renderer.new_position(x, y, w, w, offset);
+void Tile::update(float xOffset, float yOffset) {
+    renderer.new_position(x, y, w, w, xOffset, yOffset);
 
 }
 

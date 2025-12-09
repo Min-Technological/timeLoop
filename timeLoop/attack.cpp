@@ -1,10 +1,10 @@
 #include "Attack.h"
 
-void Attack::set_damage(int damage) {
+void Attack::set_damage(float damage) {
 	this->damage = damage;
 }
 
-int Attack::get_damage() {
+float Attack::get_damage() {
 	return damage;
 }
 

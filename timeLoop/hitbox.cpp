@@ -44,7 +44,9 @@ void Hitbox::set_bounding_green(Uint8 debug) {
 }
 
 void Hitbox::render(Renderer* renderer) {
-    renderer->render_hitbox(xa, ya, xb, yb, boundingGreen);
+    if (allowsCollisions) {
+        renderer->render_hitbox(xa, ya, xb, yb, boundingGreen);
+    }
     
 }
 

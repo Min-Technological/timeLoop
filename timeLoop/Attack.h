@@ -6,8 +6,8 @@
 
 class Attack {
 public:
-	void set_damage(int damage);
-	int get_damage();
+	void set_damage(float damage);
+	float get_damage();
 
 	void set_rect_attack(float x, float y, float w, float h);
 
@@ -16,7 +16,7 @@ public:
 
 private:
 	Hitbox currentAttack;
-	int damage = -1;
+	float damage = -1;
 };
 
 

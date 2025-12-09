@@ -39,6 +39,7 @@ private:
     float yOffset = 0;
     int& w;  // Viewport Width
     int& h;  // Viewport Height
+    float rate = 0.1f;
 
     float leftBounds = 480;
     float rightBounds = 1440;

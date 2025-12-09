@@ -9,7 +9,9 @@
 
 class TarotReader {
 public:
-	TarotReader(AppWindow& w, float& s, float& depth);
+	TarotReader(AppWindow& w, float& s);
+	void update();
+	void rescale();
 	void render(bool bounding);
 
 	void set_reader_state(bool facingReader);
@@ -19,10 +21,15 @@ public:
 
 	bool exit_cards(Input& input);
 
+	void reading(bool readingTarot);
+
 private:
-	Renderer renderer;
+	Renderer readerRenderer;
+	Renderer tarotRenderer;
 	AppWindow& window;
 	float& renderScale;
+
+	float UIdepth = 1.0f;
 
 	bool readerFacing = true;
 

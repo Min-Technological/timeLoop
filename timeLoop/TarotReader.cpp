@@ -1,14 +1,39 @@
 #include "TarotReader.h"
 
-TarotReader::TarotReader(AppWindow& w, float& s, float& depth) :
-	renderer(w.get_renderer(), 0, 0, 1920, 1080, s, depth), window(w), renderScale(s) {}
+TarotReader::TarotReader(AppWindow& w, float& s) :
+	readerRenderer(w.get_renderer(), 0, 0, 1920, 1080, s, UIdepth), 
+	tarotRenderer(w.get_renderer(), 0, 0, 1920, 1080, s, UIdepth),
+	window(w), renderScale(s) {}
 
 
+
+void TarotReader::update() {
+	tarotRenderer.new_position(0, 0, 1920, 1080, 0, 0);
+	readerRenderer.new_position(0, 0, 1920, 1080, 0, 0);
+}
+
+void TarotReader::rescale() {
+	readerRenderer.rescale();
+	tarotRenderer.rescale();
+	
+}
 
 void TarotReader::render(bool bounding) {
+
+	if (readerFacing) {
+		readerRenderer.render_texture();
+	}
+	
+	else {
+		tarotRenderer.render_texture();
+	}
+
 	if (bounding) {
 		if (readerFacing) {
-			renderer.render_clickbox(1463, 83, 342, 603, 0x00);
+			readerRenderer.render_clickbox(1463, 83, 342, 603, 0x00);
+		}
+		else {
+			tarotRenderer.render_clickbox(0, 0, 540, 540, 0xff);
 		}
 	}
 }
@@ -70,5 +95,19 @@ bool TarotReader::exit_cards(Input& input) {
 	}
 	else {
 		return false;
+	}
+}
+
+void TarotReader::reading(bool readingTarot) {
+	if (readingTarot) {
+		readerRenderer.destroy_texture();
+		tarotRenderer.destroy_texture();
+
+		readerRenderer.load_texture("tarotBasic.png");
+		tarotRenderer.load_texture("tarotSelect.png");
+	}
+	else {
+		readerRenderer.destroy_texture();
+		tarotRenderer.destroy_texture();
 	}
 }

@@ -5,8 +5,8 @@ TarotCard::TarotCard(int cardType, float X, float Y, AppWindow appWindow, float&
     renderer.load_texture("tarotCards.png");
 }
 
-void TarotCard::update(float offset) {
-    renderer.new_position(x, y, w, h, offset);
+void TarotCard::update(float xOffset, float yOffset) {
+    renderer.new_position(x, y, w, h, xOffset, yOffset);
 
 }
 

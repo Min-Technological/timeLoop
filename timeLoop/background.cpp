@@ -6,7 +6,7 @@ Background::Background(SDL_Renderer* r, float& s, float& depth) :
 
 // === Update ===
 void Background::update(int screenW, int screenH, State gameState) {
-    renderer.new_position(0, 0, 1920, 1080, 0);
+    renderer.new_position(0, 0, 1920, 1080, 0, 0);
     if (newState != gameState) {
         newState = gameState;
         switch (newState) {

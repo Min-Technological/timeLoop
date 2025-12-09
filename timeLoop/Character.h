@@ -12,6 +12,7 @@
 #include "Input.h"
 #include "Time.h"
 #include "Hitbox.h"
+#include "Attack.h"
 #include "CameraDepth.h"
 #include "PassiveData.h"
 #include "Enums.h"
@@ -25,7 +26,7 @@ public:
     void handle_event(Input input);
     void move(Input input);
     void resolve_collision();
-    void update(float viewScale, float xOffset);
+    void update(float xOffset, float yOffset);
     void render();
     void destroy();
 
@@ -48,6 +49,9 @@ public:
     void hit_right();
 
 
+    Attack* get_attack();
+
+
 
     // === Public Fields ===
     Hitbox hitbox;
@@ -63,14 +67,16 @@ private:
     void move_right(float px);
     void move_jump();
 
-
+    Attack attackManager;
+    bool attacking = false;
+    bool cooldown = false;
+    Uint64 attackTime = 0;
 
 
     // === Rendering Fields ===
     // --- Essential Variables ---
     Renderer renderer;  // Rendering Management
     Time& time;         // Time Management
-    float scale = 1;    // Vertical Scale Multiplier (1 : 1080)
 
     // --- Animation ---
     enum AnimationState {     // List of Animation States   
@@ -98,6 +104,8 @@ private:
  
 
     // === Physics Data ===
+    bool facingLeft = false;
+    
     // --- Location ---
     float newX; // Predicted x
     float newY; // Predicted y

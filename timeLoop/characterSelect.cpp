@@ -78,7 +78,7 @@ void CharacterSelect::render() {
 		radius
 	};
 
-	renderer.new_position(555, 135, 810, 810, 0);
+	renderer.new_position(555, 135, 810, 810, 0, 0);
 	renderer.render_texture();
 
 

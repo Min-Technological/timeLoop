@@ -7,14 +7,15 @@ Gamestate::Gamestate() :
     input(),
     time(60),
     background(window.get_renderer(), scale, cameraDepthBack),
-    user(960, 500, window, time, scale, cameraDepthMain),
+    user(960, 600, window, time, scale, cameraDepthMain),
     camera(user, time, screenW, screenH, scale, cameraDepthMain),
     gameMap0("map_test.png", 40, window, camera, scale, cameraDepthMain),
     loopData(static_cast<Uint64>(0)),
     tarotDeck(),
     characterSelect(&window, scale),
-    tarotScene(window, scale, cameraDepthBack),
+    tarotScene(window, scale),
     collisionManager(),
+    tempEnemy(720, 600, window, time, scale, cameraDepthMain),
     quit(false)
 {
     event.type = SDL_EVENT_FIRST;
@@ -85,19 +86,22 @@ void Gamestate::move() {
 
     user.resolve_collision();
 
+    collisionManager.collide_enemy_attack(&tempEnemy, user.get_attack());
+
     camera.affect(input);
 
 }
 void Gamestate::update() {
-    camera.zoom(0.0f);
+    camera.zoom(0);
+    camera.update();
     calculate_depth();
 
     background.update(screenW, screenH, currentState);
-    camera.update();
-    user.update(scale, camera.get_coordinate(0));
+    user.update(camera.get_coordinate(0), camera.get_coordinate(1));
+    tempEnemy.update(camera.get_coordinate(0), camera.get_coordinate(1));
 
     for (Chunk& chunk : currentMap) {
-        chunk.update(scale, camera.get_coordinate(0));
+        chunk.update(scale, camera.get_coordinate(0), camera.get_coordinate(1));
     }
 
     // update_loop_data();
@@ -111,12 +115,14 @@ void Gamestate::render() {
 
     background.render();
 
+
     std::vector<float> screenDimensions = { camera.get_coordinate(2), camera.get_coordinate(3)};
     for (Chunk& chunk : currentMap) {
         chunk.render(screenDimensions);
     }
 
     user.render();
+    tempEnemy.render();
 
     render_hitbox();
 
@@ -126,6 +132,7 @@ void Gamestate::render_hitbox() {
 
     Renderer hitboxRenderer = Renderer(window.get_renderer(), 0, 0, 1, 1, scale, cameraDepthMain);
     hitboxRenderer.set_x_offset(camera.get_coordinate(0));
+    hitboxRenderer.set_y_offset(camera.get_coordinate(1));
 
     if (bounding) {
         for (Chunk& chunk : currentMap) {
@@ -136,19 +143,20 @@ void Gamestate::render_hitbox() {
             }
         }
         user.get_hitbox()->render(&hitboxRenderer);
+        user.get_attack()->get_attack()->render(&hitboxRenderer);
     }
 }
 
 
 // === Pause Helpers ===
 void Gamestate::pause_update() {
-    camera.move_position(user.get_hitbox()->get_current_pos()[0], user.get_hitbox()->get_current_pos()[1], 0.29f);
     calculate_depth();
+
     background.update(screenW, screenH, currentState);
-    user.update(scale, camera.get_coordinate(0));
+    user.update(camera.get_coordinate(0), camera.get_coordinate(1));
 
     for (Chunk& chunk : currentMap) {
-        chunk.update(scale, camera.get_coordinate(0));
+        chunk.update(scale, camera.get_coordinate(0), camera.get_coordinate(1));
     }
 }
 void Gamestate::pause_render() {
@@ -178,7 +186,9 @@ void Gamestate::pause_render() {
 
 // === Suicide Helpers ===
 void Gamestate::suicide_update() {
-    calculate_depth();
+
+    cameraDepthMain = depthMain;
+    cameraDepthBack = depthBack;
 
     background.change_persona(user.get_persona());
     background.update(screenW, screenH, currentState);
@@ -205,10 +215,10 @@ void Gamestate::selection_update() {
 
     background.update(screenW, screenH, currentState);
     // camera.update();
-    user.update(scale, camera.get_coordinate(0));
+    user.update(camera.get_coordinate(0), camera.get_coordinate(1));
 
     for (Chunk& chunk : currentMap) {
-        chunk.update(scale, camera.get_coordinate(0));
+        chunk.update(scale, camera.get_coordinate(0), camera.get_coordinate(1));
     }
 
     characterSelect.set_current_selection(user.get_persona());
@@ -246,7 +256,10 @@ void Gamestate::selection_render() {
 // === Tarot Reading Helpers ===
 void Gamestate::tarot_update() {
 
-
+    if (oldScale != scale) {
+        tarotScene.rescale();
+    }
+    tarotScene.update();
     background.update(screenW, screenH, currentState);
 
 }
@@ -257,7 +270,7 @@ void Gamestate::tarot_render() {
     titlebar.render();
     set_render_canvas();
 
-    background.render();
+    // background.render();
     tarotScene.render(bounding);
 
 
@@ -313,6 +326,7 @@ void Gamestate::change_state() {
             if (time.current_time() - waitTime >= 1000) {
                 currentState = State::TAROTREADING;
                 tarotScene.set_reader_state(true);
+                tarotScene.reading(true);
                 waiting = false;
             }
         }
@@ -331,6 +345,7 @@ void Gamestate::change_state() {
     case (State::TAROTREADING):
         if (tarotScene.exit_reader(input)) {
             currentState = State::GAME;
+            tarotScene.reading(false);
         }
         else if (tarotScene.reading_cards(input)) {
             currentState = State::TAROTCARDS;
@@ -425,6 +440,11 @@ bool Gamestate::get_quit() {
 
 // === Utility ===
 void Gamestate::calculate_scale() {
+
+    if (scale != oldScale) {
+        oldScale = scale;
+    }
+
     SDL_GetCurrentRenderOutputSize(window.get_renderer(), &screenW, &windowH);
     screenH = window.is_fullscreen() ? int(windowH) : int(windowH) - titlebar.titleHeight;
     scale = static_cast<float>(screenH) / 1080;

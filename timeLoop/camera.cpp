@@ -24,24 +24,29 @@ void Camera::update() {
 
     float xVelocity = user.get_velocity()[0];
 
-    float camTarget = target(xVelocity);
-    if (xVelocity < 0) {
-        if (camTarget < leftEdge) {
-            camTarget = leftEdge;
-        }
+    float camTargetX = target(xVelocity);
+    float camTargetY = userCurrentPos[1] - 600;
+
+    if (camTargetX < leftEdge) {
+        camTargetX = leftEdge;
     }
-    else if (xVelocity > 0) {
-        if (camTarget > rightClamp) {
-            camTarget = rightClamp;
-        }
+    else if (camTargetX > rightClamp) {
+        camTargetX = rightClamp;
     }
 
     if (xVelocity <= 5 && xVelocity >= -5) {
-        xOffset = lerp(xOffset, (userCentre - camTarget), 0.02f);
+        rate = 0.01f;
     }
     else {
-        xOffset = lerp(xOffset, (userCentre - camTarget), 0.04f);
+        rate = 0.04f;
     }
+
+
+
+    xOffset = lerp(xOffset, (userCentre - camTargetX), rate);
+    yOffset = lerp(yOffset, camTargetY, rate);
+
+
 
     if (xOffset < leftEdge) {
         xOffset = leftEdge;
@@ -49,6 +54,8 @@ void Camera::update() {
     else if (xOffset > rightClamp) {
         xOffset = rightClamp;
     }
+
+
 
     // Apply shake effect if active
     if (!shaking) return;
@@ -97,7 +104,7 @@ void Camera::move_position(float x, float y, float z) {
     cameraDepth = lerp(cameraDepth, z, 0.1f);
 }
 void Camera::zoom(float z) {
-    cameraDepth = lerp(cameraDepth, z, 0.1f);
+    cameraDepth = lerp(cameraDepth, z, rate);
 }
 
 
@@ -126,7 +133,7 @@ float Camera::target(float velocity) {
     }
 
     //window width
-    float width = (static_cast<float>(w) / scale) * playerDepth;
+    float width = (static_cast<float>(w) / scale);
 
     // Exponential Factor
     float eFactor = factor * factor * factor;

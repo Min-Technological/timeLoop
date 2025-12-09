@@ -29,18 +29,18 @@ void Chunk::remove_card(TarotCard* tarotCard) {
 }
 
 // === Update Tiles ===
-void Chunk::update(float viewScale, float offset) {
+void Chunk::update(float viewScale, float xOffset, float yOffset) {
     if (scale != viewScale) {
         scale = viewScale;
     }
 
-    renderer.new_position(x, y, w, h, offset);
+    renderer.new_position(x, y, w, h, xOffset, yOffset);
 
     for (Tile& tile : chunk) {
-        tile.update(offset);
+        tile.update(xOffset, yOffset);
     }
     for (TarotCard* card : cards) {
-        card->update(offset);
+        card->update(xOffset, yOffset);
     }
 }
 

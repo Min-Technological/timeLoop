@@ -16,7 +16,7 @@ public:
     void append(Tile::TileType type, float x, float y, SDL_Renderer* renderer, float& s);
     void add_cards(int type, float x, float y, AppWindow appWindow, float& s);
     void remove_card(TarotCard* tarotCard);
-    void update(float viewScale, float xOffset);
+    void update(float viewScale, float xOffset, float yOffset);
     void render(std::vector<float> screenDimensions);
     void set_debug(char a);
 

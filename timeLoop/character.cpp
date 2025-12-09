@@ -11,6 +11,7 @@ Character::Character(float initialX, float initialY, AppWindow window, Time& tim
 {
     hitbox = std::move(Hitbox(initialX, initialY, w, h));
     change_persona(currentPersona);
+    attackManager.set_damage(1);
 }
 
 void Character::move(Input input) {
@@ -39,6 +40,28 @@ void Character::move(Input input) {
 
 
 
+    if (input.is_key_just_pressed(SDLK_COMMA)) {
+        if (!cooldown)
+        {
+            if (!facingLeft) {
+                attackManager.set_rect_attack(x + w, y, 160, 160);
+
+            }
+            else if (facingLeft) {
+                attackManager.set_rect_attack(x - 160, y, 160, 160);
+            }
+
+            attacking = true;
+            cooldown = true;
+            attackTime = time.current_frame();
+        }
+    }
+    else if (attacking) {
+        xVelocity = 0;
+    }
+
+
+
     if (input.is_key_pressed(SDL_SCANCODE_SPACE)) {
         move_jump();
     }
@@ -63,38 +86,47 @@ void Character::resolve_collision() {
 }
 
 // === Update & Render ===
-void Character::update(float viewScale, float offset) {
-
-    if (scale != viewScale) {
-        scale = viewScale;
-    }
+void Character::update(float xOffset, float yOffset) {
 
     switch (currentState) {
     case AnimationState::WALKING_RIGHT:
         spriteColumn = 0;
-        renderer.new_position(x - w, y, 120.0f, h, offset);
+        renderer.new_position(x - w, y, 120.0f, h, xOffset, yOffset);
         break;
 
     case AnimationState::WALKING_LEFT:
         spriteColumn = 1;
-        renderer.new_position(x - w, y, 120.0f, h, offset);
+        renderer.new_position(x - w, y, 120.0f, h, xOffset, yOffset);
         break;
 
     case AnimationState::RUNNING_RIGHT:
         spriteColumn = 2;
-        renderer.new_position(x - w, y, 120.0f, h, offset);
+        renderer.new_position(x - w, y, 120.0f, h, xOffset, yOffset);
         break;
 
     case AnimationState::RUNNING_LEFT:
         spriteColumn = 3;
-        renderer.new_position(x - w, y, 120.0f, h, offset);
+        renderer.new_position(x - w, y, 120.0f, h, xOffset, yOffset);
         break;
 
     default:
         spriteColumn = 0;
-        renderer.new_position(x - w, y, 120.0f, h, offset);
+        renderer.new_position(x - w, y, 120.0f, h, xOffset, yOffset);
         break;
     }
+
+    if (cooldown) {
+        if (time.current_frame() - attackTime >= 30) {
+            cooldown = false;
+            attacking = false;
+        }
+        else if (time.current_time() - attackTime >= 6) {
+            attacking = false;
+            attackManager.despawn_attack();
+        }
+        std::cout << "COOLDOWN: " << (30 - (time.current_frame() - attackTime)) << "\n";
+    }
+    
 }
 
 void Character::render() {
@@ -205,12 +237,20 @@ void Character::hit_right() {
 
 
 
+Attack* Character::get_attack() {
+    return &attackManager;
+}
+
+
+
+
 // === Movement Helpers ===
 void Character::move_up(int px) {
     yVelocity += sprinting ? px * 2 : px;
 }
 
 void Character::move_left(float px) {
+    facingLeft = true;
     xVelocity -= sprinting ? px * 2 : px;
 
     currentState = sprinting ? AnimationState::RUNNING_LEFT : AnimationState::WALKING_LEFT;
@@ -222,6 +262,7 @@ void Character::move_down(int px) {
 }
 
 void Character::move_right(float px) {
+    facingLeft = false;
     xVelocity += sprinting ? px * 2 : px;
 
     currentState = sprinting ? AnimationState::RUNNING_RIGHT : AnimationState::WALKING_RIGHT;

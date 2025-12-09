@@ -14,8 +14,10 @@ public:
 
 	void load_texture(const std::string &path);
 
-	void new_position(float newX, float newY, float newW, float newH, float xOff);
+	void new_position(float newX, float newY, float newW, float newH, float xOff, float yOff);
+	void rescale();
 	void set_x_offset(float xOff);
+	void set_y_offset(float yOff);
 
 	bool test_frame(std::vector<float> camera) const;
 
@@ -31,6 +33,7 @@ public:
 private:
 
 	SDL_Texture* texture = nullptr;
+	SDL_Texture* scaledTexture = nullptr;
 	SDL_Renderer* renderer = nullptr;
 	SDL_FRect viewport;
 
@@ -38,6 +41,7 @@ private:
 
 	float& scale;
 	float xOffset = 0;
+	float yOffset = 0;
 };
 
 #endif

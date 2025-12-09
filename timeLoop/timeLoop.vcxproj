@@ -146,7 +146,9 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="collisions.cpp" />
+    <ClCompile Include="enemy.cpp" />
     <ClCompile Include="gamestate.cpp" />
+    <ClCompile Include="health.cpp" />
     <ClCompile Include="hitbox.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="loopData.cpp" />
@@ -171,7 +173,9 @@
     <ClInclude Include="CharacterSelect.h" />
     <ClInclude Include="Chunk.h" />
     <ClInclude Include="Collisions.h" />
+    <ClInclude Include="Enemy.h" />
     <ClInclude Include="Gamestate.h" />
+    <ClInclude Include="Health.h" />
     <ClInclude Include="Hitbox.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="LoopData.h" />

@@ -21,6 +21,7 @@
 #include "TarotReader.h"
 #include "Enums.h"
 #include "Collisions.h"
+#include "Enemy.h"
 
 class Gamestate {
 public:
@@ -81,7 +82,7 @@ private:
     float cameraDepthBack = 1.0f;
 
     // === Game State Management ===
-    State currentState = State::TAROTREADING; 
+    State currentState = State::GAME; 
 
     // === Private Helpers ===
     void calculate_scale();
@@ -102,6 +103,8 @@ private:
     Collisions collisionManager;
     TarotDeck tarotDeck;
 
+    Enemy tempEnemy;
+
     // === Input & Map ===
     SDL_Event event{};
     std::vector<Chunk> currentMap;
@@ -112,6 +115,7 @@ private:
     int windowH = 1080;
     int screenH = 1080;
     float scale = 1.0f;
+    float oldScale = 1.0f;
     bool bounding = false;
 
     // === Uh... Memory ===

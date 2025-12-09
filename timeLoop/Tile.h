@@ -32,7 +32,7 @@ public:
 
     // === Public Methods ===
     void handle_event(bool fullscreen);
-    void update(float offset);
+    void update(float xOffset, float yOffset);
     void render(std::vector<float> screenDimensions);
 
     Hitbox* get_hitbox();
