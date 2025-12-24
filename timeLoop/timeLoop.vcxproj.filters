@@ -90,6 +90,9 @@
     <ClCompile Include="health.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="musicPlayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h">
@@ -167,6 +170,9 @@
     <ClInclude Include="Health.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MusicPlayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="map_test.png">
@@ -188,6 +194,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="Min-T.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="intro.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

@@ -6,7 +6,7 @@
 
 int main(int argc, char* argsp[]) {
 
-	SDL_Init(NULL);
+	SDL_Init(SDL_INIT_AUDIO);
 
 	Gamestate mint;
 
@@ -19,6 +19,12 @@ int main(int argc, char* argsp[]) {
 		mint.change_state();
 
 		switch (mint.get_current_state()) {
+		case (State::OPENING):
+			mint.intro_update();
+			mint.intro_render();
+
+			break;
+
 		case (State::MENU):
 
 			std::cout << "IN DEVELOPMENT!\n";

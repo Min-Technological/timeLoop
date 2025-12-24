@@ -1,19 +1,18 @@
 #include "Health.h"
 
-Health::Health(int initialHealth, int invincibilityFrames, Time& inputTime) :
+Health::Health(int initialHealth, int invincibilityFrames) :
 	health(initialHealth),
 	maxHealth(initialHealth),
-	invincibilityFrameCount(invincibilityFrames),
-	time(inputTime) {
+	invincibilityFrameCount(invincibilityFrames)
+	{
 	
 }
 
 
 
-void Health::damage(float damage) {
+void Health::damage(float damage, Uint64 currentFrame) {
 
-	std::cout << "Damaging? " << invincibility + invincibilityFrameCount << " vs. " << time.current_frame() << "\n";
-	if (invincibility + invincibilityFrameCount <= time.current_frame()) {
+	if (invincibility + invincibilityFrameCount <= currentFrame) {
 
 		if (!dead) {
 			health -= damage;
@@ -23,7 +22,7 @@ void Health::damage(float damage) {
 			dead = true;
 		}
 
-		invincibility = time.current_frame();
+		invincibility = currentFrame;
 	}
 	else {
 	}
@@ -45,3 +44,17 @@ bool Health::get_death() {
 float Health::get_hp() {
 	return health;
 }
+
+bool Health::is_invincible(Uint64 currentFrame) {
+
+	if (invincibility + invincibilityFrameCount > currentFrame) return true;
+
+	return false;
+
+}
+
+void Health::revive() {
+	health = static_cast<float>(maxHealth);
+	dead = false;
+}
+

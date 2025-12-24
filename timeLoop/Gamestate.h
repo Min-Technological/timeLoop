@@ -10,6 +10,7 @@
 #include "Titlebar.h"
 #include "Input.h"
 #include "Time.h"
+#include "MusicPlayer.h"
 #include "Background.h"
 #include "Character.h"
 #include "Camera.h"
@@ -27,6 +28,10 @@ class Gamestate {
 public:
     // === Constructor ===
     Gamestate();
+
+    // === Opening Functions ===
+    void intro_update();
+    void intro_render();
 
     // === Game Loop Functions ===
     void initialise_map();
@@ -75,6 +80,12 @@ private:
     bool quit;
     Uint64 frameCount = 0;
 
+    // === Intro Fields ===
+    bool faded = false;
+    Uint8 introAlpha = 0xff;
+    bool endIntro = false;
+
+    // === Camera Fields ===
     float depthMain = 1.0f;
     float depthBack = 1.0f;
 
@@ -82,7 +93,7 @@ private:
     float cameraDepthBack = 1.0f;
 
     // === Game State Management ===
-    State currentState = State::GAME; 
+    State currentState = State::OPENING;
 
     // === Private Helpers ===
     void calculate_scale();
@@ -93,6 +104,7 @@ private:
     Titlebar titlebar;
     Input input;
     Time time;
+    MusicPlayer musicPlayer;
     Background background;
     Character user;
     Camera camera;
@@ -105,10 +117,17 @@ private:
 
     Enemy tempEnemy;
 
-    // === Input & Map ===
+    // === Input ===
     SDL_Event event{};
+
+    // === Map ===
     std::vector<Chunk> currentMap;
+
+    // --- First Map
     std::array<TarotCard*, static_cast<int>(CardNumber::TOTAL)> tarotCards = { nullptr };
+    std::vector<Enemy> map0Enemies;
+
+
 
     // === Display State ===
     int screenW = 1920;

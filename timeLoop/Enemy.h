@@ -20,6 +20,8 @@ public:
 	Hitbox* get_hitbox();
 	void take_damage(float damage);
 
+	float get_contact();
+
 	
 
 private:
@@ -31,14 +33,19 @@ private:
 	Renderer renderer;
 	Health health;
 
+	Time& time;
+
 
 	float spawnX, spawnY;
 	float x, y, w, h;
 	float newX, newY;
-	float velocityX, velocityY;
+	float velocityX = 0;
+	float velocityY = 0;
 
 	Uint8 tempR = 0x80;
 	Uint8 tempB = 0xff;
+
+	float contactDamage = 1;
 	
 
 };

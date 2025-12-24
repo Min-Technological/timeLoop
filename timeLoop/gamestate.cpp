@@ -23,6 +23,46 @@ Gamestate::Gamestate() :
     std::cout << "INITIALISED!\n";
 }
 
+// === Intro Functions ===
+void Gamestate::intro_update() {
+
+    musicPlayer.load_track("C:/dev/lib/soundEffects/katz_music/Sombre Title Theme Idea (16-bit).wav");
+
+    Uint64 currentFrame = time.current_frame();
+    if (currentFrame < 255) {
+        introAlpha -= 1;
+    }
+
+    if (currentFrame >= 1020) {
+        endIntro = true;
+    }
+
+    background.update(screenW, screenH, currentState);
+
+}
+
+void  Gamestate::intro_render() {
+    SDL_SetRenderDrawColor(window.get_renderer(), 0x14, 0x28, 0x20, 0xFF);
+    SDL_RenderClear(window.get_renderer());
+
+    titlebar.render();
+    set_render_canvas();
+
+    background.render();
+
+    SDL_SetRenderDrawColor(window.get_renderer(), 0x00, 0x00, 0x00, introAlpha);
+    SDL_FRect viewport = { 
+        static_cast<float>(0),
+        static_cast<float>(0),
+        static_cast<float>(screenW),
+        static_cast<float>(screenH) 
+    };
+    SDL_RenderFillRect(window.get_renderer(), &viewport);
+
+    SDL_RenderPresent(window.get_renderer());
+
+}
+
 // === Map Initialization ===
 void Gamestate::initialise_map() {
     currentMap = gameMap0.generate_map();
@@ -86,12 +126,18 @@ void Gamestate::move() {
 
     user.resolve_collision();
 
-    collisionManager.collide_enemy_attack(&tempEnemy, user.get_attack());
+    if (!collisionManager.collide_character_enemy(&user, &tempEnemy)) {
+        collisionManager.collide_enemy_attack(&tempEnemy, user.get_attack());
+    }
+    else {
+        user.damage(tempEnemy.get_contact());
+    }
 
     camera.affect(input);
 
 }
 void Gamestate::update() {
+
     camera.zoom(0);
     camera.update();
     calculate_depth();
@@ -103,6 +149,7 @@ void Gamestate::update() {
     for (Chunk& chunk : currentMap) {
         chunk.update(scale, camera.get_coordinate(0), camera.get_coordinate(1));
     }
+
 
     // update_loop_data();
 }
@@ -283,6 +330,7 @@ void Gamestate::increment_frame() {
     frameCount++;
 }
 void Gamestate::close() {
+    musicPlayer.clear_track();
     user.destroy();
     titlebar.destroy();
     window.destroy();
@@ -296,16 +344,29 @@ State Gamestate::get_current_state() const {
 void Gamestate::change_state() {
 
     switch (currentState) {
+    case (State::OPENING):
+        if (endIntro) {
+            currentState = State::GAME;
+        }
+        break;
+
     case (State::MENU):
         break;
 
     case (State::GAME):
-        if (input.is_key_just_pressed(SDLK_R)) {
+        if (user.get_health() <= 0) {
+            currentState = State::TAROTREADING;
+            user.revive();
+            load_loop_data();
+            tarotScene.set_reader_state(true);
+            tarotScene.reading(true);
+        }
+        else if (input.is_key_just_pressed(SDLK_R)) {
             currentState = State::SUICIDE;
         }
         else if (input.is_key_just_pressed(SDLK_ESCAPE)) {
             currentState = State::PAUSE;
-        }
+        } 
         else if (input.is_key_just_pressed(SDLK_E)) {
             currentState = State::SELECTION;
         }

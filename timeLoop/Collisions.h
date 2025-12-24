@@ -18,6 +18,7 @@ public:
     bool collide_character_chunk(Character* user, Hitbox* chunkHitbox);
     void collide_character_tile(Character* user, Tile* tile);
     bool collide_character_card(Character* user, TarotCard* card);
+    bool collide_character_enemy(Character* user, Enemy* enemy);
 
     void collide_enemy_attack(Enemy* enemy, Attack* attack);
 	 

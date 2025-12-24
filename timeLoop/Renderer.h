@@ -18,6 +18,7 @@ public:
 	void rescale();
 	void set_x_offset(float xOff);
 	void set_y_offset(float yOff);
+	void set_alpha(Uint8 alpha);
 
 	bool test_frame(std::vector<float> camera) const;
 
@@ -42,6 +43,7 @@ private:
 	float& scale;
 	float xOffset = 0;
 	float yOffset = 0;
+
 };
 
 #endif

@@ -2,18 +2,21 @@
 #ifndef HEALTH
 #define HEALTH
 
-#include "Time.h"
 #include "Attack.h"
 
 class Health {
 public:
-	Health(int initialHalth, int invincibilityFrames, Time& inputTime);
+	Health(int initialHalth, int invincibilityFrames);
 
-	void damage(float damage);
+	void damage(float damage, Uint64 currentFrame);
 	void heal(int increase);
 
 	bool get_death();
 	float get_hp();
+
+	bool is_invincible(Uint64 currentFrame);
+
+	void revive();
 
 private:
 	float health = 1;
@@ -22,7 +25,6 @@ private:
 	bool dead = false;
 	float tempDefenseVal = 1;
 
-	Time& time;
 	Uint64 invincibility = 0;
 	int invincibilityFrameCount = 10;
 };

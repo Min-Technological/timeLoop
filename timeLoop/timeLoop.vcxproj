@@ -154,6 +154,7 @@
     <ClCompile Include="loopData.cpp" />
     <ClCompile Include="map.cpp" />
     <ClCompile Include="mint.cpp" />
+    <ClCompile Include="musicPlayer.cpp" />
     <ClCompile Include="passiveData.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="tarotCard.cpp" />
@@ -180,6 +181,7 @@
     <ClInclude Include="Input.h" />
     <ClInclude Include="LoopData.h" />
     <ClInclude Include="Map.h" />
+    <ClInclude Include="MusicPlayer.h" />
     <ClInclude Include="PassiveData.h" />
     <ClInclude Include="Enums.h" />
     <ClInclude Include="Renderer.h" />
@@ -192,6 +194,7 @@
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="intro.png" />
     <Image Include="mainUIButtons.png" />
     <Image Include="map_test.png" />
     <Image Include="Min-T.ico" />

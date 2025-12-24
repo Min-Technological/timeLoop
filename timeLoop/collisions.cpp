@@ -2,6 +2,8 @@
 
 Collisions::Collisions() {}
 
+// === Character Collision Helpers ===
+
 bool Collisions::collide_character_chunk(Character* user, Hitbox* chunkHitbox) {
     std::array<float, 2> userVelocity = user->get_velocity();
     if (y_collision(user->get_hitbox(), chunkHitbox, userVelocity[1]) || x_collision(user->get_hitbox(), chunkHitbox, userVelocity[0])) {
@@ -41,6 +43,22 @@ bool Collisions::collide_character_card(Character* user, TarotCard* card)
     }
 }
 
+bool Collisions::collide_character_enemy(Character* user, Enemy* enemy) {
+
+    if ( !user->get_hitbox()->allows_collisions() || !enemy->get_hitbox()->allows_collisions() ) return false;
+
+    std::array<float, 2> userVelocity = user->get_velocity();
+    if (y_collision(user->get_hitbox(), enemy->get_hitbox(), userVelocity[1]) || x_collision(user->get_hitbox(), enemy->get_hitbox(), userVelocity[0])) {
+        return true;
+    }
+    else {
+        return false;
+    }
+
+}
+
+
+// === Enemy Collision Helpers
 
 void Collisions::collide_enemy_attack(Enemy* enemy, Attack* attack) {
 
@@ -53,6 +71,7 @@ void Collisions::collide_enemy_attack(Enemy* enemy, Attack* attack) {
 
 
 
+// === Basic Character Collision Helpers ===
 
 void Collisions::character_x_solid(Character* user, Hitbox* secondary, float xVelocity) {
     Hitbox* primary = user->get_hitbox();
@@ -109,6 +128,7 @@ void Collisions::character_y_solid(Character* user, Hitbox* secondary, float yVe
 }
 
 
+// === Basic Collision Helpers ===
 
 bool Collisions::x_collision(Hitbox* main, Hitbox* other, float xVelocity)
 {

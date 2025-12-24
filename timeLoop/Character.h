@@ -16,6 +16,7 @@
 #include "CameraDepth.h"
 #include "PassiveData.h"
 #include "Enums.h"
+#include "Health.h"
 
 class Character {
 public:
@@ -50,6 +51,9 @@ public:
 
 
     Attack* get_attack();
+    float get_health();
+    void damage(float damage);
+    void revive();
 
 
 
@@ -66,6 +70,8 @@ private:
     void move_down(int px);
     void move_right(float px);
     void move_jump();
+
+    Health health;
 
     Attack attackManager;
     bool attacking = false;
@@ -92,6 +98,8 @@ private:
     Uint64 walkFrameCounter = 0;
     int walkingNum = 0;     // Frame Count
     int spriteColumn = 0;   
+    
+    Uint8 alphaValue = 0xff;
 
     void increment_walk();
 

@@ -90,6 +90,9 @@ void Renderer::set_x_offset(float xOff) {
 void Renderer::set_y_offset(float yOff) {
 	yOffset = yOff;
 }
+void Renderer::set_alpha(Uint8 alpha) {
+	SDL_SetTextureAlphaMod(texture, alpha);
+}
 
 void Renderer::render_colour(Uint8 red, Uint8 green, Uint8 blue, Uint8 alpha) {
 	if (cameraDepth.get_depth() <= 0) return;

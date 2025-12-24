@@ -13,6 +13,7 @@ enum class Persona {
 
 
 enum class State {
+	OPENING,
     MENU,
     GAME,
     PAUSE,

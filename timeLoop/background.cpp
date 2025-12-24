@@ -10,6 +10,11 @@ void Background::update(int screenW, int screenH, State gameState) {
     if (newState != gameState) {
         newState = gameState;
         switch (newState) {
+        case State::OPENING:
+            renderer.destroy_texture();
+            renderer.load_texture("intro.png");
+
+            break;
         case State::MENU:
             break;
         case State::GAME:
@@ -76,6 +81,11 @@ void Background::update(int screenW, int screenH, State gameState) {
 // === Render ===
 void Background::render() {
     switch (newState) {
+    case State::OPENING:
+        renderer.render_texture();
+
+        break;
+
     case State::MENU:
         renderer.render_colour(0x50, 0xe0, 0xa0, 0xff);
 

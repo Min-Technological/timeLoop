@@ -7,7 +7,8 @@ Character::Character(float initialX, float initialY, AppWindow window, Time& tim
     newX(initialX),
     newY(initialY),
     renderer(window.get_renderer(), initialX, initialY, w, h, s, depth),
-    time(timer)
+    time(timer),
+    health(5, 30)
 {
     hitbox = std::move(Hitbox(initialX, initialY, w, h));
     change_persona(currentPersona);
@@ -51,6 +52,7 @@ void Character::move(Input input) {
                 attackManager.set_rect_attack(x - 160, y, 160, 160);
             }
 
+            
             attacking = true;
             cooldown = true;
             attackTime = time.current_frame();
@@ -120,16 +122,33 @@ void Character::update(float xOffset, float yOffset) {
             cooldown = false;
             attacking = false;
         }
-        else if (time.current_time() - attackTime >= 6) {
+        else if (time.current_frame() - attackTime >= 6) {
             attacking = false;
             attackManager.despawn_attack();
         }
         std::cout << "COOLDOWN: " << (30 - (time.current_frame() - attackTime)) << "\n";
     }
+
+    if (health.is_invincible(time.current_frame())) {
+        if (time.current_frame() % 10 < 5) {
+            alphaValue = 0xbe;
+        }
+        else {
+            alphaValue = 0x5f;
+        }
+        renderer.set_alpha(alphaValue);
+    }
+    else {
+        if (alphaValue != 0xff) {
+            alphaValue = 0xff;
+            renderer.set_alpha(alphaValue);
+        }
+    }
     
 }
 
 void Character::render() {
+
 
     renderer.render_sprite(60.0f * walkingNum, 80.0f * spriteColumn, 60, 80);
     // SDL_RenderFillRect(r, &v);
@@ -239,6 +258,18 @@ void Character::hit_right() {
 
 Attack* Character::get_attack() {
     return &attackManager;
+}
+
+float Character::get_health() {
+    return health.get_hp();
+}
+
+void Character::damage(float damage) {
+    health.damage(damage, time.current_frame());
+}
+
+void Character::revive() {
+    health.revive();
 }
 
 
