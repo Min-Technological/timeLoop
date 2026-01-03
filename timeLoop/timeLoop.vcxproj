@@ -137,6 +137,7 @@
   <ItemGroup>
     <ClCompile Include="attack.cpp" />
     <ClCompile Include="background.cpp" />
+    <ClCompile Include="button.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="cameraDepth.cpp" />
     <ClCompile Include="character.cpp" />
@@ -168,6 +169,7 @@
   <ItemGroup>
     <ClInclude Include="Attack.h" />
     <ClInclude Include="Background.h" />
+    <ClInclude Include="Button.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraDepth.h" />
     <ClInclude Include="Character.h" />

@@ -29,6 +29,7 @@ void Renderer::load_texture(const std::string &path) {
 }
 
 void Renderer::new_position(float newX, float newY, float newW, float newH, float xOff, float yOff) {
+
 	xOffset = xOff;
 	yOffset = yOff;
 

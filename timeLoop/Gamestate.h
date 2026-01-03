@@ -23,6 +23,7 @@
 #include "Enums.h"
 #include "Collisions.h"
 #include "Enemy.h"
+#include "Button.h"
 
 class Gamestate {
 public:
@@ -32,6 +33,11 @@ public:
     // === Opening Functions ===
     void intro_update();
     void intro_render();
+
+    // === Menu Functions ===
+    void initialise_menu();
+    void menu_update();
+    void menu_render();
 
     // === Game Loop Functions ===
     void initialise_map();
@@ -126,6 +132,9 @@ private:
     // --- First Map
     std::array<TarotCard*, static_cast<int>(CardNumber::TOTAL)> tarotCards = { nullptr };
     std::vector<Enemy> map0Enemies;
+
+    // === Buttons ===
+    std::vector<Button> menuButtons;
 
 
 

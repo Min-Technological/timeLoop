@@ -13,12 +13,14 @@ public:
 
 	void clear_track();
 
-	void play_track();
+	void play_track(bool paused);
 
-	bool is_playing();
+	void adjust_gain(float gain);
 
 
 private:
+
+	bool is_playing();
 
 	Uint8* audioBuf = nullptr;
 	Uint32 audioLen = 0;
@@ -29,6 +31,10 @@ private:
 	SDL_AudioSpec deviceSpec;
 
 	SDL_AudioStream* currentStream = nullptr;
+
+
+	bool playing = false;
+	float currentGain = -1.0f;
 
 };
 

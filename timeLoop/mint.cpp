@@ -27,7 +27,9 @@ int main(int argc, char* argsp[]) {
 
 		case (State::MENU):
 
-			std::cout << "IN DEVELOPMENT!\n";
+			mint.menu_update();
+			mint.menu_render();
+
 			break;
 
 		case (State::GAME):

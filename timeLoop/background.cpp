@@ -16,6 +16,9 @@ void Background::update(int screenW, int screenH, State gameState) {
 
             break;
         case State::MENU:
+            renderer.destroy_texture();
+            renderer.load_texture("menu.png");
+
             break;
         case State::GAME:
             break;
@@ -87,7 +90,7 @@ void Background::render() {
         break;
 
     case State::MENU:
-        renderer.render_colour(0x50, 0xe0, 0xa0, 0xff);
+        renderer.render_texture();
 
         break;
 

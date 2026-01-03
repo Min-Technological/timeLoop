@@ -1,7 +1,8 @@
 #include "Input.h"
 
-Input::Input() {
-
+Input::Input(AppWindow* appWindow) :
+	window(appWindow)
+{
 }
 
 void Input::handle_event() {
@@ -51,7 +52,15 @@ bool Input::is_event_occurring(SDL_EventType eventType) {
 
 
 
-bool Input::is_clicking_square(float x, float y, float w, float h) {
+bool Input::is_clicking_square(float x, float y, float w, float h, float& scale) {
+
+	if (window->is_fullscreen()) {
+		titlebarH = 0;
+	}
+	else {
+		titlebarH = TITLEBARH;
+	}
+
 	bool clickedSquare = false;
 	for (const SDL_Event& e : events) {
 		if (e.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
@@ -59,10 +68,10 @@ bool Input::is_clicking_square(float x, float y, float w, float h) {
 			float mouseX, mouseY;
 			SDL_GetMouseState(&mouseX, &mouseY);
 
-			if (mouseY >= y &&
-				mouseY <= y + h &&
-				mouseX >= x &&
-				mouseX <= x + w) {
+			if (mouseY >= y * scale + titlebarH &&
+				mouseY <= (y + h) * scale + titlebarH &&
+				mouseX >= x * scale &&
+				mouseX <= (x + w) * scale) {
 				clickedSquare = true;
 			}
 
@@ -72,6 +81,7 @@ bool Input::is_clicking_square(float x, float y, float w, float h) {
 }
 
 bool Input::is_clicking_circle(float x, float y, float d) {
+
 	bool clickedCircle = false;
 	for (const SDL_Event& e : events) {
 		if (e.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
@@ -93,6 +103,7 @@ bool Input::is_clicking_circle(float x, float y, float d) {
 }
 
 bool Input::is_clicking_ring(float x, float y, float innerD, float outerD) {
+
 	bool clickedRing = false;
 	for (const SDL_Event& e : events) {
 		if (e.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {

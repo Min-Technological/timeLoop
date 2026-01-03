@@ -27,14 +27,18 @@ void MusicPlayer::clear_track() {
 	SDL_UnbindAudioStream(currentStream);
 	SDL_DestroyAudioStream(currentStream);
 
+	currentTitle = "NULL";
+
+	playing = false;
+
 }
 
 
 void MusicPlayer::load_track(std::string title) {
 
-	if (title == currentTitle) return;
+	if (!is_playing()) clear_track();
 
-	clear_track();
+	if (title == currentTitle) return;
 
 	currentTitle = title;
 
@@ -57,13 +61,35 @@ void MusicPlayer::load_track(std::string title) {
 
 	// Play
 	SDL_ResumeAudioDevice(deviceID);
+	playing = true;
 
 }
 
-void MusicPlayer::play_track() {
+void MusicPlayer::play_track(bool paused) {
 
+	if (paused) {
+		if (!playing) return;
+		SDL_PauseAudioDevice(deviceID);
+		playing = false;
+	}
+	else {
+		if (playing) return;
+		SDL_ResumeAudioDevice(deviceID);
+		playing = true;
+	}
 }
+
+void MusicPlayer::adjust_gain(float gain) {
+	if (gain == currentGain) return;
+
+	SDL_SetAudioDeviceGain(deviceID, gain);
+	currentGain = gain;
+}
+
+
 
 bool MusicPlayer::is_playing() {
-	return false;
+	if (SDL_GetAudioStreamAvailable(currentStream) == 0) return false;
+	else return true;
 }
+

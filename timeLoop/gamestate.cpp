@@ -4,7 +4,7 @@
 Gamestate::Gamestate() :
     window("Test Window", 960, 540, 25),
     titlebar(960, 25, "titleBarIcons.png", window.get_renderer(), &window),
-    input(),
+    input(&window),
     time(60),
     background(window.get_renderer(), scale, cameraDepthBack),
     user(960, 600, window, time, scale, cameraDepthMain),
@@ -19,6 +19,9 @@ Gamestate::Gamestate() :
     quit(false)
 {
     event.type = SDL_EVENT_FIRST;
+    musicPlayer.adjust_gain(0.1f);
+
+    initialise_menu();
 
     std::cout << "INITIALISED!\n";
 }
@@ -26,14 +29,16 @@ Gamestate::Gamestate() :
 // === Intro Functions ===
 void Gamestate::intro_update() {
 
-    musicPlayer.load_track("C:/dev/lib/soundEffects/katz_music/Sombre Title Theme Idea (16-bit).wav");
+    musicPlayer.load_track("Sombre Title Theme Idea (16-bit).wav");
 
     Uint64 currentFrame = time.current_frame();
     if (currentFrame < 255) {
         introAlpha -= 1;
     }
 
-    if (currentFrame >= 1020) {
+
+    // Should be >= 900
+    if (currentFrame >= 256) {
         endIntro = true;
     }
 
@@ -61,6 +66,65 @@ void  Gamestate::intro_render() {
 
     SDL_RenderPresent(window.get_renderer());
 
+}
+
+// === Menu Functions ===
+void Gamestate::initialise_menu() {
+
+    for (int i = 0; i < 2; i++) {
+
+        float menuButtonX = (window.get_window_dimensions()[0] / 2);
+        float menuButtonY = 600.0f + (240 * i);
+
+        Button newButton = Button(window.get_renderer(), menuButtonX, menuButtonY, 960, 120, scale, cameraDepthMain);
+
+        menuButtons.emplace_back(newButton);
+    }
+
+    std::function<void()> play = [this]() {
+        this->currentState = State::GAME;
+    };
+
+    std::function<void()> settings = [this]() {
+        std::cout << "SETTINGS NOT ENABLED YET!\n";
+    };
+
+    menuButtons[0].set_on_press(play);
+    menuButtons[1].set_on_press(settings);
+}
+
+void Gamestate::menu_update() {
+
+    musicPlayer.load_track("Sombre Title Theme Idea (16-bit).wav");
+
+    background.update(screenW, screenH, currentState);
+
+    if (cameraDepthBack != 1.0f) {
+        cameraDepthBack = 1.0f;
+    }
+
+    for (Button& button : menuButtons) {
+        button.update(input);
+    }
+
+
+}
+
+void Gamestate::menu_render() {
+    SDL_SetRenderDrawColor(window.get_renderer(), 0x14, 0x28, 0x20, 0xFF);
+    SDL_RenderClear(window.get_renderer());
+
+    titlebar.render();
+    set_render_canvas();
+
+    background.render();
+
+    for (Button& button : menuButtons) {
+        button.render();
+    }
+    
+
+    SDL_RenderPresent(window.get_renderer());
 }
 
 // === Map Initialization ===
@@ -346,7 +410,7 @@ void Gamestate::change_state() {
     switch (currentState) {
     case (State::OPENING):
         if (endIntro) {
-            currentState = State::GAME;
+            currentState = State::MENU;
         }
         break;
 

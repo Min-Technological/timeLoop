@@ -80,7 +80,7 @@ bool TarotReader::reading_cards(Input& input) {
 		stainedWindowY += 25;
 	}
 
-	if (input.is_clicking_square(stainedWindowX, stainedWindowY, stainedWindowW, stainedWindowH)) {
+	if (input.is_clicking_square(stainedWindowX, stainedWindowY, stainedWindowW, stainedWindowH, renderScale)) {
 		return true;
 	}
 	else {
