@@ -15,6 +15,7 @@ Gamestate::Gamestate() :
     characterSelect(&window, scale),
     tarotScene(window, scale),
     collisionManager(),
+    interaction(window.get_renderer(), scale, cameraDepthMain),
     tempEnemy(720, 600, window, time, scale, cameraDepthMain),
     quit(false)
 {
@@ -22,6 +23,7 @@ Gamestate::Gamestate() :
     musicPlayer.adjust_gain(0.1f);
 
     initialise_menu();
+    initialise_pause();
 
     std::cout << "INITIALISED!\n";
 }
@@ -74,7 +76,7 @@ void Gamestate::initialise_menu() {
     for (int i = 0; i < 2; i++) {
 
         float menuButtonX = (window.get_window_dimensions()[0] / 2);
-        float menuButtonY = 600.0f + (240 * i);
+        float menuButtonY = 480.0f + (240 * i);
 
         Button newButton = Button(window.get_renderer(), menuButtonX, menuButtonY, 960, 120, scale, cameraDepthMain);
 
@@ -92,9 +94,7 @@ void Gamestate::initialise_menu() {
     menuButtons[0].set_on_press(play);
     menuButtons[1].set_on_press(settings);
 }
-
 void Gamestate::menu_update() {
-
     musicPlayer.load_track("Sombre Title Theme Idea (16-bit).wav");
 
     background.update(screenW, screenH, currentState);
@@ -109,7 +109,6 @@ void Gamestate::menu_update() {
 
 
 }
-
 void Gamestate::menu_render() {
     SDL_SetRenderDrawColor(window.get_renderer(), 0x14, 0x28, 0x20, 0xFF);
     SDL_RenderClear(window.get_renderer());
@@ -202,6 +201,8 @@ void Gamestate::move() {
 }
 void Gamestate::update() {
 
+    musicPlayer.end_track();
+
     camera.zoom(0);
     camera.update();
     calculate_depth();
@@ -235,6 +236,8 @@ void Gamestate::render() {
     user.render();
     tempEnemy.render();
 
+    interaction.generate_text(time.current_frame());
+
     render_hitbox();
 
     SDL_RenderPresent(window.get_renderer());
@@ -255,11 +258,37 @@ void Gamestate::render_hitbox() {
         }
         user.get_hitbox()->render(&hitboxRenderer);
         user.get_attack()->get_attack()->render(&hitboxRenderer);
+        
+        SDL_RenderDebugText(window.get_renderer(), 0, 0, std::to_string(time.get_fps()).c_str());
     }
 }
 
 
 // === Pause Helpers ===
+void Gamestate::initialise_pause() {
+
+    for (int i = 0; i < 2; i++) {
+
+        float pauseButtonX = (window.get_window_dimensions()[0] / 2);
+        float pauseButtonY = 360.0f + (240 * i);
+
+        Button newButton = Button(window.get_renderer(), pauseButtonX, pauseButtonY, 960, 120, scale, cameraDepthMain);
+
+        pauseButtons.emplace_back(newButton);
+    }
+
+    std::function<void()> menu = [this]() {
+        this->currentState = State::MENU;
+        };
+
+    std::function<void()> settings = [this]() {
+        std::cout << "SETTINGS NOT ENABLED YET!\n";
+        };
+
+    pauseButtons[0].set_on_press(menu);
+    pauseButtons[1].set_on_press(settings);
+
+}
 void Gamestate::pause_update() {
     calculate_depth();
 
@@ -268,6 +297,10 @@ void Gamestate::pause_update() {
 
     for (Chunk& chunk : currentMap) {
         chunk.update(scale, camera.get_coordinate(0), camera.get_coordinate(1));
+    }
+
+    for (Button& button : pauseButtons) {
+        button.update(input);
     }
 }
 void Gamestate::pause_render() {
@@ -291,6 +324,11 @@ void Gamestate::pause_render() {
     SDL_FRect v = { 0, 0, static_cast<float>(screenW), static_cast<float>(screenH) };
     SDL_SetRenderDrawColor(window.get_renderer(), 0x14, 0x28, 0x20, 0x5F);
     SDL_RenderFillRect(window.get_renderer(), &v);
+
+    // Render Buttons
+    for (Button& button : pauseButtons) {
+        button.render();
+    }
 
     SDL_RenderPresent(window.get_renderer());
 }
@@ -394,7 +432,7 @@ void Gamestate::increment_frame() {
     frameCount++;
 }
 void Gamestate::close() {
-    musicPlayer.clear_track();
+    musicPlayer.end_track();
     user.destroy();
     titlebar.destroy();
     window.destroy();
@@ -578,3 +616,4 @@ void Gamestate::calculate_depth() {
     cameraDepthMain = depthMain - camera.get_depth();
     cameraDepthBack = depthBack - camera.get_depth();
 }
+

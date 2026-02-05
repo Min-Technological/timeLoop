@@ -32,7 +32,7 @@ void Health::heal(int increase) {
 	if (!dead) {
 		health += increase;
 		if (health > maxHealth) {
-			health = maxHealth;
+			health = static_cast<float>(maxHealth);
 		}
 	}
 }

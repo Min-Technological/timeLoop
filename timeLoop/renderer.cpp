@@ -53,7 +53,7 @@ void Renderer::rescale() {
 
 	// 2. Create the scaled surface
 
-	SDL_Surface* scaledSurface = SDL_CreateSurface(1920 * scale, 1080 * scale, SDL_PIXELFORMAT_RGBA32);
+	SDL_Surface* scaledSurface = SDL_CreateSurface(scale * 1920, scale * 1080, SDL_PIXELFORMAT_RGBA32);
 
 	if (!scaledSurface) {
 		SDL_UnlockTexture(texture);
@@ -103,7 +103,7 @@ void Renderer::render_colour(Uint8 red, Uint8 green, Uint8 blue, Uint8 alpha) {
 }
 void Renderer::render_texture() {
 	if (cameraDepth.get_depth() <= 0) return;
-
+	
 
 	SDL_RenderTexture(renderer, scaledTexture, NULL, &viewport);
 }
@@ -161,6 +161,43 @@ bool Renderer::test_frame(std::vector<float> camera) const {
 		return false;
 	}
 }
+
+
+
+void Renderer::load_textbox(SDL_Surface* textSurface) {
+
+	if (texture != nullptr) {
+		SDL_DestroyTexture(texture);
+		texture = nullptr;
+
+
+		SDL_DestroyTexture(scaledTexture);
+		scaledTexture = nullptr;
+	}
+
+	texture = SDL_CreateTextureFromSurface(renderer, textSurface);
+	scaledTexture = texture;
+
+
+	if (texture == NULL) {
+		std::cout << "Unable to create textbox texture from surface!\n";
+	}
+
+}
+
+void Renderer::render_textbox(float x, float y) {
+	viewport.x = x;
+	viewport.y = y;
+	viewport.w = static_cast<float>(scaledTexture->w);
+	viewport.h = static_cast<float>(scaledTexture->h);
+
+	render_texture();
+
+	std::cout << viewport.x << ", " << viewport.y << ", " << viewport.w << ", " << viewport.h << "\n";
+
+}
+
+
 
 void Renderer::destroy_texture() {
 	if (texture) {

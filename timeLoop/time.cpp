@@ -23,6 +23,7 @@ void Time::sleep_delta() {
     bool desynced = false;
     Uint32 sleepTime;
 
+
     if (deltaTime > frameGap) {
         desynced = true;
         sleepTime = 0;
@@ -30,6 +31,8 @@ void Time::sleep_delta() {
     else {
         sleepTime = static_cast<Uint32>(frameGap - deltaTime);
     }
+
+    frameTime = deltaTime + sleepTime;
 
     SDL_Delay(sleepTime);
 
@@ -46,4 +49,10 @@ void Time::sleep_delta() {
 // === Get current frame number ===
 Uint64 Time::current_frame() const {
     return frameCount;
+}
+
+Uint64 Time::get_fps() {
+    Uint64 fps = 1000.0f / frameTime;
+
+    return fps;
 }

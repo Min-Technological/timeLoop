@@ -6,6 +6,8 @@
 
 class Attack {
 public:
+	Attack();
+
 	void set_damage(float damage);
 	float get_damage();
 

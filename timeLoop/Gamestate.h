@@ -5,6 +5,7 @@
 #include <SDL3_image/SDL_image.h>
 #include <iostream>
 #include <vector>
+#include <string>
 
 #include "Window.h"
 #include "Titlebar.h"
@@ -24,6 +25,7 @@
 #include "Collisions.h"
 #include "Enemy.h"
 #include "Button.h"
+#include "Interaction.h"
 
 class Gamestate {
 public:
@@ -49,6 +51,7 @@ public:
     void render_hitbox();
 
     // === Pause Loop Functions ===
+    void initialise_pause();
     void pause_update();
     void pause_render();
 
@@ -120,6 +123,7 @@ private:
     TarotReader tarotScene;
     Collisions collisionManager;
     TarotDeck tarotDeck;
+    Interaction interaction;
 
     Enemy tempEnemy;
 
@@ -135,6 +139,7 @@ private:
 
     // === Buttons ===
     std::vector<Button> menuButtons;
+    std::vector<Button> pauseButtons;
 
 
 

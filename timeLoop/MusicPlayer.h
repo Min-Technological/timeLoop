@@ -11,9 +11,9 @@ public:
 
 	void load_track(std::string title);
 
-	void clear_track();
-
 	void play_track(bool paused);
+
+	void end_track();
 
 	void adjust_gain(float gain);
 
@@ -21,6 +21,8 @@ public:
 private:
 
 	bool is_playing();
+
+	void clear_track();
 
 	Uint8* audioBuf = nullptr;
 	Uint32 audioLen = 0;

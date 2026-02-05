@@ -51,4 +51,10 @@ enum class CardNumber {
 	WORLD,
 	TOTAL
 };
+
+// Yes, this is in the order of implementation.
+enum class CharacterID {
+	NILL
+};
+
 #endif

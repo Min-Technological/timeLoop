@@ -1,5 +1,9 @@
 #include "Attack.h"
 
+Attack::Attack() {
+	currentAttack.enable_collisions(false);
+}
+
 void Attack::set_damage(float damage) {
 	this->damage = damage;
 }

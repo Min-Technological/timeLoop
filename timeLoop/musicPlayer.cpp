@@ -19,26 +19,15 @@ MusicPlayer::MusicPlayer() {
 
 }
 
-void MusicPlayer::clear_track() {
-	SDL_free(audioBuf);
-	audioBuf = nullptr;
-	audioLen = 0;
-
-	SDL_UnbindAudioStream(currentStream);
-	SDL_DestroyAudioStream(currentStream);
-
-	currentTitle = "NULL";
-
-	playing = false;
-
-}
-
 
 void MusicPlayer::load_track(std::string title) {
 
-	if (!is_playing()) clear_track();
+	if (currentTitle != "NULL") {
+		if (!is_playing()) clear_track();
+	}
 
 	if (title == currentTitle) return;
+
 
 	currentTitle = title;
 
@@ -53,7 +42,9 @@ void MusicPlayer::load_track(std::string title) {
 
 	SDL_LoadWAV(title.c_str(), &tempSpecs, &audioBuf, &audioLen);
 
+
 	currentStream = SDL_CreateAudioStream(&tempSpecs, &deviceSpec);
+
 
 	// Bind and feed
 	SDL_BindAudioStream(deviceID, currentStream);
@@ -79,6 +70,10 @@ void MusicPlayer::play_track(bool paused) {
 	}
 }
 
+void MusicPlayer::end_track() {
+	if (playing) clear_track();
+}
+
 void MusicPlayer::adjust_gain(float gain) {
 	if (gain == currentGain) return;
 
@@ -91,5 +86,19 @@ void MusicPlayer::adjust_gain(float gain) {
 bool MusicPlayer::is_playing() {
 	if (SDL_GetAudioStreamAvailable(currentStream) == 0) return false;
 	else return true;
+}
+
+void MusicPlayer::clear_track() {
+	SDL_free(audioBuf);
+	audioBuf = nullptr;
+	audioLen = 0;
+
+	SDL_UnbindAudioStream(currentStream);
+	SDL_DestroyAudioStream(currentStream);
+
+	currentTitle = "NULL";
+
+	playing = false;
+
 }
 

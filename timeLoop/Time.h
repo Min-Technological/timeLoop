@@ -16,11 +16,15 @@ public:
     void sleep_delta();
     Uint64 current_frame() const;
 
+    Uint64 get_fps();
+
 private:
     // === Timing State ===
-    Uint64 accumulator = 0;
-    Uint64 frameCount = 0;
+    Uint64 accumulator = 0; 
+    Uint64 frameCount = 0; // total number of elapsed frames
     const Uint64 frameGap;
+
+    Uint64 frameTime;
 };
 
 #endif

@@ -1,12 +1,14 @@
 #define SDL_MAIN_HANDLED
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
+#include <SDL3_ttf/SDL_ttf.h>
 
 #include "Gamestate.h"
 
 int main(int argc, char* argsp[]) {
 
 	SDL_Init(SDL_INIT_AUDIO);
+	
 
 	Gamestate mint;
 

@@ -28,6 +28,10 @@ public:
 	void render_hitbox(float xa, float ya, float xb, float yb, Uint8 green);
 	void render_clickbox(float x, float y, float w, float h, Uint8 green);
 
+	// === Text Rendering ===
+	void load_textbox(SDL_Surface* textSurface);
+	void render_textbox(float x, float y);
+
 	void destroy_texture();
 
 	bool has_texture();
