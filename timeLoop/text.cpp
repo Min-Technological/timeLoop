@@ -2,22 +2,13 @@
 #include "Text.h"
 
 Text::Text(SDL_Renderer* r, float& scale, float& depth) :
-renderer(r, 0, 0, 30, 30, scale, depth) {
+	renderer(r, 0, 0, 30, 30, scale, depth),
+	scale(scale) {
 	TTF_Init();
 }
 
-void Text::set_font(std::string fontName) {
-	if (fontSet) {
-		TTF_CloseFont(font);
-		font = nullptr;
-	}
-	std::string fontLocation = fontName + ".ttf";
-	font = TTF_OpenFont(fontLocation.c_str(), 30.0f);
-
-	if (font == NULL) {
-		std::cout << "COULD NOT OPEN FONT! : " << SDL_GetError() << "\n";
-	}
-	
+void Text::set_font(TTF_Font* presetFont) {
+	font = presetFont;
 }
 
 void Text::load_text(std::string text, SDL_Color colour) {
@@ -26,7 +17,7 @@ void Text::load_text(std::string text, SDL_Color colour) {
 
 	if (textSurface == NULL) {
 		std::cout << "Unable to render text surface! SDL_ttf Error: " << SDL_GetError() << "\n";
-	}
+	} 
 	else {
 		renderer.load_textbox(textSurface);
 		SDL_DestroySurface(textSurface);
@@ -34,8 +25,16 @@ void Text::load_text(std::string text, SDL_Color colour) {
 
 }
 
-void Text::render_text(float x, float y) {
-	renderer.render_textbox(x, y);
+void Text::new_position(float newX, float newY, float newW, float newH, float xOff, float yOff) {
+	renderer.new_position(newX, newY, newW, newH, xOff, yOff);
+}
+
+void Text::render_text() {
+	renderer.render_texture();
+}
+
+std::array<int, 2> Text::get_dimensions() {
+	return renderer.texture_dimensions();
 }
 
 void Text::destroy() {

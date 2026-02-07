@@ -20,12 +20,9 @@ void Interaction::progress_character(CharacterID character) {
 	nextCharacter = character;
 }
 
-void Interaction::generate_text(Uint64 currentFrame) {
-	text.set_font("AkayaKanadaka_Regular");
+void Interaction::generate_text(Uint64 currentFrame, TTF_Font* font, SDL_Color color) {
+	text.set_font(font);
 
-	SDL_Color testColor = { 0x00, 0x00, 0x00, 0xFF };
-
-	text.load_text(currentText, testColor);
-	text.render_text(0, 0);
-	std::cout << "RENDERING TEXT!\n";
+	text.load_text(currentText, color);
+	text.render_text();
 }

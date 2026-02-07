@@ -28,6 +28,14 @@ void Renderer::load_texture(const std::string &path) {
 	SDL_DestroySurface(loadedSurface);
 }
 
+std::array<int, 2> Renderer::texture_dimensions() {
+	if (texture == nullptr) {
+		return { 0, 0 };
+	}
+
+	return { texture->w, texture->h };
+}
+
 void Renderer::new_position(float newX, float newY, float newW, float newH, float xOff, float yOff) {
 
 	xOffset = xOff;
@@ -46,7 +54,7 @@ void Renderer::rescale() {
 	void* pixels = nullptr;
 	int pitch = 0;
 
-	if (SDL_LockTextureToSurface(texture, nullptr, &originalSurface) < 0) {
+	if (SDL_LockTextureToSurface(texture, nullptr, &originalSurface) == 0) {
 		std::cout << "Failed to lock texture to surface: " << SDL_GetError() << "\n";
 		return;
 	}
@@ -65,9 +73,9 @@ void Renderer::rescale() {
 	// 3. Blit (copy + scale) originalSurface to scaledSurface
 
 	SDL_Rect source{ 0, 0, originalSurface->w, originalSurface->h };
-	SDL_Rect scaled{ 0, 0, 1920 * scale, 1080 * scale };
+	SDL_Rect scaled{ 0, 0, scale * 1920, scale * 1080 };
 
-	if (SDL_BlitSurfaceScaled(originalSurface, &source, scaledSurface, &scaled, SDL_SCALEMODE_LINEAR) < 0) {
+	if (SDL_BlitSurfaceScaled(originalSurface, &source, scaledSurface, &scaled, SDL_SCALEMODE_LINEAR) == 0) {
 		std::cout << "Scaled blit failed: " << SDL_GetError() << "\n";
 		SDL_UnlockTexture(texture);
 		SDL_DestroySurface(scaledSurface);
@@ -182,18 +190,6 @@ void Renderer::load_textbox(SDL_Surface* textSurface) {
 	if (texture == NULL) {
 		std::cout << "Unable to create textbox texture from surface!\n";
 	}
-
-}
-
-void Renderer::render_textbox(float x, float y) {
-	viewport.x = x;
-	viewport.y = y;
-	viewport.w = static_cast<float>(scaledTexture->w);
-	viewport.h = static_cast<float>(scaledTexture->h);
-
-	render_texture();
-
-	std::cout << viewport.x << ", " << viewport.y << ", " << viewport.w << ", " << viewport.h << "\n";
 
 }
 

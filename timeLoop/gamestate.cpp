@@ -22,10 +22,16 @@ Gamestate::Gamestate() :
     event.type = SDL_EVENT_FIRST;
     musicPlayer.adjust_gain(0.1f);
 
+    initialise_fonts();
     initialise_menu();
     initialise_pause();
 
     std::cout << "INITIALISED!\n";
+}
+
+void Gamestate::initialise_fonts() {
+    fonts.push_back(load_font("AkayaKanadaka_Regular"));
+    std::cout << "FONTS INITIALISED!\n";
 }
 
 // === Intro Functions ===
@@ -73,6 +79,7 @@ void  Gamestate::intro_render() {
 // === Menu Functions ===
 void Gamestate::initialise_menu() {
 
+    // === Button Initialisation ===
     for (int i = 0; i < 2; i++) {
 
         float menuButtonX = (window.get_window_dimensions()[0] / 2);
@@ -90,9 +97,19 @@ void Gamestate::initialise_menu() {
     std::function<void()> settings = [this]() {
         std::cout << "SETTINGS NOT ENABLED YET!\n";
     };
+    int menuFontIndex = static_cast<int>(Fonts::MENU);
 
     menuButtons[0].set_on_press(play);
+    menuButtons[0].enable_text(true, fonts[menuFontIndex], "START", { 0x00, 0x00, 0x00, 0xff });
+
     menuButtons[1].set_on_press(settings);
+    menuButtons[1].enable_text(true, fonts[menuFontIndex], "SETTINGS", { 0x00, 0x00, 0x00, 0xff });
+    
+
+
+
+
+
 }
 void Gamestate::menu_update() {
     musicPlayer.load_track("Sombre Title Theme Idea (16-bit).wav");
@@ -120,6 +137,10 @@ void Gamestate::menu_render() {
 
     for (Button& button : menuButtons) {
         button.render();
+    }
+
+    for (Text& box : menuText) {
+        box.render_text();
     }
     
 
@@ -236,7 +257,7 @@ void Gamestate::render() {
     user.render();
     tempEnemy.render();
 
-    interaction.generate_text(time.current_frame());
+    // interaction.generate_text(time.current_frame());
 
     render_hitbox();
 
@@ -285,8 +306,14 @@ void Gamestate::initialise_pause() {
         std::cout << "SETTINGS NOT ENABLED YET!\n";
         };
 
+    int menuFontIndex = static_cast<int>(Fonts::MENU);
+
     pauseButtons[0].set_on_press(menu);
+    pauseButtons[0].enable_text(true, fonts[menuFontIndex], "MENU", { 0x00, 0x00, 0x00, 0xFF });
+
     pauseButtons[1].set_on_press(settings);
+    pauseButtons[1].enable_text(true, fonts[menuFontIndex], "SETTINGS", { 0x00, 0x00, 0x00, 0xFF });
+
 
 }
 void Gamestate::pause_update() {
@@ -615,5 +642,24 @@ void Gamestate::calculate_scale() {
 void Gamestate::calculate_depth() {
     cameraDepthMain = depthMain - camera.get_depth();
     cameraDepthBack = depthBack - camera.get_depth();
+}
+
+TTF_Font* Gamestate::load_font(std::string fontName) {
+
+    std::string fontLocation = fontName + ".ttf";
+    TTF_Font* font = TTF_OpenFont(fontLocation.c_str(), 120.0f);
+
+    if (font == NULL) {
+        std::cout << "COULD NOT OPEN FONT! : " << SDL_GetError() << "\n";
+    }
+
+    return font;
+}
+
+void Gamestate::close_fonts() {
+    for (TTF_Font* font : fonts) {
+        TTF_CloseFont(font);
+        font = nullptr;
+    }
 }
 

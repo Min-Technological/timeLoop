@@ -57,4 +57,8 @@ enum class CharacterID {
 	NILL
 };
 
+enum class Fonts {
+	MENU
+};
+
 #endif

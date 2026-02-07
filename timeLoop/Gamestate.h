@@ -32,6 +32,8 @@ public:
     // === Constructor ===
     Gamestate();
 
+    void initialise_fonts();
+
     // === Opening Functions ===
     void intro_update();
     void intro_render();
@@ -138,8 +140,13 @@ private:
     std::vector<Enemy> map0Enemies;
 
     // === Buttons ===
+    // --- Menu ---
     std::vector<Button> menuButtons;
+    std::vector<Text> menuText;
+
+    // --- Pause ---
     std::vector<Button> pauseButtons;
+    std::vector<Text> pauseText;
 
 
 
@@ -157,6 +164,11 @@ private:
     Uint64 loopTime = 0;
 
     bool charChange = false;
+
+    // === Font Stuff ===
+    TTF_Font* load_font(std::string fontName);
+    void close_fonts();
+    std::vector<TTF_Font*> fonts;
 };
 
 #endif

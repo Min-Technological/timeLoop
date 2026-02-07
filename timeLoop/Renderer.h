@@ -6,6 +6,7 @@
 #include <SDL3_image\SDL_image.h>
 #include <iostream>
 #include <vector>
+#include <array>
 #include "CameraDepth.h"
 
 class Renderer {
@@ -13,6 +14,7 @@ public:
 	Renderer(SDL_Renderer* r, float x, float y, float w, float h, float& s, float& depth);
 
 	void load_texture(const std::string &path);
+	std::array<int, 2> texture_dimensions();
 
 	void new_position(float newX, float newY, float newW, float newH, float xOff, float yOff);
 	void rescale();
@@ -30,7 +32,6 @@ public:
 
 	// === Text Rendering ===
 	void load_textbox(SDL_Surface* textSurface);
-	void render_textbox(float x, float y);
 
 	void destroy_texture();
 

@@ -1,7 +1,7 @@
 #include "Health.h"
 
 Health::Health(int initialHealth, int invincibilityFrames) :
-	health(initialHealth),
+	health(static_cast<float>(initialHealth)),
 	maxHealth(initialHealth),
 	invincibilityFrameCount(invincibilityFrames)
 	{

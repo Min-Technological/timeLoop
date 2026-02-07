@@ -18,7 +18,7 @@ public:
 	void next_character(CharacterID character);
 	void progress_character(CharacterID character);
 
-	void generate_text(Uint64 currentFrame);
+	void generate_text(Uint64 currentFrame, TTF_Font* font, SDL_Color color);
 
 private:
 	float gapFrame = 1;
