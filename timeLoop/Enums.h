@@ -54,7 +54,8 @@ enum class CardNumber {
 
 // Yes, this is in the order of implementation.
 enum class CharacterID {
-	NILL
+	NILL,
+	BUDDY
 };
 
 enum class Fonts {

@@ -15,8 +15,9 @@ Gamestate::Gamestate() :
     characterSelect(&window, scale),
     tarotScene(window, scale),
     collisionManager(),
-    interaction(window.get_renderer(), scale, cameraDepthMain),
+    interaction(window.get_renderer(), scale, cameraDepthMain, input),
     tempEnemy(720, 600, window, time, scale, cameraDepthMain),
+    cube(window.get_renderer(), scale, cameraDepthCube),
     quit(false)
 {
     event.type = SDL_EVENT_FIRST;
@@ -25,6 +26,8 @@ Gamestate::Gamestate() :
     initialise_fonts();
     initialise_menu();
     initialise_pause();
+
+    tempEnemy.enable_interaction(true, CharacterID::BUDDY);
 
     std::cout << "INITIALISED!\n";
 }
@@ -104,10 +107,9 @@ void Gamestate::initialise_menu() {
 
     menuButtons[1].set_on_press(settings);
     menuButtons[1].enable_text(true, fonts[menuFontIndex], "SETTINGS", { 0x00, 0x00, 0x00, 0xff });
+
+    cube.scale_cube(500);
     
-
-
-
 
 
 }
@@ -123,6 +125,10 @@ void Gamestate::menu_update() {
     for (Button& button : menuButtons) {
         button.update(input);
     }
+
+    double rotationAngle = double(time.current_time() / 2000.0f);
+    cube.rotate(rotationAngle, rotationAngle, rotationAngle);
+
 
 
 }
@@ -142,6 +148,8 @@ void Gamestate::menu_render() {
     for (Text& box : menuText) {
         box.render_text();
     }
+
+    cube.render(960, 540);
     
 
     SDL_RenderPresent(window.get_renderer());
@@ -211,10 +219,20 @@ void Gamestate::move() {
     user.resolve_collision();
 
     if (!collisionManager.collide_character_enemy(&user, &tempEnemy)) {
+
+        interaction.clear();
+
         collisionManager.collide_enemy_attack(&tempEnemy, user.get_attack());
     }
     else {
-        user.damage(tempEnemy.get_contact());
+        if (tempEnemy.emitting_contact()) {
+            user.damage(tempEnemy.get_contact());
+        }
+        else {
+            interaction.set_text("Hey! Don't hurt me!");
+            interaction.generate_text(time.current_frame(), fonts[static_cast<int>(Fonts::MENU)], { 0xFF, 0xFF, 0xFF, 0xFF });
+        }
+        
     }
 
     camera.affect(input);
@@ -235,6 +253,8 @@ void Gamestate::update() {
     for (Chunk& chunk : currentMap) {
         chunk.update(scale, camera.get_coordinate(0), camera.get_coordinate(1));
     }
+
+    interaction.update();
 
 
     // update_loop_data();
@@ -257,7 +277,7 @@ void Gamestate::render() {
     user.render();
     tempEnemy.render();
 
-    // interaction.generate_text(time.current_frame());
+    interaction.render();
 
     render_hitbox();
 
@@ -496,7 +516,7 @@ void Gamestate::change_state() {
         else if (input.is_key_just_pressed(SDLK_ESCAPE)) {
             currentState = State::PAUSE;
         } 
-        else if (input.is_key_just_pressed(SDLK_E)) {
+        else if (input.is_key_just_pressed(SDLK_Q)) {
             currentState = State::SELECTION;
         }
         // === TEMPORARY, SHOULD BE A PASSIVE THING IN GAME.UPDATE().
@@ -527,7 +547,7 @@ void Gamestate::change_state() {
         break;
 
     case (State::SELECTION):
-        if (input.is_key_just_pressed(SDLK_E) || charChange) {
+        if (input.is_key_just_pressed(SDLK_Q) || charChange) {
             currentState = State::GAME;
         }
         break;

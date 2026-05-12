@@ -61,9 +61,40 @@ float Enemy::get_contact() {
     return contactDamage;
 }
 
+void Enemy::enable_interaction(bool state, CharacterID ID) {
+    interactionState = state;
+    characterID = ID;
+    convert_ID_to_name(ID);
+
+    emitContact = interactionState ? false : true;
+}
+
+CharacterID Enemy::get_interaction() {
+    return characterID;
+}
+
+std::string Enemy::get_name() {
+    return nameID;
+}
+
+bool Enemy::emitting_contact() {
+    return emitContact;
+}
+
 
 void Enemy::die() {
     hitbox.enable_collisions(false);
+}
+
+void Enemy::convert_ID_to_name(CharacterID ID) {
+    switch (ID) {
+    case CharacterID::NILL:
+        nameID = "NILL";
+        break;
+    case CharacterID::BUDDY:
+        nameID = "Buddy, Destroyer of Worlds";
+        break;
+    }
 }
 
 

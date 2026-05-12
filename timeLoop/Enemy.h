@@ -8,6 +8,8 @@
 #include "Time.h"
 #include "Hitbox.h"
 #include "Health.h"
+#include "Enums.h"
+
 
 class Enemy {
 public:
@@ -22,13 +24,23 @@ public:
 
 	float get_contact();
 
+	void enable_interaction(bool state, CharacterID ID);
+	CharacterID get_interaction();
+
+	std::string get_name();
+
+	bool emitting_contact();
+
+
 	
 
 private:
 
 	void die();
+	void convert_ID_to_name(CharacterID ID);
 
 	std::string nameID = "NULL";
+	CharacterID characterID = CharacterID::NILL;
 	Hitbox hitbox;
 	Renderer renderer;
 	Health health;
@@ -45,7 +57,13 @@ private:
 	Uint8 tempR = 0x80;
 	Uint8 tempB = 0xff;
 
+	bool emitContact = true;
 	float contactDamage = 1;
+
+
+	// === Interaction ===
+	bool interactionState = false;
+
 	
 
 };

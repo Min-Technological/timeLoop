@@ -26,6 +26,7 @@
 #include "Enemy.h"
 #include "Button.h"
 #include "Interaction.h"
+#include "Cube.h"
 
 class Gamestate {
 public:
@@ -102,6 +103,7 @@ private:
 
     float cameraDepthMain = 1.0f;
     float cameraDepthBack = 1.0f;
+    float cameraDepthCube = 750.0f;
 
     // === Game State Management ===
     State currentState = State::OPENING;
@@ -126,6 +128,7 @@ private:
     Collisions collisionManager;
     TarotDeck tarotDeck;
     Interaction interaction;
+    Cube cube;
 
     Enemy tempEnemy;
 

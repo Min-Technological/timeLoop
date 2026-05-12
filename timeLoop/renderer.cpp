@@ -156,6 +156,11 @@ void Renderer::render_clickbox(float x, float y, float w, float h, Uint8 green) 
 	SDL_RenderRect(renderer, &bounding);
 }
 
+void Renderer::render_line(float x1, float y1, float x2, float y2) {
+	SDL_SetRenderDrawColor(renderer, 0x00, 0xff, 0x00, 0xff);
+	SDL_RenderLine(renderer, x1, y1, x2, y2);
+}
+
 bool Renderer::test_frame(std::vector<float> camera) const {
 	if (viewport.x > -viewport.w && viewport.x < camera[0]) {
 		if (viewport.y > -viewport.h && viewport.y < camera[1]) {
