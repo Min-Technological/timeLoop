@@ -103,7 +103,7 @@ private:
 
     float cameraDepthMain = 1.0f;
     float cameraDepthBack = 1.0f;
-    float cameraDepthCube = 750.0f;
+    float cameraDepthCube = 750.0f; // 750.0f
 
     // === Game State Management ===
     State currentState = State::OPENING;

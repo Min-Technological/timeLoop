@@ -127,6 +127,7 @@ void Gamestate::menu_update() {
     }
 
     double rotationAngle = double(time.current_time() / 2000.0f);
+    cube.update(960, 540);
     cube.rotate(rotationAngle, rotationAngle, rotationAngle);
 
 
@@ -149,7 +150,7 @@ void Gamestate::menu_render() {
         box.render_text();
     }
 
-    cube.render(960, 540);
+    cube.render_textured();
     
 
     SDL_RenderPresent(window.get_renderer());

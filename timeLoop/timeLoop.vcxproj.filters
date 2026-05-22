@@ -108,6 +108,9 @@
     <ClCompile Include="cube.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="face.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h">
@@ -204,6 +207,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Cube.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Face.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

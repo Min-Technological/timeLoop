@@ -110,7 +110,10 @@ void Renderer::render_colour(Uint8 red, Uint8 green, Uint8 blue, Uint8 alpha) {
 	SDL_RenderFillRect(renderer, &viewport);
 }
 void Renderer::render_texture() {
-	if (cameraDepth.get_depth() <= 0) return;
+	if (cameraDepth.get_depth() <= 0) {
+		std::cout << "Can't Render!\n";
+		return;
+	}
 	
 
 	SDL_RenderTexture(renderer, scaledTexture, NULL, &viewport);
@@ -160,6 +163,19 @@ void Renderer::render_line(float x1, float y1, float x2, float y2) {
 	SDL_SetRenderDrawColor(renderer, 0x00, 0xff, 0x00, 0xff);
 	SDL_RenderLine(renderer, x1, y1, x2, y2);
 }
+
+
+
+void Renderer::render_triangle(std::array<SDL_Vertex, 3> triangle) {
+
+	if (!texture) {
+		std::cout << "AHHHHHHHHH\n";
+	}
+
+	SDL_RenderGeometry(renderer, texture, triangle.data(), 3, NULL, 0);
+}
+
+
 
 bool Renderer::test_frame(std::vector<float> camera) const {
 	if (viewport.x > -viewport.w && viewport.x < camera[0]) {

@@ -150,6 +150,7 @@
     <ClCompile Include="cube.cpp" />
     <ClCompile Include="enemy.cpp" />
     <ClCompile Include="entry.cpp" />
+    <ClCompile Include="face.cpp" />
     <ClCompile Include="gamestate.cpp" />
     <ClCompile Include="health.cpp" />
     <ClCompile Include="hitbox.cpp" />
@@ -183,6 +184,7 @@
     <ClInclude Include="Cube.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Entry.h" />
+    <ClInclude Include="Face.h" />
     <ClInclude Include="FMod.h" />
     <ClInclude Include="Gamestate.h" />
     <ClInclude Include="Health.h" />
