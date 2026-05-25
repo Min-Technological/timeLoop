@@ -103,6 +103,14 @@ void Renderer::set_alpha(Uint8 alpha) {
 	SDL_SetTextureAlphaMod(texture, alpha);
 }
 
+void Renderer::set_render_window(float x, float y, float w, float h) {
+	SDL_Rect renderWindow = { x, y, w, h };
+	SDL_SetRenderViewport(renderer, &renderWindow);
+}
+
+
+
+
 void Renderer::render_colour(Uint8 red, Uint8 green, Uint8 blue, Uint8 alpha) {
 	if (cameraDepth.get_depth() <= 0) return;
 

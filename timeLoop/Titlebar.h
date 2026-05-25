@@ -5,10 +5,10 @@
 #include <SDL3_image/SDL_image.h>
 #include <SDL3/SDL.h>
 #include <iostream>
-#include <stdio.h>
-#include <functional>
+#include <array>
 
 #include "Window.h"
+#include "Renderer.h"
 #include "Input.h"
 
 class Titlebar {
@@ -17,8 +17,6 @@ public:
     Titlebar(int width, int height, std::string buttonTextures, SDL_Renderer* renderer, AppWindow* appWindow);
 
     // === Public Methods ===
-    void load_texture(std::string texturePath);
-    void load_sprites(SDL_FRect button[], int column);
     void handle_event(Input input);
     void handle_minimise(const SDL_Event &e);
     void handle_fullscreen(const SDL_Event &e);
@@ -28,33 +26,23 @@ public:
     void destroy();
 
     // === Public Fields ===
+    int titleWidth;
     int titleHeight;
 
 private:
-    // === Dimensions ===
-    int titleWidth;
 
     // === Window & Renderer ===
     AppWindow* titleBarWindow;
-    SDL_Renderer* titleBarRenderer;
-    SDL_Texture* titleBarTexture;
+    Renderer renderer;
 
-    // === Render State ===
-    SDL_Rect renderWindow = { 0, titleHeight, 960, 540 };
-
-    SDL_FRect minimiseSprites[3];
-    SDL_FRect fullscreenSprites[3];
-    SDL_FRect closeSprites[3];
-
-    int minimiseState = 0;
-    int fullscreenState = 0;
-    int closeState = 0;
+    std::array<int, 3> states = { 0, 0 ,0 };
 
     bool isClicking = false;
 
     // === Button Constants ===
     const float buttonWidth = 48;
     const float buttonHeight = 25;
+    float dummyValue = 1.0f;
 };
 
 #endif

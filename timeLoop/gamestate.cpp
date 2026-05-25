@@ -149,6 +149,8 @@ void Gamestate::menu_render() {
 
     background.render();
 
+    cube.render_textured();
+
     for (Button& button : menuButtons) {
         button.render();
     }
@@ -157,7 +159,6 @@ void Gamestate::menu_render() {
         box.render_text();
     }
 
-    cube.render_textured();
     
 
     SDL_RenderPresent(window.get_renderer());

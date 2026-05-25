@@ -21,6 +21,7 @@ public:
 	void set_x_offset(float xOff);
 	void set_y_offset(float yOff);
 	void set_alpha(Uint8 alpha);
+	void set_render_window(float x, float y, float w, float h);
 
 	bool test_frame(std::vector<float> camera) const;
 

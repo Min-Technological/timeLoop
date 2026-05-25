@@ -11,7 +11,7 @@
 
 class Cube {
 public:
-	Cube(SDL_Renderer* r, float& s, float& depth);
+	Cube(SDL_Renderer* r, float& scale, float& depth);
 
 	void scale_cube(float sideLength);
 	void rotate(float angleA, float angleB, float angleC);
@@ -49,6 +49,7 @@ private:
 
 	float sideScale = 1;
 
+	float& scale;
 	float& depth;
 
 	Renderer renderer;

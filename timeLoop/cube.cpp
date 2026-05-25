@@ -9,10 +9,11 @@ const SDL_FPoint Cube::faceUVs[6][4] = {
    {  {5.0f / 6.0f, 1.0f}, {1.0f, 1.0f}, {1.0f, 0.0f}, {5.0f / 6.0f, 0.0f} } 
    } ;
 
-Cube::Cube(SDL_Renderer* r, float& s, float& depth) :
-	renderer(r, 0, 0, 1, 1, s, depth),
+Cube::Cube(SDL_Renderer* r, float& scale, float& depth) :
+	renderer(r, 0, 0, 1, 1, scale, depth),
 	depth(depth),
-	faces()
+	faces(),
+	scale(scale)
 {
 	renderer.load_texture("tempCube.png");
 }
@@ -166,7 +167,10 @@ void Cube::calculate_uv(float xOff, float yOff) {
 		for (int i = 0; i < 4; i++) {
 			int j = faceSets[k][i];
 
-			v[i].position = { points[j][0] + xOff, points[j][1] + yOff };
+			float xPos = points[j][0] + xOff;
+			float yPos = points[j][1] + yOff;
+
+			v[i].position = { xPos * scale, yPos * scale };
 			v[i].color = { 1.0f, 1.0f, 1.0f, 0.5f };
 			v[i].tex_coord = faceUVs[k][i];
 		}
