@@ -96,16 +96,25 @@ void Gamestate::initialise_menu() {
     std::function<void()> play = [this]() {
         this->currentState = State::GAME;
     };
+    std::function<void()> playHover = [this]() {
+        float uAngle = static_cast<float>(PI) / 4.0f;
+        this->cube.lerp_rotate(uAngle, uAngle, uAngle);
+    };
 
     std::function<void()> settings = [this]() {
         std::cout << "SETTINGS NOT ENABLED YET!\n";
     };
+    std::function<void()> settingsHover = [this]() {
+        this->cube.lerp_rotate(0, 0, 0);
+    };
     int menuFontIndex = static_cast<int>(Fonts::MENU);
 
     menuButtons[0].set_on_press(play);
+    menuButtons[0].set_on_hover(playHover);
     menuButtons[0].enable_text(true, fonts[menuFontIndex], "START", { 0x00, 0x00, 0x00, 0xff });
 
     menuButtons[1].set_on_press(settings);
+    menuButtons[1].set_on_hover(settingsHover);
     menuButtons[1].enable_text(true, fonts[menuFontIndex], "SETTINGS", { 0x00, 0x00, 0x00, 0xff });
 
     cube.scale_cube(500);
@@ -126,9 +135,7 @@ void Gamestate::menu_update() {
         button.update(input);
     }
 
-    double rotationAngle = double(time.current_time() / 2000.0f);
     cube.update(960, 540);
-    cube.rotate(rotationAngle, rotationAngle, rotationAngle);
 
 
 

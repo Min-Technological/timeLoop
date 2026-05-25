@@ -175,6 +175,15 @@ void Renderer::render_triangle(std::array<SDL_Vertex, 3> triangle) {
 	SDL_RenderGeometry(renderer, texture, triangle.data(), 3, NULL, 0);
 }
 
+void Renderer::render_square(std::array<SDL_Vertex, 4> square) {
+
+	if (!texture) {
+		std::cout << "AHHHHHHHHHHHH\n";
+	}
+
+	SDL_RenderGeometry(renderer, texture, square.data(), 4, NULL, 0);
+}
+
 
 
 bool Renderer::test_frame(std::vector<float> camera) const {

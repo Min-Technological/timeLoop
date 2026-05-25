@@ -24,6 +24,8 @@ public:
 	bool is_clicking_ring(float x, float y, float innerR, float outerR);
 	int get_quadrant(float x, float y, float d, float buffer);
 
+	bool is_mouse_inside(float x, float y, float w, float h, float& scale);
+
 private:
 	const bool* keys = nullptr;
 	std::vector<SDL_Event> events;

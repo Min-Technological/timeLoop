@@ -2,6 +2,8 @@
 #ifndef PERSONA
 #define PERSONA
 
+constexpr double PI = 3.14159265358979323846;
+
 enum class Persona {
 	PROTAG,     // <Unnnamed>
 	CUP,        // TEMP NAME <ZOE>

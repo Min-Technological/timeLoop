@@ -17,22 +17,41 @@ Cube::Cube(SDL_Renderer* r, float& s, float& depth) :
 	renderer.load_texture("tempCube.png");
 }
 
-void Cube::scale_cube(double sideLength) {
+void Cube::scale_cube(float sideLength) {
 	sideScale = sideLength / 2;
 }
 
-void Cube::rotate(double angleA, double angleB, double angleC) {
+void Cube::rotate(float angleA, float angleB, float angleC) {
 
-	angle_a(angleA);
-	angle_b(angleB);
-	angle_c(angleC);
+	currentA = angleA;
+	targetA = angleA;
+	
+	currentB = angleB;
+	targetB = angleB;
 
-	calculate_points();
+	currentC = angleC;
+	targetC = angleC;
+
+}
+
+void Cube::lerp_rotate(float angleA, float angleB, float angleC) {
+	targetA = angleA;
+	targetB = angleB;
+	targetC = angleC;
 }
 
 void Cube::update(float xOff, float yOff) {
+
+	lerp_angles();
+
+	angle_a(currentA);
+	angle_b(currentB);
+	angle_c(currentC);
+
+	calculate_points();
+
 	calculate_uv(xOff, yOff);
-	// renderer.new_position(0, 0, 360, 60, 0, 0);
+	
 	calculate_z_depths();
 	sort_indexes();
 }
@@ -60,12 +79,12 @@ void Cube::render_textured() {
 }
 
 
-void Cube::angle_a(double angleA) {
+void Cube::angle_a(float angleA) {
 	for (int i = 0; i < 8; i++) {
 
-		double newX = xCoords[i] * sideScale;
-		double newY = yCoords[i] * sideScale;
-		double newZ = zCoords[i] * sideScale;
+		float newX = xCoords[i] * sideScale;
+		float newY = yCoords[i] * sideScale;
+		float newZ = zCoords[i] * sideScale;
 
 		rotatedX[i] = newX;
 
@@ -75,19 +94,19 @@ void Cube::angle_a(double angleA) {
 	}
 }
 
-void Cube::angle_b(double angleB) {
+void Cube::angle_b(float angleB) {
 
-	std::array<double, 8> xCopy = rotatedX;
-	std::array<double, 8> yCopy = rotatedY;
-	std::array<double, 8> zCopy = rotatedZ;
+	std::array<float, 8> xCopy = rotatedX;
+	std::array<float, 8> yCopy = rotatedY;
+	std::array<float, 8> zCopy = rotatedZ;
 
 
 
 	for (int i = 0; i < 8; i++) {
 
-		double newX = xCopy[i];
-		double newY = yCopy[i];
-		double newZ = zCopy[i];
+		float newX = xCopy[i];
+		float newY = yCopy[i];
+		float newZ = zCopy[i];
 
 		rotatedX[i] = newX * std::cos(angleB) + newZ * std::sin(angleB);
 
@@ -97,19 +116,19 @@ void Cube::angle_b(double angleB) {
 	}
 }
 
-void Cube::angle_c(double angleC) {
+void Cube::angle_c(float angleC) {
 
-	std::array<double, 8> xCopy = rotatedX;
-	std::array<double, 8> yCopy = rotatedY;
-	std::array<double, 8> zCopy = rotatedZ;
+	std::array<float, 8> xCopy = rotatedX;
+	std::array<float, 8> yCopy = rotatedY;
+	std::array<float, 8> zCopy = rotatedZ;
 
 
 
 	for (int i = 0; i < 8; i++) {
 
-		double newX = xCopy[i];
-		double newY = yCopy[i];
-		double newZ = zCopy[i];
+		float newX = xCopy[i];
+		float newY = yCopy[i];
+		float newZ = zCopy[i];
 
 		rotatedX[i] = newX * std::cos(angleC) - newY * std::sin(angleC);
 
@@ -148,7 +167,7 @@ void Cube::calculate_uv(float xOff, float yOff) {
 			int j = faceSets[k][i];
 
 			v[i].position = { points[j][0] + xOff, points[j][1] + yOff };
-			v[i].color = { 1.0f, 1.0f, 1.0f, 1.0f };
+			v[i].color = { 1.0f, 1.0f, 1.0f, 0.5f };
 			v[i].tex_coord = faceUVs[k][i];
 		}
 		faces[k].update(v);
@@ -176,5 +195,11 @@ void Cube::sort_indexes() {
 			}
 		}
 	}
+}
+
+void Cube::lerp_angles() {
+	currentA += (targetA - currentA) * blendFactor;
+	currentB += (targetB - currentB) * blendFactor;
+	currentC += (targetC - currentC) * blendFactor;
 }
 

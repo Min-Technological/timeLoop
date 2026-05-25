@@ -187,3 +187,28 @@ int Input::get_quadrant(float x, float y, float d, float buffer) {
 		return 0;
 	}
 }
+
+bool Input::is_mouse_inside(float x, float y, float w, float h, float& scale) {
+
+
+	if (window->is_fullscreen()) {
+		titlebarH = 0;
+	}
+	else {
+		titlebarH = TITLEBARH;
+	}
+
+	bool isInside = false;
+
+	float mouseX, mouseY;
+	SDL_GetMouseState(&mouseX, &mouseY);
+
+	if (mouseY >= y * scale + titlebarH &&
+		mouseY <= (y + h) * scale + titlebarH &&
+		mouseX >= x * scale &&
+		mouseX <= (x + w) * scale) {
+		isInside = true;
+	}
+
+	return isInside;
+}

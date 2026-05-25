@@ -13,8 +13,9 @@ class Cube {
 public:
 	Cube(SDL_Renderer* r, float& s, float& depth);
 
-	void scale_cube(double sideLength);
-	void rotate(double angleA, double angleB, double angleC);
+	void scale_cube(float sideLength);
+	void rotate(float angleA, float angleB, float angleC);
+	void lerp_rotate(float angleA, float angleB, float angleC);
 	void update(float xOff, float yOff);
 
 	void render_wireframe(float xOff, float yOff);
@@ -22,17 +23,17 @@ public:
 
 private:
 
-	std::array<double, 8> xCoords = { -1, 1, 1, -1, -1, 1, 1, -1 };
-	std::array<double, 8> yCoords = { -1, -1, 1, 1, -1, -1, 1, 1 };
-	std::array<double, 8> zCoords = { -1, -1, -1, -1, 1, 1, 1, 1 };
+	std::array<float, 8> xCoords = { -1, 1, 1, -1, -1, 1, 1, -1 };
+	std::array<float, 8> yCoords = { -1, -1, 1, 1, -1, -1, 1, 1 };
+	std::array<float, 8> zCoords = { -1, -1, -1, -1, 1, 1, 1, 1 };
 
-	std::array<double, 8> rotatedX = xCoords;
-	std::array<double, 8> rotatedY = yCoords;
-	std::array<double, 8> rotatedZ = zCoords;
+	std::array<float, 8> rotatedX = xCoords;
+	std::array<float, 8> rotatedY = yCoords;
+	std::array<float, 8> rotatedZ = zCoords;
 
-	void angle_a(double angleA);
-	void angle_b(double angleB);
-	void angle_c(double angleC);
+	void angle_a(float angleA);
+	void angle_b(float angleB);
+	void angle_c(float angleC);
 
 	std::array<std::array<float, 2>, 8> points = { { { -1, -1},{-1, 1},{1, 1},{1, -1},{-1, -1},{-1, 1},{1, 1},{1, -1} } };
 	
@@ -46,7 +47,7 @@ private:
 	void calculate_z_depths();
 	void sort_indexes();
 
-	double sideScale = 1;
+	float sideScale = 1;
 
 	float& depth;
 
@@ -73,6 +74,17 @@ private:
 
 	// Face Indexes
 	int faceIndexes[6] = { 0, 1, 2, 3, 4, 5 };
+
+	float currentA = 0;
+	float currentB = 0;
+	float currentC = 0;
+
+	float targetA = 0;
+	float targetB = 0;
+	float targetC = 0;
+
+	void lerp_angles();
+	float blendFactor = 0.05f;
 
 };
 

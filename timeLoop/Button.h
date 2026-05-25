@@ -19,6 +19,7 @@ public:
 	void render();
 
 	void set_on_press(std::function<void()> pressFunction);
+	void set_on_hover(std::function<void()> hoverFunction);
 
 	void enable_text(bool state, TTF_Font* font, std::string text, SDL_Color color);
 
@@ -38,6 +39,7 @@ private:
 	float textY = 0;
 
 	std::function<void()> onClick;
+	std::function<void()> onHover;
 
 
 };

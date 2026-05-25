@@ -19,6 +19,10 @@ void Button::update(Input& input) {
 
 	renderer.new_position(position[0], position[1], (position[2] - position[0]), (position[3] - position[1]), 0, 0);
 
+	if (input.is_mouse_inside(position[0], position[1], (position[2] - position[0]), (position[3] - position[1]), scale)) {
+		if (onHover) onHover();
+	}
+
 	if (input.is_clicking_square(position[0], position[1], (position[2] - position[0]), (position[3] - position[1]), scale)) {
 		if (onClick) onClick();
 	}
@@ -52,6 +56,10 @@ void Button::render() {
 
 void Button::set_on_press(std::function<void()> pressFunction) {
 	onClick = pressFunction;
+}
+
+void Button::set_on_hover(std::function<void()> hoverFunction) {
+	onHover = hoverFunction;
 }
 
 void Button::enable_text(bool state, TTF_Font* font, std::string text, SDL_Color color) {
